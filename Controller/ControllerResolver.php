@@ -4,6 +4,7 @@ namespace KumbiaPHP\Kernel\Controller;
 
 use KumbiaPHP\Kernel\Request;
 use KumbiaPHP\Kernel\Exception\NotFoundException;
+use KumbiaPHP\Kernel\Controller\Controller;
 
 /**
  * Description of ControllerResolver
@@ -13,6 +14,7 @@ use KumbiaPHP\Kernel\Exception\NotFoundException;
 class ControllerResolver
 {
 
+    protected $request;
     protected $defaultModule;
     protected $defaultController;
     protected $defaultAction;
@@ -30,6 +32,7 @@ class ControllerResolver
 
     public function getController(Request $request)
     {
+        $this->request = $request;
         $controllerFound = FALSE;
         $module = $this->defaultModule;
         $controller = $this->defaultController;
@@ -42,24 +45,30 @@ class ControllerResolver
 
         //primero obtengo el modulo.
         if (current($uri)) {
-            $module = current($uri);
-            if (!array_key_exists($module, $this->modules)) {
-                throw new NotFoundException(sprintf("El primer patron de la Ruta <b>%s</b> No Coincide con ningun Módulo", $module), 404);
+            if (array_key_exists(current($uri), $this->modules)) {
+                //si concuerda con un modulo, es un modulo.
+                $module = current($uri);
+                next($uri);
+            } elseif (!$this->isController($module, $this->camelcase(current($uri)))) {
+                //si no es ni modulo ni controller, lanzo la excepcion.
+                throw new NotFoundException(sprintf("El primer patron de la Ruta <b>%s</b> No Coincide con ningun Módulo", current($uri)), 404);
             }
         }
         //ahora obtengo el controlador
-        if (next($uri)) {
+        if (current($uri)) {
             $controller = $this->camelcase(current($uri));
             if (!$this->isController($module, $controller)) {
                 throw new NotFoundException(sprintf("El controlador <b>%s</b> para el Módulo <b>%s</b> no Existe", $controller, $module), 404);
             }
+            next($uri);
         }
         //luego obtenemos la acción
-        if (next($uri)) {
+        if (current($uri)) {
             $action = $this->camelcase(current($uri), TRUE);
+            next($uri);
         }
         //por ultimo los parametros
-        if (next($uri)) {
+        if (current($uri)) {
             $params = array_slice($uri, key($uri));
         }
 
@@ -76,12 +85,13 @@ class ControllerResolver
     protected function camelcase($string, $firstLower = FALSE)
     {
         // Notacion lowerCamelCase
+        $string = str_replace(' ', '', ucwords(str_replace('_', ' ', strtolower($string))));
         if ($firstLower) {
-            $string = str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
             $string[0] = strtolower($string[0]);
             return $string;
+        } else {
+            return $string;
         }
-        return str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
     }
 
     protected function isController($module, $controller)
@@ -98,14 +108,24 @@ class ControllerResolver
         $controllerName = $controller . 'Controller';
         $controllerClass = str_replace('/', '\\', $path . '/Controller/') . $controllerName;
 
-        $controllerObject = new $controllerClass();
+        $controllerObject = new $controllerClass($this->request, $action);
 
+        if (!$controllerObject instanceof \KumbiaPHP\Kernel\Controller\Controller) {
+            throw new NotFoundException(sprintf("El controlador <b>%s</b> debe extender de <b>%s</b>", $controllerName,'KumbiaPHP\\Kernel\\Controller\\Controller'), 404);
+        }
+        
         if (!method_exists($controllerObject, $action)) {
             throw new NotFoundException(sprintf("No exite el metodo <b>%s</b> en el controlador <b>%s</b>", $action, $controllerName), 404);
         }
 
         //Obteniendo el metodo
         $reflectionMethod = new \ReflectionMethod($controllerObject, $action);
+        
+        //el nombre del metodo debe ser exactamente igual al camelcases
+        //de la porcion de url
+        if ($reflectionMethod->getName() !== $action) {
+            throw new NotFoundException(sprintf("No exite el metodo <b>%s</b> en el controlador <b>%s</b>", $action, $controllerName), 404);
+        }
 
         //se verifica que el metodo sea public
         if (!$reflectionMethod->isPublic()) {
