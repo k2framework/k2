@@ -42,4 +42,9 @@ class Parameters
         return count($this->params);
     }
 
+    public function clear()
+    {
+        $this->params = array();
+    }
+
 }

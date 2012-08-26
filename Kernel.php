@@ -3,38 +3,92 @@
 namespace KumbiaPHP\Kernel;
 
 use KumbiaPHP\Kernel\KernelInterface;
-//use KumbiaPHP\Kernel\Session\Session;
 use KumbiaPHP\Kernel\Controller\ControllerResolver;
 use KumbiaPHP\Kernel\Event\KumbiaEvents;
 use KumbiaPHP\EventDispatcher\EventDispatcher;
 use KumbiaPHP\Kernel\Event\RequestEvent;
 use KumbiaPHP\Kernel\Event\ControllerEvent;
 use KumbiaPHP\Kernel\Event\ResponseEvent;
+use KumbiaPHP\Kernel\Config\ConfigContainer;
+use KumbiaPHP\Di\DependencyInjection;
+use KumbiaPHP\Di\Container\Container;
+use KumbiaPHP\Di\Definition\DefinitionManager;
+use KumbiaPHP\Kernel\Exception\ExceptionHandler;
 
 /**
  * Description of Kernel
  *
  * @author manuel
  */
-abstract class Kernel implements KernelInterface
-{
+abstract class Kernel implements KernelInterface {
 
     protected $modules;
+    protected $defaultModule;
+    protected $defaultController = 'Index';
+    protected $defaultAction = 'index';
 
-    public function __construct()
-    {
-        \PSR0\Autoload::install($this->getModulesAutoload());
+    /**
+     *
+     * @var DependencyInjection
+     */
+    protected $di;
+
+    /**
+     *  
+     * @var Container
+     */
+    protected $container;
+
+    /**
+     *
+     * @var Request 
+     */
+    protected $request;
+    private $appPath;
+    protected $production;
+
+    public function __construct($production = FALSE) {
+        \KumbiaPHP\Loader\Autoload::registerDirectories(
+                $this->getModulesAutoload()
+        );
+        if ($this->production = $production) {
+            error_reporting(0);
+            ini_set('display_errors', 'Off');
+        } else {
+            error_reporting(-1);
+            ini_set('display_errors', 'On');
+            ExceptionHandler::handle();
+        }
+    }
+
+    protected function init() {
+        $this->modules = $this->registerModules();
+
+        $this->getDefaultModule();
+
+        //fix para que carge la config de core
+        array_unshift($this->modules, dirname(__DIR__));
+
+        $this->initContainer();
     }
 
     //put your code here
-    public function execute(Request $request)
-    {
+    public function execute(Request $request) {
+        $this->request = $request;
+
+        $this->init();
+
+        //le asignamos el servicio session al request
+        $request->setSession($this->container->get('session'));
+        //agregamos el request al container
+        $this->container->set('request', $request);
+
         $dispatcher = new EventDispatcher();
 
         //ejecutamos el evento request
         $dispatcher->dispatch(KumbiaEvents::REQUEST, new RequestEvent($request));
 
-        $resolver = new ControllerResolver($this->getModules(), $this->getDefaultModule());
+        $resolver = new ControllerResolver($this);
 
         list($controller, $action, $params) = $resolver->getController($request);
 
@@ -46,15 +100,11 @@ abstract class Kernel implements KernelInterface
 
         if (!$response instanceof Response) {
 
-            $response = $controller->getResponse();
             //si la acción no devolvió respuesta,
-            //la buscamos en el controlador
-            if (!$response instanceof Response) {
-                //si en ningun momento se creó una Respuesta, la creamos
-
-                $response = new Response();
-            }
-            //throw new \LogicException("La accion $action del controlador " . get_class($controller) . " Debe retornar una instancia de Response");
+            $view = $resolver->getView();
+            $template = $resolver->getTemplate();
+            $properties = $resolver->getPublicProperties();
+            $response = $this->container->get('template')->render($template, $view, $properties);
         }
 
         //ejecutamos el evento response.
@@ -65,16 +115,15 @@ abstract class Kernel implements KernelInterface
 
     abstract protected function registerModules();
 
-    public function getModules()
-    {
-        if (!$this->modules) {
-            $this->modules = $this->registerModules();
-        }
+    public function getContainer() {
+        return $this->container;
+    }
+
+    public function getModules() {
         return $this->modules;
     }
 
-    public function getModulesAutoload()
-    {
+    public function getModulesAutoload() {
         $modules = array();
         foreach ($this->registerModules() as $module => $path) {
             $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
@@ -93,9 +142,61 @@ abstract class Kernel implements KernelInterface
      * 
      * @return string 
      */
-    public function getDefaultModule()
-    {
-        return key($this->getModules());
+    public function getDefaultModule() {
+        if ($this->defaultModule) {
+            return $this->defaultModule;
+        }
+
+        return $this->defaultModule = key($this->modules);
+    }
+
+    public function getDefaultController() {
+        return $this->defaultController;
+    }
+
+    public function getDefaultAction() {
+        return $this->defaultAction;
+    }
+
+    /**
+     *
+     * @return Request 
+     */
+    public function getRequest() {
+        return $this->request;
+    }
+
+    public function getAppPath() {
+        if (!$this->appPath) {
+            $this->appPath = $this->createAppPath();
+        }
+        return $this->appPath;
+    }
+
+    private function createAppPath() {
+        $r = new \ReflectionObject($this);
+        return dirname($r->getFileName()) . '/';
+    }
+
+    /**
+     * Esta función inicializa el contenedor de servicios.
+     */
+    protected function initContainer() {
+        $config = new ConfigContainer($this);
+        $config->compile();
+
+        $definitions = new DefinitionManager();
+
+        foreach ($config->getConfig()->get('services')->all() as $id => $class) {
+            $definitions->addService(new \KumbiaPHP\Di\Definition\Service($id, $class));
+        }
+//        foreach ($config->getConfig()->get('parameters')->all() as $id => $class) {
+//            $definitions->addParam(new \KumbiaPHP\Di\Definition\Parameter($id, $class));
+//        }
+
+        $this->di = new DependencyInjection();
+
+        $this->container = new Container($this->di, $definitions);
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace KumbiaPHP\Kernel\Controller;
 
+use KumbiaPHP\Kernel\KernelInterface;
 use KumbiaPHP\Kernel\Request;
 use KumbiaPHP\Kernel\Exception\NotFoundException;
 use KumbiaPHP\Kernel\Controller\Controller;
@@ -14,38 +15,32 @@ use KumbiaPHP\Kernel\Controller\Controller;
 class ControllerResolver
 {
 
-    protected $request;
-    protected $defaultModule;
-    protected $defaultController;
-    protected $defaultAction;
+    protected $kernel;
     protected $modulesPath;
-    protected $modules;
+    protected $module;
+    protected $controller;
+    protected $contShortName;
+    protected $action;
 
-    function __construct($modules, $defaultModule = '', $defaultController = 'Index', $defaultAction = 'index')
+    function __construct(KernelInterface $kernel)
     {
-        $this->defaultModule = $defaultModule;
-        $this->defaultController = $defaultController;
-        $this->defaultAction = $defaultAction;
-        $this->modules = $modules;
-        //var_dump($this->modules);
+        $this->kernel = $kernel;
+        $this->modulesPath = $this->kernel->getAppPath() . 'modules/';
     }
 
-    public function getController(Request $request)
+    public function getController()
     {
-        $this->request = $request;
         $controllerFound = FALSE;
-        $module = $this->defaultModule;
-        $controller = $this->defaultController;
-        $action = $this->defaultAction;
+        $module = $this->kernel->getDefaultModule();
+        $controller = $this->kernel->getDefaultController();
+        $action = $this->kernel->getDefaultAction();
         $params = array();
 
-        $this->modulesPath = $request->getAppPath() . 'modules/';
-
-        $uri = explode('/', trim($request->getRequestUri(), '/'));
+        $uri = explode('/', trim($this->kernel->getRequest()->getRequestUri(), '/'));
 
         //primero obtengo el modulo.
         if (current($uri)) {
-            if (array_key_exists(current($uri), $this->modules)) {
+            if (array_key_exists(current($uri), $this->kernel->getModules())) {
                 //si concuerda con un modulo, es un modulo.
                 $module = current($uri);
                 next($uri);
@@ -72,6 +67,10 @@ class ControllerResolver
             $params = array_slice($uri, key($uri));
         }
 
+        $this->module = $module;
+        $this->contShortName = $controller;
+        $this->action = $action;
+
         return $this->createController($module, $controller, $action, $params);
     }
 
@@ -96,31 +95,33 @@ class ControllerResolver
 
     protected function isController($module, $controller)
     {
-        $path = rtrim($this->modules[$module], '/'); // . '/' . $module;
+        $modules = $this->kernel->getModules();
+        $path = rtrim($modules[$module], '/'); // . '/' . $module;
         //var_dump("{$path}/Controller/{$controller}Controller.php");die;
         return is_file("{$path}/Controller/{$controller}Controller.php");
     }
 
     protected function createController($module, $controller, $action, $params)
     {
-        $path = rtrim($this->modules[$module], '/'); // . '/' . $module;
+        $modules = $this->kernel->getModules();
+        $path = rtrim($modules[$module], '/'); // . '/' . $module;
         $path = rtrim(substr($path, strlen($this->modulesPath)), '/');
         $controllerName = $controller . 'Controller';
         $controllerClass = str_replace('/', '\\', $path . '/Controller/') . $controllerName;
 
-        $controllerObject = new $controllerClass($this->request, $action);
+        $this->controller = new $controllerClass($this->kernel->getContainer());
 
-        if (!$controllerObject instanceof \KumbiaPHP\Kernel\Controller\Controller) {
-            throw new NotFoundException(sprintf("El controlador <b>%s</b> debe extender de <b>%s</b>", $controllerName,'KumbiaPHP\\Kernel\\Controller\\Controller'), 404);
+        if (!$this->controller instanceof \KumbiaPHP\Kernel\Controller\Controller) {
+            throw new NotFoundException(sprintf("El controlador <b>%s</b> debe extender de <b>%s</b>", $controllerName, 'KumbiaPHP\\Kernel\\Controller\\Controller'), 404);
         }
-        
-        if (!method_exists($controllerObject, $action)) {
+
+        if (!method_exists($this->controller, $action)) {
             throw new NotFoundException(sprintf("No exite el metodo <b>%s</b> en el controlador <b>%s</b>", $action, $controllerName), 404);
         }
 
         //Obteniendo el metodo
-        $reflectionMethod = new \ReflectionMethod($controllerObject, $action);
-        
+        $reflectionMethod = new \ReflectionMethod($this->controller, $action);
+
         //el nombre del metodo debe ser exactamente igual al camelcases
         //de la porcion de url
         if ($reflectionMethod->getName() !== $action) {
@@ -137,7 +138,55 @@ class ControllerResolver
             throw new NotFoundException(sprintf("Número de parámetros erróneo para ejecutar la acción <b>%s</b> en el controlador <b>%s</b>", $action, $controller), 404);
         }
 
-        return array($controllerObject, $action, $params);
+        return array($this->controller, $action, $params);
+    }
+
+    public function getPublicProperties()
+    {
+        return get_object_vars($this->controller);
+    }
+
+    public function getView()
+    {
+        $view = $this->getParamValue('view');
+
+        if ($view === NULL) {
+            return NULL;
+        }
+        return $this->getModulePath() . '/View/' . $this->contShortName . '/' . $view . '.phtml';
+    }
+
+    public function getTemplate()
+    {
+        $template = $this->getParamValue('template');
+
+        if ($template === NULL) {
+            return NULL;
+        }
+
+        $dirTemplatesApp = $this->kernel->getAppPath() . 'view/templates/';
+
+        return $dirTemplatesApp . $template . '.phtml';
+    }
+
+    public function getModulePath()
+    {
+        $modules = $this->kernel->getModules();
+        return $modules[$this->module];
+    }
+
+    protected function getParamValue($propertie)
+    {
+        $reflection = new \ReflectionClass($this->controller);
+
+        //obtengo el parametro del controlador.
+        $propertie = $reflection->getProperty($propertie);
+
+        //lo hago accesible para poderlo leer
+        $propertie->setAccessible(true);
+
+        //y retorno su valor
+        return $propertie->getValue($this->controller);
     }
 
 }

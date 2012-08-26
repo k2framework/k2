@@ -46,7 +46,7 @@ class Response
     {
         $this->content = $content;
         $this->statusCode = $statusCode;
-        $this->statusText = "Todo Bien";
+        $this->statusText = "Ok";
         $this->headers = new Parameters($headers);
     }
 

@@ -2,8 +2,8 @@
 
 namespace KumbiaPHP\Kernel\Controller;
 
+use KumbiaPHP\Di\Container\ContainerInterface;
 use KumbiaPHP\Kernel\Request;
-use KumbiaPHP\Kernel\Response;
 
 /**
  * Description of Controller
@@ -15,82 +15,51 @@ class Controller
 
     /**
      *
-     * @var Request 
+     * @var ContainerInterface; 
      */
-    private $request;
+    private $container;
+    protected $view = 'index';
+    protected $template = 'default';
 
     /**
-     *
-     * @var Response 
+     * @Service(container,$container)
+     * @param ContainerInterface $container
      */
-    private $response;
-
-    /**
-     *
-     * @var string 
-     */
-    private $methodName;
-
-    /**
-     *
-     * @var string 
-     */
-    private $viewName;
-
-    /**
-     *
-     * @var string 
-     */
-    private $viewFileName;
-
-    public function __construct(Request $request, $methodName)
+    public function __construct(ContainerInterface $container)
     {
-        $this->request = $request;
-        $this->response = new Response();
-        $this->methodName = $methodName;
-        $this->viewName = $methodName;
+        $this->container = $container;
     }
 
-    public function getRequest()
+    /**
+     *
+     * @return object
+     */
+    protected function get($id)
     {
-        return $this->request;
+        return $this->container->get($id);
     }
 
-    public function getResponse()
+    /**
+     *
+     * @return Request 
+     */
+    protected function getRequest()
     {
-        $r = new \ReflectionObject($this);
-
-        $moduleDir = dirname(dirname($r->getFileName()));
-        $controllerName = preg_replace('/Controller$/', '', $r->getShortName());
-
-        $viewFileName = $moduleDir . '/View/' . $controllerName . '/' . $this->viewName . '.phtml';
-
-        if (!file_exists($viewFileName)) {
-            throw new \LogicException(sprintf("No existe la Vista <b>%s</b> para el controlador <b>%s</b> en el Módulo <b>%s</b>", basename($viewFileName), $r->getShortName(), basename($moduleDir)));
+        return $this->container->get('request');
+    }
+    
+    protected function setView($view, $template = FALSE)
+    {
+        $this->view = $view;
+        if ($template !== FALSE)
+        {
+            $this->setTemplate($template);
         }
-
-        $varsToView = array();
-        foreach ($r->getProperties(\ReflectionProperty::IS_PUBLIC) as $var) {
-            $varsToView[$var->getName()] = $var->getValue($this);
-        }
-        
-        $this->viewFileName = $viewFileName;
-
-        $this->response->setContent($this->getResponseString($varsToView));
-
-        return $this->response;
     }
-
-    private function getResponseString($vars)
+    
+    protected function setTemplate($template)
     {
-        ob_start();
-        extract($vars, EXTR_OVERWRITE);
-        
-        unset($vars);
-
-        require $this->viewFileName;
-        
-        return ob_get_clean();
+        $this->template = $template;
     }
 
 }

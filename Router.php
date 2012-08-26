@@ -3,7 +3,6 @@
 namespace KumbiaPHP\Kernel;
 
 use KumbiaPHP\Kernel\RouterInterface;
-use KumbiaPHP\Kernel\Request;
 
 /**
  * Description of Router

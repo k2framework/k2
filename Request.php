@@ -49,7 +49,6 @@ class Request
      */
     protected $session;
     private $baseUrl;
-    private $appPath;
     protected $requestUri;
 
     public function __construct()
@@ -78,7 +77,7 @@ class Request
     }
 
     /**
-     *
+     * @Service(session)
      * @param SessionInterface $session 
      */
     public function setSession(SessionInterface $session)
@@ -130,19 +129,6 @@ class Request
     private function createRequestUri()
     {
         return $this->query->get('_uri', '/');
-    }
-
-    public function getAppPath()
-    {
-        if (!$this->appPath) {
-            $this->appPath = $this->createAppPath();
-        }
-        return $this->appPath;
-    }
-
-    private function createAppPath()
-    {
-        return dirname(dirname($this->server->get('SCRIPT_FILENAME'))) . '/app/';
     }
 
 }

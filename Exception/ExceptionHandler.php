@@ -9,11 +9,13 @@ use KumbiaPHP\Kernel\Response;
  *
  * @author manuel
  */
-class ExceptionHandler
-{
+class ExceptionHandler {
 
-    static public function handle(\Exception $e)
-    {
+    static public function handle() {
+        set_exception_handler(array(__CLASS__, 'onException'));
+    }
+
+    public static function onException(\Exception $e) {
         $HTML = sprintf('
 <html>
     <head>
@@ -24,9 +26,9 @@ class ExceptionHandler
         <p>%s<p>
         <p>%s<p>
     </body>
-</html>', basename(get_class($e)), $e->getMessage(), join('<br>',explode('#',$e->getTraceAsString())));
-        
-        $response = new Response($HTML,$e->getCode());
+</html>', basename(get_class($e)), $e->getMessage(), join('<br>', explode('#', $e->getTraceAsString())));
+
+        $response = new Response($HTML, $e->getCode());
         $response->send();
     }
 

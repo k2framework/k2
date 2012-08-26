@@ -14,9 +14,10 @@ class Session implements SessionInterface
 
     protected $namespace;
 
-    public function __construct($namespace)
+    public function __construct($namespace = 'default')
     {
         $this->namespace = $namespace;
+        $this->start();
     }
 
     public function start()
