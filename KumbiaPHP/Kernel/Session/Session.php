@@ -38,7 +38,7 @@ class Session implements SessionInterface
 
     public function has($key)
     {
-        return array_key_exists($key, $_SESSION[$this->namespace]);
+        return isset($_SESSION[$this->namespace]) && array_key_exists($key, $_SESSION[$this->namespace]);
     }
 
     public function set($key, $value)
