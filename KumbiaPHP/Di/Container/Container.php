@@ -101,5 +101,10 @@ class Container implements ContainerInterface
         //y lo agregamos a las definiciones. (solo será a gregado si no existe)
         $this->definitioManager->addService(new Service('container', get_class($object)));
     }
+    
+    public function getDefinitionManager()
+    {
+        return $this->definitioManager;
+    }
 
 }
