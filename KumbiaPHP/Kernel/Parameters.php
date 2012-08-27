@@ -7,7 +7,7 @@ namespace KumbiaPHP\Kernel;
  *
  * @author manuel
  */
-class Parameters
+class Parameters implements \Serializable
 {
 
     protected $params;
@@ -42,9 +42,26 @@ class Parameters
         return count($this->params);
     }
 
+    public function delete($key)
+    {
+        if ($this->has($key)) {
+            unset($this->params[$key]);
+        }
+    }
+
     public function clear()
     {
         $this->params = array();
+    }
+
+    public function serialize()
+    {
+        return serialize($this->params);
+    }
+
+    public function unserialize($serialized)
+    {
+        $this->params = unserialize($serialized);
     }
 
 }
