@@ -1,15 +1,17 @@
 <?php
 
-namespace KumbiaPHP\Template;
+namespace KumbiaPHP\View;
 
 use KumbiaPHP\Kernel\Response;
+use KumbiaPHP\View\ViewContainer;
+use KumbiaPHP\Di\Container\ContainerInterface;
 
 /**
  * Description of Template
  *
  * @author manuel
  */
-class Template
+class View
 {
 
     protected $template;
@@ -17,11 +19,26 @@ class Template
     protected $variables;
     protected $content;
 
+    /**
+     * 
+     * @var ContainerInterface 
+     */
+    private $container;
+
+    /**
+     * @Service(container,$container)
+     * @param ContainerInterface $container 
+     */
+    public function __construct(ContainerInterface $container)
+    {
+        $this->variables['view'] = new ViewContainer($container);
+    }
+
     public function render($template, $view, array $params = array())
     {
         $this->template = $template;
         $this->view = $view;
-        $this->variables = $params;
+        $this->variables = array_merge($params, $this->variables);
 
         return $this->getContent();
     }
@@ -37,7 +54,7 @@ class Template
             }
             ob_start();
             require_once $this->view;
-            $this->content = ob_get_clean();
+            $this->variables['view']->content = $this->content = ob_get_clean();
         }
         if ($this->template !== NULL) {
 
@@ -49,7 +66,7 @@ class Template
             require_once $this->template;
             $this->content = ob_get_clean();
         }
-        
+
         return new Response($this->content);
     }
 

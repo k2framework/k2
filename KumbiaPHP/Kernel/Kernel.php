@@ -104,7 +104,7 @@ abstract class Kernel implements KernelInterface {
             $view = $resolver->getView();
             $template = $resolver->getTemplate();
             $properties = $resolver->getPublicProperties();
-            $response = $this->container->get('template')->render($template, $view, $properties);
+            $response = $this->container->get('view')->render($template, $view, $properties);
         }
 
         //ejecutamos el evento response.
