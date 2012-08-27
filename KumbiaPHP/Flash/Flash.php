@@ -1,6 +1,6 @@
 <?php
 
-namespace Flash;
+namespace KumbiaPHP\Flash;
 
 use KumbiaPHP\Kernel\Session\SessionInterface;
 use KumbiaPHP\Kernel\Parameters;
