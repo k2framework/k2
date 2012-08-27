@@ -52,12 +52,14 @@ class DefinitionManager
         if (!$this->hasService($definition->getId())) {
             $this->services[$definition->getId()] = $definition;
         }
+        return $this;
     }
     public function addParam(DefinitionInterface $param)
     {
         if (!$this->hasParam($param->getId())) {
             $this->parameters[$definition->getId()] = $definition;
         }
+        return $this;
     }
     
     public function getSerivces()
