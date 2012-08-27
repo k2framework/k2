@@ -1,8 +1,8 @@
 <?php
 
-namespace KumbiaPHP\Kernel;
+namespace KumbiaPHP\Kernel\Router;
 
-use KumbiaPHP\Kernel\RouterInterface;
+use KumbiaPHP\Kernel\Router\RouterInterface;
 
 /**
  * Description of Router
