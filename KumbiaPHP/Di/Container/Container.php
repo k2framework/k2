@@ -34,14 +34,29 @@ class Container implements ContainerInterface
      */
     protected $definitioManager;
 
+    /**
+     * Contiene los servicios que se han ido solicitando a partir de un servicio
+     * inicial que depende de otros servicios no creados aun.
+     * 
+     * Por cada solicitud de un servicio no creado, se debe verificar que ese
+     * servicio no esté ya en la cola, porque estariamos en presencia de 
+     * una dependencia circular entre servicios, donde un servicio A depende
+     * de un servicio B que depende del servicio A.
+     * 
+     * @var array 
+     */
+    private $queue;
+
     public function __construct(Di $di, DefinitionManager $dm = NULL)
     {
         $this->services = new Services();
         $this->di = $di;
         $this->definitioManager = $dm ? : new DefinitionManager();
-        
+
+        $this->queue = array();
+
         //agregamos al container como servicio.
-        $this->set('container', $this); 
+        $this->set('container', $this);
     }
 
     public function get($id)
@@ -56,9 +71,22 @@ class Container implements ContainerInterface
             throw new \Exception(sprintf('No existe el servicio <b>%s</b>', $id));
         }
 
+        //si el servicio actual aparece en la cola de servicios
+        //indica que dicho servicio tiene una dependencia a un servicio 
+        //que depende de este, por lo que hay una dependencia circular.
+        if (in_array($id, $this->queue)) {
+            throw new \Exception('Se ha Detectado una Dependencia Circular entre Servicios');
+        }
+
+        array_push($this->queue, $id); //agregamos el $id del servicio a la cola de servicios
+
         $serviceClass = $this->definitioManager->getService($id)->getClassName();
 
         $this->set($id, $this->di->newInstance($serviceClass, $this));
+        
+        //antes de devolver la instancia creada, quitamos el id
+        //de la cola de servicios.
+        array_shift($this->queue); 
         return $this->services->get($id);
     }
 
