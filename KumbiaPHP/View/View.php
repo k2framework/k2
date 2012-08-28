@@ -34,16 +34,16 @@ class View
         $this->variables['view'] = new ViewContainer($container);
     }
 
-    public function render($template, $view, array $params = array())
+    public function render($template, $view, array $params = array(), Response $response = NULL)
     {
         $this->template = $template;
         $this->view = $view;
         $this->variables = array_merge($params, $this->variables);
 
-        return $this->getContent();
+        return $this->getContent($response);
     }
 
-    protected function getContent()
+    protected function getContent(Response $response)
     {
         extract($this->variables, EXTR_OVERWRITE);
         //si va a mostrar vista
@@ -65,6 +65,11 @@ class View
             $content = $this->content;
             require_once $this->template;
             $this->content = ob_get_clean();
+        }
+
+        if ($response instanceof Response) {
+            $response->setContent($this->content);
+            return $response;
         }
 
         return new Response($this->content);
