@@ -41,17 +41,23 @@ class DependencyInjection implements DependencyInjectionInterface
 
     public function newInstance($id, $className)
     {
-        if (is_string($className)) {
+        $reader = new AnnotationReader($className);
+        $services = $reader->getServices();
 
-            $reader = new AnnotationReader($className);
-            $services = $reader->getServices();
-            $class = $reader->getClass();
-            //
-        } elseif (!$className instanceof \ReflectionClass) {
-            throw new \Exception("Tipo inesperado para el metodo newInstance del Inyector de Dependencias");
-        }
+        $class = $reader->getClass();
 
-        return $this->createInstance($id, $class);
+        $arguments = $this->getArgumentsFromConstruct($id, $class, $services);
+
+        $instance = $class->newInstanceArgs($arguments);
+
+        //agregamos la instancia del objeto al contenedor.
+        $this->container->set($id, $instance);
+
+        $this->injectObjectIntoServicesQueue();
+
+        $this->setOtherServices($id, $instance, $services);
+
+        return $instance;
     }
 
     protected function getArgumentsFromConstruct($id, \ReflectionClass $class, array $services = array())
@@ -59,9 +65,7 @@ class DependencyInjection implements DependencyInjectionInterface
         $args = array();
         //lo agregamos a la cola hasta que se creen los servicios del
         //que depende
-        if (!$this->isQueue) {
-            $this->addToQueue($id);
-        }
+        $this->addToQueue($id, $class->getName());
         if (isset($services['__construct']) && count($services['__construct'])) {
             foreach ($class->getConstructor()->getParameters() as $param) {
                 if (isset($services['__construct'][$param->getName()])) {
@@ -88,27 +92,8 @@ class DependencyInjection implements DependencyInjectionInterface
         unset($services['__construct']);
 
         foreach ($services as $method => $service_id) {
-            var_dump("inyectando el servicio $service_id en $id");
             $object->$method($this->container->get($service_id));
         }
-    }
-
-    protected function createInstance($id, \ReflectionClass $class)
-    {
-        $arguments = $this->getArgumentsFromConstruct($id, $class, $services);
-
-        $instance = $class->newInstanceArgs($argsConstruct);
-
-        //agregamos la instancia del objeto al contenedor.
-        $this->container->set($id, $instance);
-
-        $this->injectObjectIntoServicesQueue();
-
-        $this->setOtherServices($id, $instance, $services);
-
-        $this->isQueue = FALSE;
-
-        return $instance;
     }
 
     protected function injectObjectIntoServicesQueue()
@@ -125,24 +110,21 @@ class DependencyInjection implements DependencyInjectionInterface
         return isset($this->queue[$id]);
     }
 
-    protected function addToQueue($id, \ReflectionClass $class)
+    protected function addToQueue($id, $className)
     {
-        var_dump("a la cola $id", $this->queue);
         //si el servicio actual aparece en la cola de servicios
         //indica que dicho servicio tiene una dependencia a un servicio 
         //que depende de este, por lo que hay una dependencia circular.
-        if ($this->inQueue($id)) {
-            var_dump("problema con servicio $id", $this->queue);
-            throw new \Exception("Se ha Detectado una Dependencia Circular entre Servicios $id");
+        if (!$this->isQueue && $this->inQueue($id)) {
+            throw new \Exception("Se ha Detectado una Dependencia Circular entre Servicios");
         }
-        $this->queue[$id] = $class;
+        $this->queue[$id] = $className;
     }
 
     protected function removeToQueue($id)
     {
         if ($this->inQueue($id)) {
             unset($this->queue[$id]);
-            var_dump("fuera de la cola $id", $this->queue);
         }
     }
 
