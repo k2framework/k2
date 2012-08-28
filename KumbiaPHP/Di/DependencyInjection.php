@@ -47,6 +47,12 @@ class DependencyInjection implements DependencyInjectionInterface
         $class = $reader->getClass();
 
         $arguments = $this->getArgumentsFromConstruct($id, $class, $services);
+        
+        //verificamos si ya se creó una instancia en una retrollamada del
+        //metodo injectObjectIntoServicesQueue
+        if ( $this->container->has($id) ){
+            return $this->container->get($id);
+        }
 
         $instance = $class->newInstanceArgs($arguments);
 
@@ -96,6 +102,14 @@ class DependencyInjection implements DependencyInjectionInterface
         }
     }
 
+    /**
+     * Inyecta el servicio recien creado en los servicios que lo están
+     * solicitando.
+     * 
+     * Debe activarse el semaforo isQueue para avisar al inyector
+     * de que ya existe el servicio en la cola y que no debe volver a ser
+     * agregado. 
+     */
     protected function injectObjectIntoServicesQueue()
     {
         $this->isQueue = TRUE;
