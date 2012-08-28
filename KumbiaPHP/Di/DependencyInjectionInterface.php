@@ -2,7 +2,7 @@
 
 namespace KumbiaPHP\Di;
 
-use KumbiaPHP\Di\Container\ContainerInterface;
+use KumbiaPHP\Di\Container\Container;
 
 /**
  * 
@@ -11,5 +11,7 @@ use KumbiaPHP\Di\Container\ContainerInterface;
 interface DependencyInjectionInterface
 {
 
-    public function newInstance($class, ContainerInterface $container);
+    public function newInstance($id, $className);
+
+    public function setContainer(Container $container);
 }
