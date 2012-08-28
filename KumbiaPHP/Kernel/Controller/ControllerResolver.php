@@ -2,8 +2,7 @@
 
 namespace KumbiaPHP\Kernel\Controller;
 
-use KumbiaPHP\Kernel\KernelInterface;
-use KumbiaPHP\Kernel\Request;
+use KumbiaPHP\Di\Container\ContainerInterface;
 use KumbiaPHP\Kernel\Exception\NotFoundException;
 use KumbiaPHP\Kernel\Controller\Controller;
 
@@ -15,56 +14,58 @@ use KumbiaPHP\Kernel\Controller\Controller;
 class ControllerResolver
 {
 
-    protected $kernel;
-    protected $modulesPath;
+    /**
+     *
+     * @var AppContext 
+     */
+    protected $container;
     protected $module;
     protected $controller;
     protected $contShortName;
     protected $action;
 
-    function __construct(KernelInterface $kernel)
+    function __construct(ContainerInterface $con)
     {
-        $this->kernel = $kernel;
-        $this->modulesPath = $this->kernel->getAppPath() . 'modules/';
+        $this->container = $con;
     }
 
     public function getController()
     {
         $controllerFound = FALSE;
-        $module = $this->kernel->getDefaultModule();
-        $controller = $this->kernel->getDefaultController();
-        $action = $this->kernel->getDefaultAction();
+        $module = 'Home';
+        $controller = 'Index';
+        $action = 'index';
         $params = array();
 
-        $uri = explode('/', trim($this->kernel->getRequest()->getRequestUri(), '/'));
+        $url = explode('/', trim($this->container->get('app.context')->getCurrentUrl(), '/'));
 
         //primero obtengo el modulo.
-        if (current($uri)) {
-            if (array_key_exists(current($uri), $this->kernel->getModules())) {
+        if (current($url)) {
+            if (array_key_exists(current($url), $this->container->get('app.context')->getNamespaces())) {
                 //si concuerda con un modulo, es un modulo.
-                $module = current($uri);
-                next($uri);
-            } elseif (!$this->isController($module, $this->camelcase(current($uri)))) {
+                $module = current($url);
+                next($url);
+            } elseif (!$this->isController($module, $this->camelcase(current($url)))) {
                 //si no es ni modulo ni controller, lanzo la excepcion.
-                throw new NotFoundException(sprintf("El primer patron de la Ruta <b>%s</b> No Coincide con ningun Módulo", current($uri)), 404);
+                throw new NotFoundException(sprintf("El primer patron de la Ruta <b>%s</b> No Coincide con ningun Módulo", current($url)), 404);
             }
         }
         //ahora obtengo el controlador
-        if (current($uri)) {
-            $controller = $this->camelcase(current($uri));
+        if (current($url)) {
+            $controller = $this->camelcase(current($url));
             if (!$this->isController($module, $controller)) {
                 throw new NotFoundException(sprintf("El controlador <b>%s</b> para el Módulo <b>%s</b> no Existe", $controller, $module), 404);
             }
-            next($uri);
+            next($url);
         }
         //luego obtenemos la acción
-        if (current($uri)) {
-            $action = $this->camelcase(current($uri), TRUE);
-            next($uri);
+        if (current($url)) {
+            $action = $this->camelcase(current($url), TRUE);
+            next($url);
         }
         //por ultimo los parametros
-        if (current($uri)) {
-            $params = array_slice($uri, key($uri));
+        if (current($url)) {
+            $params = array_slice($url, key($url));
         }
 
         $this->module = $module;
@@ -95,21 +96,18 @@ class ControllerResolver
 
     protected function isController($module, $controller)
     {
-        $modules = $this->kernel->getModules();
-        $path = rtrim($modules[$module], '/'); // . '/' . $module;
-        //var_dump("{$path}/Controller/{$controller}Controller.php");die;
+        $namespaces = $this->container->get('app.context')->getNamespaces();
+        $path = rtrim($namespaces[$module], '/');
         return is_file("{$path}/Controller/{$controller}Controller.php");
     }
 
     protected function createController($module, $controller, $action, $params)
     {
-        $modules = $this->kernel->getModules();
-        $path = rtrim($modules[$module], '/'); // . '/' . $module;
-        $path = rtrim(substr($path, strlen($this->modulesPath)), '/');
+        $path = $module . '/';
         $controllerName = $controller . 'Controller';
-        $controllerClass = str_replace('/', '\\', $path . '/Controller/') . $controllerName;
+        $controllerClass = str_replace('/', '\\', $path . 'Controller/') . $controllerName;
 
-        $this->controller = new $controllerClass($this->kernel->getContainer());
+        $this->controller = new $controllerClass($this->container);
 
         if (!$this->controller instanceof \KumbiaPHP\Kernel\Controller\Controller) {
             throw new NotFoundException(sprintf("El controlador <b>%s</b> debe extender de <b>%s</b>", $controllerName, 'KumbiaPHP\\Kernel\\Controller\\Controller'), 404);
@@ -164,15 +162,15 @@ class ControllerResolver
             return NULL;
         }
 
-        $dirTemplatesApp = $this->kernel->getAppPath() . 'view/templates/';
+        $dirTemplatesApp = $this->container->get('app.context')->getAppPath() . 'view/templates/';
 
         return $dirTemplatesApp . $template . '.phtml';
     }
 
     public function getModulePath()
     {
-        $modules = $this->kernel->getModules();
-        return $modules[$this->module];
+        $namespaces = $this->container->get('app.context')->getNamespaces();
+        return rtrim($namespaces[$this->module] . '/') . '/' . $this->module ;
     }
 
     protected function getParamValue($propertie)

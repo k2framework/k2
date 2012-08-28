@@ -2,7 +2,7 @@
 
 namespace KumbiaPHP\Kernel\Config;
 
-use KumbiaPHP\Kernel\Kernel;
+use KumbiaPHP\Kernel\AppContext;
 use KumbiaPHP\Kernel\Parameters;
 
 /**
@@ -18,11 +18,16 @@ class ConfigContainer
      * @var Parameters 
      */
     protected $configs;
-    protected $kernel;
 
-    public function __construct(Kernel $kernel)
+    /**
+     *
+     * @var AppContext 
+     */
+    protected $app;
+
+    public function __construct(AppContext $app)
     {
-        $this->kernel = $kernel;
+        $this->app = $app;
         $this->configs = new Parameters();
 
         $this->init();
@@ -31,12 +36,12 @@ class ConfigContainer
     protected function init()
     {
         //obtengo la configuracion general de la App.
-        $iniApp = $this->kernel->getAppPath() . 'config/config.ini';
+        $iniApp = $this->app->getAppPath() . 'config/config.ini';
         $this->configs->set('_default', parse_ini_file($iniApp, TRUE));
-        foreach (array_unique($this->kernel->getModules()) as $moduleName => $moduleDir) {
-            $file = rtrim($moduleDir, '/') . '/config.ini';
+        foreach (array_unique($this->app->getNamespaces()) as $namespace => $dir) {
+            $file = rtrim($dir, '/') . '/' . $namespace . '/config.ini';
             if (is_file($file)) {
-                $this->configs->set($moduleName, parse_ini_file($file, TRUE));
+                $this->configs->set($namespace, parse_ini_file($file, TRUE));
             }
         }
     }

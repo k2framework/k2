@@ -2,6 +2,8 @@
 
 namespace KumbiaPHP\Kernel;
 
+use KumbiaPHP\Kernel\Request;
+
 /**
  * Description of RouteContext
  *
@@ -12,13 +14,18 @@ class AppContext
 
     protected $baseUrl;
     protected $appPath;
-    protected $modulesDir;
-    protected $currentModule;
+    protected $moduleDir;
+    protected $namespaces;
     protected $currentUrl;
+    protected $currentModule;
 
-    public function __construct()
+    public function __construct(Request $request, $appPath, $namespaces)
     {
-        
+        $this->baseUrl = $request->getBaseUrl();
+        $this->appPath = $appPath;
+        $this->currentUrl = $request->get('_url');
+        $this->moduleDir = $appPath . '/modules/';
+        $this->namespaces = $namespaces;
     }
 
     public function getBaseUrl()
@@ -26,39 +33,9 @@ class AppContext
         return $this->baseUrl;
     }
 
-    public function setBaseUrl($baseUrl)
-    {
-        $this->baseUrl = $baseUrl;
-    }
-
     public function getAppPath()
     {
         return $this->appPath;
-    }
-
-    public function setAppPath($appPath)
-    {
-        $this->appPath = $appPath;
-    }
-
-    public function getModulesDir()
-    {
-        return $this->modulesDir;
-    }
-
-    public function setModulesDir($modulesDir)
-    {
-        $this->modulesDir = $modulesDir;
-    }
-
-    public function getCurrentModule()
-    {
-        return $this->currentModule;
-    }
-
-    public function setCurrentModule($currentModule)
-    {
-        $this->currentModule = $currentModule;
     }
 
     public function getCurrentUrl()
@@ -66,9 +43,14 @@ class AppContext
         return $this->currentUrl;
     }
 
-    public function setCurrentUrl($currentUrl)
+    public function getModuleDir()
     {
-        $this->currentUrl = $currentUrl;
+        return $this->moduleDir;
+    }
+
+    public function getNamespaces()
+    {
+        return $this->namespaces;
     }
 
 }
