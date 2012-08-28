@@ -43,7 +43,7 @@ class View
         return $this->getContent($response);
     }
 
-    protected function getContent(Response $response)
+    protected function getContent(Response $response = NULL)
     {
         extract($this->variables, EXTR_OVERWRITE);
         //si va a mostrar vista
