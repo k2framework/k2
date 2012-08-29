@@ -60,6 +60,7 @@ class ControllerResolver
             if (!$this->isController($module, current($url))) {
                 throw new NotFoundException(sprintf("El controlador <b>%sController</b> para el Módulo <b>%s</b> no Existe", $controller, $module), 404);
             }
+            $controller = $this->camelcase(current($url));
             next($url);
         }
         //luego obtenemos la acción
@@ -129,9 +130,18 @@ class ControllerResolver
             $this->controller = $reflectionClass->newInstance();
         }
 
-//        if (!$this->controller instanceof \KumbiaPHP\Kernel\Controller\Controller) {
-//            throw new NotFoundException(sprintf("El controlador <b>%s</b> debe extender de <b>%s</b>", $controllerName, 'KumbiaPHP\\Kernel\\Controller\\Controller'), 404);
-//        }
+        if ($reflectionClass->hasProperty('limitParams')) {
+            $limitParams = $reflectionClass->getProperty('limitParams');
+            $limitParams->setAccessible(true);
+            $limitParams = $limitParams->getValue($this->controller);
+        }
+
+        if ($reflectionClass->hasProperty('parameters')) {
+            $parameters = $reflectionClass->getProperty('parameters');
+            $parameters->setAccessible(true);
+            $parameters->setValue($this->controller, $params);
+        }
+
         //verificamos la existencia del metodo.
         if (!$reflectionClass->hasMethod($action)) {
             throw new NotFoundException(sprintf("No exite el metodo <b>%s</b> en el controlador <b>%s</b>", $action, $controllerName), 404);
@@ -166,14 +176,10 @@ class ControllerResolver
         /**
          * Verificamos que los parametros coincidan 
          */
-        if (count($params) < $reflectionMethod->getNumberOfRequiredParameters() ||
-                count($params) > $reflectionMethod->getNumberOfParameters()) {
+        if ($limitParams && (count($params) < $reflectionMethod->getNumberOfRequiredParameters() ||
+                count($params) > $reflectionMethod->getNumberOfParameters())) {
 
-//            if ($reflectionClass->isSubclassOf('\\KumbiaPHP\\Kernel\\Controller\\Controller')) {
             throw new NotFoundException(sprintf("Número de parámetros erróneo para ejecutar la acción <b>%s</b> en el controlador <b>%s</b>", $action, $controllerName), 404);
-//            } else {
-//                
-//            }
         }
 
         return array($this->controller, $action, $params);
