@@ -5,6 +5,7 @@ namespace KumbiaPHP\Kernel\Controller;
 use KumbiaPHP\Di\Container\ContainerInterface;
 use KumbiaPHP\Kernel\Exception\NotFoundException;
 use \ReflectionClass;
+use \ReflectionObject;
 
 /**
  * Description of ControllerResolver
@@ -154,6 +155,10 @@ class ControllerResolver
             throw new NotFoundException(sprintf("Se está intentando ejecutar el constructor del controlador como una acción, en el controlador <b>%s</b>", $controllerName), 404);
         }
 
+        if (in_array($action, array('beforeFilter', 'afterFilter'))) {
+            throw new NotFoundException(sprintf("Se está intentando ejecutar el filtro <b>%s</b> del controlador <b>%s</b>", $action, $controllerName), 404);
+        }
+
         //el nombre del metodo debe ser exactamente igual al camelCase
         //de la porcion de url
         if ($reflectionMethod->getName() !== $action) {
@@ -181,8 +186,24 @@ class ControllerResolver
 
             throw new NotFoundException(sprintf("Número de parámetros erróneo para ejecutar la acción <b>%s</b> en el controlador <b>%s</b>", $action, $controllerName), 404);
         }
-
+        
         return array($this->controller, $action, $params);
+    }
+
+    public function executeAction($action, $arguments)
+    {
+        $reflectionObject = new ReflectionObject($this->controller);
+        if ($reflectionObject->hasMethod('beforeFilter')) {
+            $this->controller->beforeFilter();
+        }
+
+        $response = call_user_func_array(array($this->controller, $action), $arguments);
+
+        if ($reflectionObject->hasMethod('afterFilter')) {
+            $this->controller->afterFilter();
+        }
+
+        return $response;
     }
 
     public function getPublicProperties()
@@ -190,12 +211,14 @@ class ControllerResolver
         return get_object_vars($this->controller);
     }
 
-    public function getView()
+    public function getView($action)
     {
         $view = $this->getParamValue('view');
 
-        if ($view === NULL) {
-            return NULL;
+        if ($view == NULL) {
+            //si no se estableció una vista,
+            //retorna el mismo nombre de la acción
+            return $action;
         }
         return $this->getModulePath() . '/View/' . $this->contShortName . '/' . $view . '.phtml';
     }

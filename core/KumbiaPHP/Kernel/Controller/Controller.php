@@ -19,7 +19,7 @@ class Controller
      * @var ContainerInterface; 
      */
     protected $container;
-    protected $view = 'index';
+    protected $view;
     protected $template = 'default';
     protected $limitParams = TRUE;
     protected $parameters;

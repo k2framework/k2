@@ -11,10 +11,14 @@ use KumbiaPHP\Kernel\Controller\Controller;
  */
 class IndexController extends Controller
 {
-
     public function index()
     {
         
+    }
+
+    public function otro()
+    {
+        return new \KumbiaPHP\Kernel\Response("<html><body>Mi Respuesta</body></html>");
     }
 
 }

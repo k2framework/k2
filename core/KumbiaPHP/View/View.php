@@ -50,7 +50,7 @@ class View
         if ($this->view !== NULL) {
 
             if (!file_exists($this->view)) {
-                throw new \LogicException(sprintf("No existe la Vista <b>%s</b>", basename($this->view)));
+                throw new \LogicException(sprintf("No existe la Vista <b>%s.phtml</b>", basename($this->view)));
             }
             ob_start();
             require_once $this->view;
@@ -59,7 +59,7 @@ class View
         if ($this->template !== NULL) {
 
             if (!file_exists($this->template)) {
-                throw new \LogicException(sprintf("No existe El Template <b>%s</b>", basename($this->template)));
+                throw new \LogicException(sprintf("No existe El Template <b>%s.phtml</b>", basename($this->template)));
             }
             ob_start();
             $content = $this->content;
