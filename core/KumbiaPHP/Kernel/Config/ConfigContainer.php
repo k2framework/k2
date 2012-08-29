@@ -90,7 +90,7 @@ class ConfigContainer
         $this->configs = new Parameters(array(
                     'config' => $configsSection,
                     'services' => $servicesSection,
-                    'listener' => $listenersSection,
+                    'listeners' => $listenersSection,
                     'parameters' => $parametersSection,
                 ));
     }

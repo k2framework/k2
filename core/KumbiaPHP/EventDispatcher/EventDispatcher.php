@@ -3,6 +3,7 @@
 namespace KumbiaPHP\EventDispatcher;
 
 use KumbiaPHP\EventDispatcher\EventDispatcherInterface;
+use KumbiaPHP\Di\Container\ContainerInterface;
 
 /**
  * Description of EventDispatcher
@@ -13,6 +14,17 @@ class EventDispatcher implements EventDispatcherInterface
 {
 
     protected $listeners = array();
+
+    /**
+     *
+     * @var ContainerInterface 
+     */
+    protected $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
 
     public function dispatch($eventName, Event $event)
     {
@@ -39,7 +51,11 @@ class EventDispatcher implements EventDispatcherInterface
 
     public function hasListenerr($eventName, $listener)
     {
-        return in_array($listener, $this->listeners[$eventName]);
+        if (isset($this->listeners[$eventName])) {
+            return in_array($listener, $this->listeners[$eventName]);
+        } else {
+            return FALSE;
+        }
     }
 
     public function removeListener($eventName, $listener)

@@ -52,6 +52,11 @@ abstract class Kernel implements KernelInterface
     protected $request;
 
     /**
+     *  @var EventDispatcher
+     */
+    protected $dispatcher;
+
+    /**
      *
      * @var boolean 
      */
@@ -80,9 +85,19 @@ abstract class Kernel implements KernelInterface
             ExceptionHandler::handle();
         }
 
+        //creamos la instancia del AppContext
+        $context = new AppContext($this->request, $this->getAppPath(), $this->namespaces);
+
+        $config = new ConfigContainer($context);
+        $config->compile();
+
         $this->getDefaultModule();
 
-        $this->initContainer();
+        $this->initContainer($config->getConfig());
+
+        $this->container->set('app.context', $context);
+
+        $this->initDispatcher($config->getConfig());
     }
 
     //put your code here
@@ -97,10 +112,8 @@ abstract class Kernel implements KernelInterface
         //agregamos el request al container
         $this->container->set('request', $request);
 
-        $dispatcher = new EventDispatcher();
-
         //ejecutamos el evento request
-        $dispatcher->dispatch(KumbiaEvents::REQUEST, new RequestEvent($request));
+        $this->dispatcher->dispatch(KumbiaEvents::REQUEST, new RequestEvent($request));
 
         $resolver = new ControllerResolver($this->container);
 
@@ -109,7 +122,7 @@ abstract class Kernel implements KernelInterface
         list($controller, $action, $params) = $resolver->getController($request);
 
         //ejecutamos el evento controller.
-        $dispatcher
+        $this->dispatcher
                 ->dispatch(KumbiaEvents::CONTROLLER, new ControllerEvent($request, array($controller, $action)));
 
         //ejecutamos la acción de controlador pasandole los parametros.
@@ -136,7 +149,7 @@ abstract class Kernel implements KernelInterface
         }
 
         //ejecutamos el evento response.
-        $dispatcher->dispatch(KumbiaEvents::RESPONSE, new ResponseEvent($request, $response));
+        $this->dispatcher->dispatch(KumbiaEvents::RESPONSE, new ResponseEvent($request, $response));
 
         //retornamos la respuesta
         return $response;
@@ -186,28 +199,37 @@ abstract class Kernel implements KernelInterface
     /**
      * Esta función inicializa el contenedor de servicios.
      */
-    protected function initContainer()
+    protected function initContainer(Parameters $config)
     {
-        //creamos la instancia del AppContext
-        $context = new AppContext($this->request, $this->getAppPath(), $this->namespaces);
 
-        $config = new ConfigContainer($context);
-        $config->compile();
 
         $definitions = new DefinitionManager();
 
-        foreach ($config->getConfig()->get('services')->all() as $id => $class) {
+        foreach ($config->get('services')->all() as $id => $class) {
             $definitions->addService(new \KumbiaPHP\Di\Definition\Service($id, $class));
         }
 
-        foreach ($config->getConfig()->get('parameters')->all() as $id => $value) {
+        foreach ($config->get('parameters')->all() as $id => $value) {
             $definitions->addParam(new \KumbiaPHP\Di\Definition\Parameter($id, $value));
         }
 
         $this->di = new DependencyInjection();
 
         $this->container = new Container($this->di, $definitions);
-        $this->container->set('app.context', $context);
+    }
+
+    protected function initDispatcher(Parameters $config)
+    {
+        $this->dispatcher = new EventDispatcher($this->container);
+        foreach ($config->get('listeners')->all() as $service => $params) {
+            if ($config->get('services')->has($service)) {
+                foreach ($params as $method => $event) {
+                    $this->dispatcher->addListenerr($event, array($service, $method));
+                }
+            }else{
+                throw new \LogicException("Se ha definido el escucha <b>$service</b> pero este no es un Servicio");
+            }
+        }
     }
 
 }
