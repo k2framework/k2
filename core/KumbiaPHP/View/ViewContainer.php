@@ -25,7 +25,9 @@ class ViewContainer implements ArrayAccess
     public function __construct(Container $container)
     {
         $container->getDefinitionManager()
-                ->addService(new Service('form','KumbiaPHP\\View\\Helper\\Form'));
+                ->addService(new Service('html','KumbiaPHP\\View\\Helper\\Html'))
+                ->addService(new Service('form','KumbiaPHP\\View\\Helper\\Form'))
+                ->addService(new Service('tag','KumbiaPHP\\View\\Helper\\Tag'));
         $this->container = $container;
     }
 

@@ -2,11 +2,15 @@
 <html>
     <head>
         <title>Título de la Pagina</title>
+        <?php $view['tag']->css('css/bienvenida') ?>
+        <?php $view['tag']->css('css/style') ?>
+        <?php echo $view['tag']->includeCss() ?>
     </head>
     <body>
         <?php echo $view ?>
         <footer>
             Pie de pagina
         </footer>
+        <?php echo $view['tag']->includeJs() ?>
     </body>
 </html>
