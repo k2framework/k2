@@ -21,6 +21,8 @@ class Controller
     private $container;
     protected $view = 'index';
     protected $template = 'default';
+    protected $limitParams = TRUE;
+    protected $parameters;
 
     /**
      * @Service(container,$container)
