@@ -49,21 +49,21 @@ class View
         //si va a mostrar vista
         if ($this->view !== NULL) {
 
-            if (!file_exists($this->view)) {
+            if (!file_exists($this->view . '.phtml')) {
                 throw new \LogicException(sprintf("No existe la Vista <b>%s.phtml</b>", basename($this->view)));
             }
             ob_start();
-            require_once $this->view;
+            require_once $this->view . '.phtml';
             $this->variables['view']->content = $this->content = ob_get_clean();
         }
         if ($this->template !== NULL) {
 
-            if (!file_exists($this->template)) {
+            if (!file_exists($this->template . '.phtml')) {
                 throw new \LogicException(sprintf("No existe El Template <b>%s.phtml</b>", basename($this->template)));
             }
             ob_start();
             $content = $this->content;
-            require_once $this->template;
+            require_once $this->template . '.phtml';
             $this->content = ob_get_clean();
         }
 

@@ -42,17 +42,22 @@ class ControllerResolver
 
         //primero obtengo el modulo ó controlador.
         if (current($url)) {
-            //verifico la existencia del patron de la url en los modulos
-            if (array_key_exists($this->camelcase(current($url)), $this->container
-                                    ->get('app.context')->getModules())) {
-                //si concuerda con un algun indice, es un modulo.
-                $module = $this->camelcase(current($url));
-                next($url);
+            //si la url comienza con index, asumimos que estamos en el modulo
+            //por defecto index, ya que este nunca debe colocarse en la URL.
+            //y estaremos solicitando el controlador Index del modulo Index
+            if ($this->camelcase(current($url)) !== 'Index') {
+                //verifico la existencia del patron de la url en los modulos
+                if (array_key_exists($this->camelcase(current($url)), $this->container
+                                        ->get('app.context')->getModules())) {
+                    //si concuerda con un algun indice, es un modulo.
+                    $module = $this->camelcase(current($url));
+                    next($url);
 
-                //si no es un modulo, verificamos que sea un controlador.
-            } elseif (!$this->isController($this->camelcase($module), current($url))) {
-                //si no es ni modulo ni controller, lanzo la excepcion.
-                throw new NotFoundException(sprintf("El primer patron de la Ruta <b>%s</b> No Coincide con ningun Módulo ni Controlador", current($url)), 404);
+                    //si no es un modulo, verificamos que sea un controlador.
+                } elseif (!$this->isController($this->camelcase($module), current($url))) {
+                    //si no es ni modulo ni controller, lanzo la excepcion.
+                    throw new NotFoundException(sprintf("El primer patron de la Ruta <b>%s</b> No Coincide con ningun Módulo ni Controlador", current($url)), 404);
+                }
             }
         }
         //ahora obtengo el controlador
@@ -135,8 +140,8 @@ class ControllerResolver
             $limitParams = $reflectionClass->getProperty('limitParams');
             $limitParams->setAccessible(true);
             $limitParams = $limitParams->getValue($this->controller);
-        }else{
-            $limitParams = TRUE;//por defeto siempre limita los parametro
+        } else {
+            $limitParams = TRUE; //por defeto siempre limita los parametro
         }
 
         if ($reflectionClass->hasProperty('parameters')) {
@@ -188,7 +193,7 @@ class ControllerResolver
 
             throw new NotFoundException(sprintf("Número de parámetros erróneo para ejecutar la acción <b>%s</b> en el controlador <b>%s</b>", $action, $controllerName), 404);
         }
-        
+
         return array($this->controller, $action, $params);
     }
 
@@ -220,9 +225,9 @@ class ControllerResolver
         if ($view == NULL) {
             //si no se estableció una vista,
             //retorna el mismo nombre de la acción
-            return $action;
+            $view = $action;
         }
-        return $this->getModulePath() . '/View/' . $this->contShortName . '/' . $view . '.phtml';
+        return $this->getModulePath() . '/View/' . $this->contShortName . '/' . $view;
     }
 
     public function getTemplate()
@@ -235,7 +240,7 @@ class ControllerResolver
 
         $dirTemplatesApp = $this->container->get('app.context')->getAppPath() . 'view/templates/';
 
-        return $dirTemplatesApp . $template . '.phtml';
+        return $dirTemplatesApp . $template ;
     }
 
     public function getModulePath()
