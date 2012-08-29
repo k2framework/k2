@@ -9,17 +9,14 @@ use KumbiaPHP\Kernel\Controller\Controller;
  *
  * @author manuel
  */
-class IndexController extends Controller
+class PagesController extends Controller
 {
 
-    public function index(\KumbiaPHP\Kernel\Request $request,$param = NULL)
-    {                
-        //return new \KumbiaPHP\Kernel\Response($request->getRequestUri() . "  <br/> $param");
-    }
+    protected $limitParams = FALSE;
 
-    public function accion2()
+    public function show()
     {
-        $this->get('otro_servicio')->mensaje($this->get("flash")->get("error"));
+        $this->setView(implode('/', $this->parameters));
     }
 
 }
