@@ -13,19 +13,11 @@ use KumbiaPHP\Kernel\Kernel;
 class AppKernel extends Kernel
 {
 
-    //put your code here
     protected function registerNamespaces()
     {
         return array(
             'KumbiaPHP' => __DIR__ . '/../../core/',
             'Index' => __DIR__ . '/modules/',
-        );
-    }
-
-    protected function registerModules()
-    {
-        return array(
-            //'Nuevos' => __DIR__ . '/modules/Usuarios/Clientes/',
         );
     }
 

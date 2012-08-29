@@ -3,6 +3,7 @@
 namespace Index\Services;
 
 use Index\Services\ServicioDependiente;
+use KumbiaPHP\Kernel\Event\RequestEvent;
 
 /**
  * Description of Servicio
@@ -28,4 +29,7 @@ class Servicio
         echo '<p>', $string, '</p>';
     }
 
+    public function onKernelRequest(RequestEvent $event){
+        //var_dump($event->getRequest()->getBaseUrl());
+    }
 }

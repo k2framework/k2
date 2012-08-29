@@ -30,7 +30,6 @@ Autoload::register();
 abstract class Kernel implements KernelInterface
 {
 
-    protected $modules;
     protected $namespaces;
 
     /**
@@ -73,7 +72,6 @@ abstract class Kernel implements KernelInterface
 
     protected function init()
     {
-        $this->modules = $this->registerModules();
         $this->namespaces = $this->registerNamespaces();
 
         if ($this->production) {
@@ -90,8 +88,6 @@ abstract class Kernel implements KernelInterface
 
         $config = new ConfigContainer($context);
         $config->compile();
-
-        $this->getDefaultModule();
 
         $this->initContainer($config->getConfig());
 
@@ -115,7 +111,7 @@ abstract class Kernel implements KernelInterface
         //ejecutamos el evento request
         $this->dispatcher->dispatch(KumbiaEvents::REQUEST, new RequestEvent($request));
 
-        $resolver = new ControllerResolver($this->container);
+            $resolver = new ControllerResolver($this->container);
 
         //obtenemos la instancia del controlador, el nombre de la accion
         //a ejecutar, y los parametros que recibirá dicha acción
@@ -123,8 +119,7 @@ abstract class Kernel implements KernelInterface
 
         //ejecutamos el evento controller.
         $this->dispatcher
-                ->dispatch(KumbiaEvents::CONTROLLER, new ControllerEvent($request, array($controller, $action)));
-
+               ->dispatch(KumbiaEvents::CONTROLLER, new ControllerEvent($request, array($controller, $action)));
         //ejecutamos la acción de controlador pasandole los parametros.
         $response = $resolver->executeAction($action, $params);
 
@@ -150,45 +145,11 @@ abstract class Kernel implements KernelInterface
 
         //ejecutamos el evento response.
         $this->dispatcher->dispatch(KumbiaEvents::RESPONSE, new ResponseEvent($request, $response));
-
         //retornamos la respuesta
         return $response;
     }
 
-    abstract protected function registerModules();
-
     abstract protected function registerNamespaces();
-
-    protected function getModules()
-    {
-        return $this->modules;
-    }
-
-    public function getModulesAutoload()
-    {
-        $modules = array();
-        $mods = array_merge($this->registerModules(), $this->namespaces);
-        foreach ($mods as $module => $path) {
-            $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
-            $path = explode('/', $path);
-            array_pop($path); //quito el ultimo elemento que es la carpeta del modulo
-            $modules[$module] = join('/', $path);
-        }
-        return $modules;
-    }
-
-    /**
-     * Devuleve el nombre modulo a cargar por defecto si no 
-     * se especifica nada en la URL.
-     * 
-     * Ese modulo será el que esté de primero en la lista de modulos cargados.
-     * 
-     * @return string 
-     */
-    protected function getDefaultModule()
-    {
-        return key($this->modules);
-    }
 
     private function getAppPath()
     {
@@ -226,7 +187,7 @@ abstract class Kernel implements KernelInterface
                 foreach ($params as $method => $event) {
                     $this->dispatcher->addListenerr($event, array($service, $method));
                 }
-            }else{
+            } else {
                 throw new \LogicException("Se ha definido el escucha <b>$service</b> pero este no es un Servicio");
             }
         }
