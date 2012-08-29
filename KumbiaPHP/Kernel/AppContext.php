@@ -17,6 +17,7 @@ class AppContext
     protected $moduleDir;
     protected $namespaces;
     protected $currentUrl;
+    protected $modules;
     protected $currentModule;
 
     public function __construct(Request $request, $appPath, $namespaces)
@@ -26,6 +27,9 @@ class AppContext
         $this->currentUrl = $request->get('_url');
         $this->moduleDir = $appPath . '/modules/';
         $this->namespaces = $namespaces;
+        $this->modules = $namespaces;
+        //debemos excluir el namespace del dir del core del propio fw
+        unset($this->modules['KumbiaPHP']);
     }
 
     public function getBaseUrl()
@@ -51,6 +55,11 @@ class AppContext
     public function getNamespaces()
     {
         return $this->namespaces;
+    }
+
+    public function getModules()
+    {
+        return $this->modules;
     }
 
 }

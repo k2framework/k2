@@ -128,7 +128,7 @@ class Request
 
     private function createRequestUri()
     {
-        return $this->query->get('_uri', '/');
+        return $this->query->get('_url', '/');
     }
 
 }

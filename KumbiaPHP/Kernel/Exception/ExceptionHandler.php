@@ -23,10 +23,10 @@ class ExceptionHandler {
     </head>
     <body>
         <h1>%s</h1>
-        <p>%s<p>
+        <p>%s<p> en la linea %s
         <p>%s<p>
     </body>
-</html>', basename(get_class($e)), $e->getMessage(), join('<br>', explode('#', $e->getTraceAsString())));
+</html>', basename(get_class($e)), $e->getMessage(),$e->getLine(), join('<br>', explode('#', $e->getTraceAsString())));
 
         $response = new Response($HTML, $e->getCode());
         $response->send();

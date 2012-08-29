@@ -62,6 +62,16 @@ class Controller
         $this->template = $template;
     }
 
+    protected function getView()
+    {
+        return $this->view;
+    }
+
+    protected function getTemplate()
+    {
+        return $this->template;
+    }
+
     /**
      * Sirve para enviar al servicio de template "view" una respuesta
      * especifica con los parametros pasados a este metodo.

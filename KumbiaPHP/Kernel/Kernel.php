@@ -104,27 +104,41 @@ abstract class Kernel implements KernelInterface
 
         $resolver = new ControllerResolver($this->container);
 
+        //obtenemos la instancia del controlador, el nombre de la accion
+        //a ejecutar, y los parametros que recibirá dicha acción
         list($controller, $action, $params) = $resolver->getController($request);
 
         //ejecutamos el evento controller.
         $dispatcher
                 ->dispatch(KumbiaEvents::CONTROLLER, new ControllerEvent($request, array($controller, $action)));
 
+        //ejecutamos la acción de controlador pasandole los parametros.
         $response = call_user_func_array(array($controller, $action), $params);
 
 
         if (!$response instanceof Response) {
 
-            //si la acción no devolvió respuesta,
-            $view = $resolver->getView();
-            $template = $resolver->getTemplate();
-            $properties = $resolver->getPublicProperties();
-            $response = $this->container->get('view')->render($template, $view, $properties);
+            //si no es una instancia de KumbiaPHP\Kernel\Controller\Controller
+            //lanzamos una excepción
+            if (!$controller instanceof \KumbiaPHP\Kernel\Controller\Controller) {
+                throw new \LogicException(sprintf("El controlador debe retornar una Respuesta"));
+            } else {
+                //como la acción no devolvió respuesta, debemos
+                //obtener la vista y el template establecidos en el controlador
+                //para pasarlos al servicio view, y este construya la respuesta
+                $view = $resolver->getView();
+                $template = $resolver->getTemplate();
+                $properties = $resolver->getPublicProperties(); //nos devuelve las propiedades publicas del controlador
+                //llamamos al render del servicio "view" y esté nos devolverá
+                //una instancia de response con la respuesta creada
+                $response = $this->container->get('view')->render($template, $view, $properties);
+            }
         }
 
         //ejecutamos el evento response.
         $dispatcher->dispatch(KumbiaEvents::RESPONSE, new ResponseEvent($request, $response));
 
+        //retornamos la respuesta
         return $response;
     }
 
