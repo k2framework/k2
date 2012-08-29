@@ -135,6 +135,8 @@ class ControllerResolver
             $limitParams = $reflectionClass->getProperty('limitParams');
             $limitParams->setAccessible(true);
             $limitParams = $limitParams->getValue($this->controller);
+        }else{
+            $limitParams = TRUE;//por defeto siempre limita los parametro
         }
 
         if ($reflectionClass->hasProperty('parameters')) {
