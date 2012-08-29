@@ -21,7 +21,6 @@ class Servicio
     public function __construct(ServicioDependiente $sd, $nombreApp)
     {
         $this->sdsdd = $sd;
-        echo $nombreApp;
     }
 
     public function show($string)
