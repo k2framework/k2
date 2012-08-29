@@ -11,10 +11,10 @@ use KumbiaPHP\Kernel\Controller\Controller;
  */
 class IndexController extends Controller
 {
-    
+
     public function index()
-    {           
-        var_dump($this->getRequest()->server);
+    {
+        
     }
 
 }
