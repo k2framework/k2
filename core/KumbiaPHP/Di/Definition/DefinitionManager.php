@@ -57,7 +57,7 @@ class DefinitionManager
     public function addParam(DefinitionInterface $param)
     {
         if (!$this->hasParam($param->getId())) {
-            $this->parameters[$definition->getId()] = $definition;
+            $this->parameters[$param->getId()] = $param;
         }
         return $this;
     }

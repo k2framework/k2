@@ -58,11 +58,11 @@ class ConfigContainer
         $listenersSection = new Parameters();
         $parametersSection = new Parameters();
 
+
         foreach ($this->configs->all() as $module => $values) {
             if (array_key_exists('config', $values)) {
                 foreach ($values['config'] as $index => $v) {
                     $configsSection->set($index, $v);
-                    //$configsSection->set($module . '.' . $index, $v);
                 }
             }
             if (array_key_exists('services', $values)) {
@@ -84,6 +84,9 @@ class ConfigContainer
                 }
             }
         }
+
+        $this->explodeIndexes($servicesSection, $parametersSection);
+
         $this->configs = new Parameters(array(
                     'config' => $configsSection,
                     'services' => $servicesSection,
@@ -95,6 +98,47 @@ class ConfigContainer
     public function getConfig()
     {
         return $this->configs;
+    }
+
+    /**
+     * Busca en el config.ini de la aplicación
+     * los indices que representen servicios definidos, y que tengan
+     * un punto que separe al nombre del servicio de un parametro del mismo
+     * ( el parametro tambien debe estár definido )
+     * 
+     * @example
+     * 
+     * tenemos un servicio llamada    mi_servico
+     * tiene un parametro definido    nombre_app  con valor = 'Mi App'
+     *  
+     * Si queremos cambiar ese valor, debemos hacerlo en el config.ini de 
+     * la App.
+     * 
+     * y colocar los siguiente en la seccion [config]:
+     * 
+     * mi_servico.nombre_app = 'Nuevo nombre asignado'
+     * 
+     * @param Parameters $services
+     * @param Parameters $params 
+     */
+    protected function explodeIndexes(Parameters $services, Parameters $params)
+    {
+        foreach ($this->configs->get('_default') as $key => $value) {
+            if ($key === 'config') {
+                foreach ($value as $index => $val) {
+                    $explode = explode('.', $index);
+                    //si hay un punto y el valor delante del punto
+                    //es el nombre de un servicio existente
+                    if (count($explode) > 1 && $services->has($explode[0])) {
+                        //le asignamos el nuevo valor al parametro
+                        //que usará ese servicio
+                        if ($params->has($explode[1])) {
+                            $params->set($explode[1], $val);
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }

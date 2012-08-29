@@ -43,14 +43,15 @@ class DependencyInjection implements DependencyInjectionInterface
     {
         $reader = new AnnotationReader($className);
         $services = $reader->getServices();
-
+        $parameters = $reader->getParameters();
+        
         $class = $reader->getClass();
 
-        $arguments = $this->getArgumentsFromConstruct($id, $class, $services);
-        
+        $arguments = $this->getArgumentsFromConstruct($id, $class, $services, $parameters);
+
         //verificamos si ya se creó una instancia en una retrollamada del
         //metodo injectObjectIntoServicesQueue
-        if ( $this->container->has($id) ){
+        if ($this->container->has($id)) {
             return $this->container->get($id);
         }
 
@@ -61,12 +62,12 @@ class DependencyInjection implements DependencyInjectionInterface
 
         $this->injectObjectIntoServicesQueue();
 
-        $this->setOtherServices($id, $instance, $services);
+        $this->setOtherDependencies($id, $instance, $services, $parameters);
 
         return $instance;
     }
 
-    protected function getArgumentsFromConstruct($id, \ReflectionClass $class, array $services = array())
+    protected function getArgumentsFromConstruct($id, \ReflectionClass $class, array $services = array(), array $parameters = array())
     {
         $args = array();
         //lo agregamos a la cola hasta que se creen los servicios del
@@ -77,9 +78,11 @@ class DependencyInjection implements DependencyInjectionInterface
                 if (isset($services['__construct'][$param->getName()])) {
                     $service = $services['__construct'][$param->getName()];
                     $args[$param->getName()] = $this->container->get($service);
+                } elseif (isset($parameters['__construct'][$param->getName()])) {
+                    $p = $parameters['__construct'][$param->getName()];
+                    $args[$param->getName()] = $this->container->getParameter($p);
                 } else {
-                    //por ahora NULL
-                    $args[$param->getName()] = NULL;
+                    throw new \BadFunctionCallException(sprintf("El servico <b>%s</b> en el argumento <b>%s</b> del constructor, espera un parametro ó servicio que no le está llegando ", $class->getName(), $param->getName()));
                 }
             }
         }
@@ -93,12 +96,20 @@ class DependencyInjection implements DependencyInjectionInterface
      *
      * @param type $class 
      */
-    protected function setOtherServices($id, $object, array $services = array())
+    protected function setOtherDependencies($id, $object, array $services = array(), array $parameters = array())
     {
-        unset($services['__construct']);
+        if (isset($services['__construct'])) {
+            unset($services['__construct']);
+        }
+        if (isset($parameters['__construct'])) {
+            unset($parameters['__construct']);
+        }
 
         foreach ($services as $method => $service_id) {
             $object->$method($this->container->get($service_id));
+        }
+        foreach ($parameters as $method => $param_id) {
+            $object->$method($this->container->getParameter($param_id));
         }
     }
 

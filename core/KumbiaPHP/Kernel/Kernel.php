@@ -199,9 +199,10 @@ abstract class Kernel implements KernelInterface
         foreach ($config->getConfig()->get('services')->all() as $id => $class) {
             $definitions->addService(new \KumbiaPHP\Di\Definition\Service($id, $class));
         }
-//        foreach ($config->getConfig()->get('parameters')->all() as $id => $class) {
-//            $definitions->addParam(new \KumbiaPHP\Di\Definition\Parameter($id, $class));
-//        }
+        
+        foreach ($config->getConfig()->get('parameters')->all() as $id => $value) {
+            $definitions->addParam(new \KumbiaPHP\Di\Definition\Parameter($id, $value));
+        }
 
         $this->di = new DependencyInjection();
 

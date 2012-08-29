@@ -39,7 +39,7 @@ class Container implements ContainerInterface
         $this->services = new Services();
         $this->di = $di;
         $this->definitioManager = $dm ? : new DefinitionManager();
-        
+
         $di->setContainer($this);
 
         //agregamos al container como servicio.
@@ -77,9 +77,23 @@ class Container implements ContainerInterface
         $this->definitioManager->addService(new Service('container', get_class($object)));
     }
 
+    public function getParameter($id)
+    {
+        if ($this->hasParameter($id)) {
+            return $this->definitioManager->getParam($id)->getValue();
+        } else {
+            return NULL;
+        }
+    }
+
+    public function hasParameter($id)
+    {
+        return $this->definitioManager->hasParam($id);
+    }
+
     public function getDefinitionManager()
     {
         return $this->definitioManager;
     }
-    
+
 }
