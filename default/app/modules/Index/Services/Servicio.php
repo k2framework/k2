@@ -18,6 +18,10 @@ class Servicio implements Validatable
     {
         //$this->show("dir App: " . $app->getAppPath());
     }
+    
+    public function setSession(\KumbiaPHP\Kernel\Session\SessionInterface $sesion){
+        //var_dump($sesion);
+    }
 
     public function show($string)
     {
