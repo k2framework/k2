@@ -99,9 +99,9 @@ class ControllerResolver
      * */
     protected function camelcase($string, $firstLower = FALSE)
     {
-        // Notacion lowerCamelCase
         $string = str_replace(' ', '', ucwords(str_replace('_', ' ', strtolower($string))));
         if ($firstLower) {
+            // Notacion lowerCamelCase
             $string[0] = strtolower($string[0]);
             return $string;
         } else {
@@ -139,7 +139,7 @@ class ControllerResolver
             //si no es una instancia de Controller, lo creo como una simple clase PHP
             $this->controller = $reflectionClass->newInstance();
         }
-        
+
 
         if ($reflectionClass->hasProperty('limitParams')) {
             $limitParams = $reflectionClass->getProperty('limitParams');
