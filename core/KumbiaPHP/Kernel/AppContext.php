@@ -27,12 +27,17 @@ class AppContext
         $this->baseUrl = $request->getBaseUrl();
         $this->inProduction = $inProduction;
         $this->appPath = $appPath;
-        $this->currentUrl = $request->get('_url');
+        $this->currentUrl = $request->getRequestUrl();
         $this->moduleDir = $appPath . 'modules/';
         $this->namespaces = $namespaces;
         $this->modules = $namespaces;
         //debemos excluir el namespace del dir del core del propio fw
         unset($this->modules['KumbiaPHP']);
+    }
+
+    public function setRequest(Request $request)
+    {
+        $this->baseUrl = $request->getBaseUrl();
     }
 
     public function getBaseUrl()
