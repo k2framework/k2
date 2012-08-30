@@ -18,7 +18,7 @@
                 </div>
 
                 <h1 id='logo'>KumbiaPHP</h1>
-                <h2 id='info-app'>web &amp; app Framework versión <?php //echo kumbia_version()   ?></h2>
+                <h2 id='info-app'>web &amp; app Framework versión <?php //echo kumbia_version()    ?></h2>
             </div>
 
             <?php echo $view ?>
@@ -40,10 +40,13 @@
                 </div>
                 <div class='alignleft clear'><a href='http://wiki.kumbiaphp.com/Team_Development_KumbiaPHP_Framework'>© 2007 - <?php echo date('Y'); ?> KumbiaPHP Team</a></div>
                 <div class='alignright'><p><?php //echo 'Tiempo: ' . round((microtime(1) - START_TIME), 4) . ' seg.';
-            echo ', Memoria Usada: ' . number_format(memory_get_usage() / 1048576, 2) . ' MB'; ?></p></div>
+            echo ', Memoria Usada: ' . number_format(memory_get_usage() / 1048576, 2) . ' MB';
+            ?></p></div>
             </div>
 
         </div>
+        <?php $view['tag']->js('js/jquery/jquery.min', -100) ?>
+        <?php echo $view['tag']->includeJs() ?>
     </body>
 </html>
 
