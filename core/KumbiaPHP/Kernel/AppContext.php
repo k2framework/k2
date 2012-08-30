@@ -37,7 +37,7 @@ class AppContext
 
     public function setRequest(Request $request)
     {
-        $this->baseUrl = $request->getBaseUrl();
+        $this->currentUrl = $request->getRequestUrl();
     }
 
     public function getBaseUrl()
