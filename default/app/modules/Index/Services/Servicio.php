@@ -2,7 +2,6 @@
 
 namespace Index\Services;
 
-use Index\Services\ServicioDependiente;
 use KumbiaPHP\Kernel\Event\RequestEvent;
 
 /**
@@ -13,15 +12,9 @@ use KumbiaPHP\Kernel\Event\RequestEvent;
 class Servicio
 {
 
-    /**
-     * @Service(otro_servicio,$sd)
-     * @Parameter(nombre_app,$nombreApp)
-     * 
-     * @param ServicioDependiente $sd 
-     */
-    public function __construct(ServicioDependiente $sd, $nombreApp)
+    public function __construct(\KumbiaPHP\Kernel\AppContext $app)
     {
-        $this->sdsdd = $sd;
+        $this->show("dir App: " . $app->getAppPath());
     }
 
     public function show($string)
@@ -29,7 +22,9 @@ class Servicio
         echo '<p>', $string, '</p>';
     }
 
-    public function onKernelRequest(RequestEvent $event){
-        //var_dump($event->getRequest()->getBaseUrl());
+    public function onRequest(RequestEvent $event)
+    {
+        $this->show("Metodo Peticion: " . $event->getRequest()->getMethod());
     }
+
 }
