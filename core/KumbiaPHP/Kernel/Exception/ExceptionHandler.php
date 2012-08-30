@@ -2,6 +2,7 @@
 
 namespace KumbiaPHP\Kernel\Exception;
 
+use KumbiaPHP\Kernel\KernelInterface;
 use KumbiaPHP\Kernel\Response;
 
 /**
@@ -9,30 +10,32 @@ use KumbiaPHP\Kernel\Response;
  *
  * @author manuel
  */
-class ExceptionHandler {
+class ExceptionHandler
+{
 
-    static public function handle() {
+    /**
+     *
+     * @var KernelInterface 
+     */
+    static private $kernel;
+
+    static public function handle(KernelInterface $kernel)
+    {
         set_exception_handler(array(__CLASS__, 'onException'));
+        self::$kernel = $kernel;
     }
 
-    public static function onException(\Exception $e) {
-        $HTML = sprintf('
-<html>
-    <head>
-        <title>Excepcion</title>
-    </head>
-    <body>
-        <h1>%s</h1>
-        <p>%s<p> en la linea %s del archivo <b>%s</b>
-        <p>%s<p>
-    </body>
-</html>', basename(get_class($e)), 
-                $e->getMessage(),
-                $e->getLine(),
-                $e->getFile(), 
-                join('<br>', explode('#', $e->getTraceAsString())));
-
-        $response = new Response($HTML, $e->getCode());
+    public static function onException(\Exception $e)
+    {
+        $app = self::$kernel->getContainer()->get('app.context');
+        
+        while (ob_get_level()) {
+            ob_end_clean(); //vamos limpiando todos los niveles de buffer creados.
+        }
+        
+        ob_start();
+        include __DIR__ . '/files/exception.php';
+        $response = new Response(ob_get_clean(), $e->getCode());
         $response->send();
     }
 

@@ -69,6 +69,7 @@ abstract class Kernel implements KernelInterface
 
     public function __construct($production = FALSE)
     {
+        ob_start();//arrancamos el buffer de salida.
         $this->production = $production;
 
         Autoload::registerDirectories(
@@ -81,7 +82,7 @@ abstract class Kernel implements KernelInterface
         } else {
             error_reporting(-1);
             ini_set('display_errors', 'On');
-            ExceptionHandler::handle();
+            ExceptionHandler::handle($this);
         }
     }
 
