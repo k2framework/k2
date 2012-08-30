@@ -21,12 +21,12 @@ class IndexController extends Controller
 
     public function index()
     {
-
+        //return $this->get('router')->toAction('otro');
     }
 
     public function otro()
     {
-        return new \KumbiaPHP\Kernel\Response("<html><body>Mi Respuesta</body></html>");
+        return new \KumbiaPHP\Kernel\Response("<html><body>Mi Respuesta...!!!</body></html>");
     }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace KumbiaPHP\Kernel;
+namespace KumbiaPHP\Kernel\Router;
 
 /**
  * Description of RouterInterface
@@ -13,6 +13,6 @@ interface RouterInterface
     public function redirect($url = NULL);
 
     public function toAction($action);
-
-    public function getPublicPath();
+    
+    public function forward($url = NULL);
 }
