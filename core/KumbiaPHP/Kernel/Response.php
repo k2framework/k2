@@ -145,7 +145,7 @@ class Response
         }
 
         //mandamos el status
-        header(sprintf('HTTP/1.0 %s %s', $this->statusCode, $this->statusText));
+        header(sprintf('HTTP/1.1 %s %s', $this->statusCode, $this->statusText));
 
         foreach ($this->headers->all() as $index => $value) {
             header("{$index}: {$value}", false);
@@ -155,6 +155,9 @@ class Response
     protected function sendContent()
     {
         echo $this->content;
+        while (ob_get_level()){
+            ob_end_flush();//vamos limpiando y mostrando todos los niveles de buffer creados.
+        }
     }
 
 }
