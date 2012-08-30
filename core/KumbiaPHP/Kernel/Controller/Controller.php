@@ -4,6 +4,7 @@ namespace KumbiaPHP\Kernel\Controller;
 
 use KumbiaPHP\Di\Container\ContainerInterface;
 use KumbiaPHP\Kernel\Request;
+use KumbiaPHP\Kernel\Router\Router;
 use KumbiaPHP\Kernel\Response;
 
 /**
@@ -49,6 +50,15 @@ class Controller
     protected function getRequest()
     {
         return $this->container->get('request');
+    }
+    
+    /**
+     *
+     * @return Router 
+     */
+    protected function getRouter()
+    {
+        return $this->container->get('router');
     }
 
     protected function setView($view, $template = FALSE)
