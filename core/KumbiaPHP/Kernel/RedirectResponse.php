@@ -20,10 +20,10 @@ class RedirectResponse extends Response
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="refresh" content="1;url=%1$s" />
 
-        <title>Redirecting to %1$s</title>
+        <title>Redireccionando a %1$s</title>
     </head>
     <body>
-        Redirecting to <a href="%1$s">%1$s</a>.
+        Redireccionando a <a href="%1$s">%1$s</a>.
     </body>
 </html>', htmlspecialchars($url, ENT_QUOTES, 'UTF-8')), $status, array(
             'Location' => $url
