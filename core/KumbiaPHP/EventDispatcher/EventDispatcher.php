@@ -43,14 +43,14 @@ class EventDispatcher implements EventDispatcherInterface
     }
 
     //put your code here
-    public function addListenerr($eventName, $listener)
+    public function addListener($eventName, $listener)
     {
-        if (!$this->hasListenerr($eventName, $listener)) {
+        if (!$this->hasListener($eventName, $listener)) {
             $this->listeners[$eventName][] = $listener;
         }
     }
 
-    public function hasListenerr($eventName, $listener)
+    public function hasListener($eventName, $listener)
     {
         if (isset($this->listeners[$eventName])) {
             return in_array($listener, $this->listeners[$eventName]);
@@ -61,7 +61,7 @@ class EventDispatcher implements EventDispatcherInterface
 
     public function removeListener($eventName, $listener)
     {
-        if ($this->hasListenerr($eventName, $listener)) {
+        if ($this->hasListener($eventName, $listener)) {
             do {
                 if ($listener === current($this->listeners[$eventName])) {
                     $key = key(current($this->listeners[$eventName]));

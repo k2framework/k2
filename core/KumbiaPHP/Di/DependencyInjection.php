@@ -107,6 +107,7 @@ class DependencyInjection implements DependencyInjectionInterface
     protected function setOtherDependencies($id, $object, array $config)
     {
         unset($config['class']);
+        unset($config['listen']);
         if (isset($config['__construct'])) {
             unset($config['__construct']);
         }

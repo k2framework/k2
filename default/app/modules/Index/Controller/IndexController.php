@@ -11,9 +11,17 @@ use KumbiaPHP\Kernel\Controller\Controller;
  */
 class IndexController extends Controller
 {
+
+    protected function beforeFilter()
+    {
+        if ($this->getRequest()->isAjax()) {
+            $this->setTemplate(NULL);
+        }
+    }
+
     public function index()
     {
-        
+        $this->get('mi_servicio')->show("Hola Mundo...!!!");
     }
 
     public function otro()

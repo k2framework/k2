@@ -85,7 +85,7 @@ abstract class Kernel implements KernelInterface
 
         //creamos la instancia del AppContext
         $context = new AppContext($this->request, $this->getAppPath(), $this->namespaces);
-        
+
         $config = new ConfigContainer($context);
 
         $this->initContainer($config->getConfig());
@@ -180,13 +180,11 @@ abstract class Kernel implements KernelInterface
     protected function initDispatcher(Parameters $config)
     {
         $this->dispatcher = new EventDispatcher($this->container);
-        foreach ($config->get('listeners')->all() as $service => $params) {
-            if ($config->get('services')->has($service)) {
-                foreach ($params as $method => $event) {
-                    $this->dispatcher->addListenerr($event, array($service, $method));
+        foreach ($config->get('services')->all() as $service => $params) {
+            if (isset($params['listen'])) {
+                foreach ($params['listen'] as $method => $event) {
+                    $this->dispatcher->addListener($event, array($service, $method));
                 }
-            } else {
-                throw new \LogicException("Se ha definido el escucha <b>$service</b> pero este no es un Servicio");
             }
         }
     }

@@ -18,7 +18,7 @@ class ConfigContainer
      * @var Parameters
      */
     protected $config;
-    private $sectionsValid = array('config', 'parameters', 'listeners');
+    private $sectionsValid = array('config', 'parameters');
 
     public function __construct(AppContext $app)
     {
@@ -34,7 +34,6 @@ class ConfigContainer
     {
         $section['config'] = new Parameters();
         $section['services'] = new Parameters();
-        $section['listeners'] = new Parameters();
         $section['parameters'] = new Parameters();
 
         $namespaces = $app->getNamespaces();

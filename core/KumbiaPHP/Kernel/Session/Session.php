@@ -22,7 +22,7 @@ class Session implements SessionInterface
 
     public function start()
     {
-        //session_start();
+        session_start();
     }
 
     public function destroy()
