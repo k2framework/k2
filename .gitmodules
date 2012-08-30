@@ -1,0 +1,3 @@
+[submodule "core/ActiveRecord"]
+	path = core/ActiveRecord
+	url = git@github.com:manuelj555/ActiveRecord.git
