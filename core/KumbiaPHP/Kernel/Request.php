@@ -48,8 +48,11 @@ class Request
      * @var SessionInterface 
      */
     protected $session;
+    /**
+     *
+     * @var string 
+     */
     private $baseUrl;
-    protected $requestUri;
 
     public function __construct()
     {
@@ -118,15 +121,7 @@ class Request
         return dirname($this->server->get('SCRIPT_NAME')) . '/';
     }
 
-    public function getRequestUri()
-    {
-        if (!$this->requestUri) {
-            $this->requestUri = $this->createRequestUri();
-        }
-        return $this->requestUri;
-    }
-
-    private function createRequestUri()
+    public function getRequestUrl()
     {
         return $this->query->get('_url', '/');
     }
