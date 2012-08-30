@@ -42,7 +42,7 @@ abstract class Kernel implements KernelInterface
      *  
      * @var Container
      */
-    protected $container;
+    protected static $container;
 
     /**
      *
@@ -90,7 +90,7 @@ abstract class Kernel implements KernelInterface
 
         $this->initContainer($config->getConfig());
 
-        $this->container->set('app.context', $context);
+        self::$container->set('app.context', $context);
 
         $this->initDispatcher($config->getConfig());
     }
@@ -103,14 +103,14 @@ abstract class Kernel implements KernelInterface
         $this->init();
 
         //le asignamos el servicio session al request
-        $request->setSession($this->container->get('session'));
+        $request->setSession(self::$container->get('session'));
         //agregamos el request al container
-        $this->container->set('request', $request);
+        self::$container->set('request', $request);
 
         //ejecutamos el evento request
         $this->dispatcher->dispatch(KumbiaEvents::REQUEST, new RequestEvent($request));
 
-        $resolver = new ControllerResolver($this->container);
+        $resolver = new ControllerResolver(self::$container);
 
         //obtenemos la instancia del controlador, el nombre de la accion
         //a ejecutar, y los parametros que recibirá dicha acción
@@ -137,7 +137,7 @@ abstract class Kernel implements KernelInterface
                 $properties = $resolver->getPublicProperties(); //nos devuelve las propiedades publicas del controlador
                 //llamamos al render del servicio "view" y esté nos devolverá
                 //una instancia de response con la respuesta creada
-                $response = $this->container->get('view')->render($template, $view, $properties);
+                $response = self::$container->get('view')->render($template, $view, $properties);
             }
         }
 
@@ -145,6 +145,15 @@ abstract class Kernel implements KernelInterface
         $this->dispatcher->dispatch(KumbiaEvents::RESPONSE, new ResponseEvent($request, $response));
         //retornamos la respuesta
         return $response;
+    }
+    
+    /**
+     *
+     * @return \KumbiaPHP\Di\Container\ContainerInterface 
+     */
+    public static function getContainer()
+    {
+        return self::$container;
     }
 
     abstract protected function registerNamespaces();
@@ -160,8 +169,7 @@ abstract class Kernel implements KernelInterface
      */
     protected function initContainer(Parameters $config)
     {
-
-
+        
         $definitions = new DefinitionManager();
 
         foreach ($config->get('services')->all() as $id => $configs) {
@@ -174,12 +182,12 @@ abstract class Kernel implements KernelInterface
 
         $this->di = new DependencyInjection();
 
-        $this->container = new Container($this->di, $definitions);
+        self::$container = new Container($this->di, $definitions);
     }
 
     protected function initDispatcher(Parameters $config)
     {
-        $this->dispatcher = new EventDispatcher($this->container);
+        $this->dispatcher = new EventDispatcher(self::$container);
         foreach ($config->get('services')->all() as $service => $params) {
             if (isset($params['listen'])) {
                 foreach ($params['listen'] as $method => $event) {
