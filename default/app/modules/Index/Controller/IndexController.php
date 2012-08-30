@@ -21,7 +21,10 @@ class IndexController extends Controller
 
     public function index()
     {
-        $this->get('mi_servicio')->show("Hola Mundo...!!!");
+        var_dump($this->get('validator')->validate($this->get('mi_servicio')));
+       return $this->render(new \KumbiaPHP\Kernel\Response('',300,array(
+           'Content-Type' => 'application/json'
+       )));
     }
 
     public function otro()

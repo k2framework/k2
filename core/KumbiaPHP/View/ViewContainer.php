@@ -27,11 +27,11 @@ class ViewContainer implements ArrayAccess
         $container->getDefinitionManager()
                 ->addService(new Service('html', array(
                             'class' => 'KumbiaPHP\\View\\Helper\\Html',
-                            '__construct' => '@app.context'
+                            'construct' => '@app.context'
                         )))
                 ->addService(new Service('tag', array(
                             'class' => 'KumbiaPHP\\View\\Helper\\Tag',
-                            '__construct' => '@app.context'
+                            'construct' => '@app.context'
                         )))
                 ->addService(new Service('form', array(
                             'class' => 'KumbiaPHP\\View\\Helper\\Form',

@@ -48,7 +48,7 @@ class DependencyInjection implements DependencyInjectionInterface
 
         $reflection = new ReflectionClass($config['class']);
 
-        if (isset($config['__construct'])) {
+        if (isset($config['construct'])) {
             $arguments = $this->getArgumentsFromConstruct($id, $config);
         } else {
             $arguments = array();
@@ -67,8 +67,9 @@ class DependencyInjection implements DependencyInjectionInterface
 
         $this->injectObjectIntoServicesQueue();
 
-        $this->setOtherDependencies($id, $instance, $config);
-        //die('fin2');
+        if (isset($config['call'])) {
+            $this->setOtherDependencies($id, $instance, $config['call']);
+        }
         return $instance;
     }
 
@@ -79,8 +80,8 @@ class DependencyInjection implements DependencyInjectionInterface
         //que depende
         $this->addToQueue($id, $config);
 
-        if (is_array($config['__construct'])) {
-            foreach ($config['__construct'] as $serviceOrParameter) {
+        if (is_array($config['construct'])) {
+            foreach ($config['construct'] as $serviceOrParameter) {
                 if ('@' === $serviceOrParameter[0]) {//si comienza con @ es un servicio lo que solicita
                     $args[] = $this->container->get(substr($serviceOrParameter, 1));
                 } else { //si no comienza por arroba es un parametro lo que solicita
@@ -88,10 +89,10 @@ class DependencyInjection implements DependencyInjectionInterface
                 }
             }
         } else {
-            if ('@' === $config['__construct'][0]) {//si comienza con @ es un servicio lo que solicita
-                $args[] = $this->container->get(substr($config['__construct'], 1));
+            if ('@' === $config['construct'][0]) {//si comienza con @ es un servicio lo que solicita
+                $args[] = $this->container->get(substr($config['construct'], 1));
             } else { //si no comienza por arroba es un parametro lo que solicita
-                $args[] = $this->container->getParameter($config['__construct']);
+                $args[] = $this->container->getParameter($config['construct']);
             }
         }
         //al tener los servicios que necesitamos
@@ -104,15 +105,9 @@ class DependencyInjection implements DependencyInjectionInterface
      *
      * @param type $class 
      */
-    protected function setOtherDependencies($id, $object, array $config)
+    protected function setOtherDependencies($id, $object, array $calls)
     {
-        unset($config['class']);
-        unset($config['listen']);
-        if (isset($config['__construct'])) {
-            unset($config['__construct']);
-        }
-
-        foreach ($config as $method => $serviceOrParameter) {
+        foreach ($calls as $method => $serviceOrParameter) {
             if ('@' === $serviceOrParameter[0]) {//si comienza con @ es un servicio lo que solicita
                 $object->$method($this->container->get(substr($serviceOrParameter, 1)));
             } else { //si no comienza por arroba es un parametro lo que solicita
