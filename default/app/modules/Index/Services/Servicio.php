@@ -14,7 +14,7 @@ class Servicio
 
     public function __construct(\KumbiaPHP\Kernel\AppContext $app)
     {
-        $this->show("dir App: " . $app->getAppPath());
+        //$this->show("dir App: " . $app->getAppPath());
     }
 
     public function show($string)
@@ -24,7 +24,7 @@ class Servicio
 
     public function onRequest(RequestEvent $event)
     {
-        $this->show("Metodo Peticion: " . $event->getRequest()->getMethod());
+        //$this->show("Metodo Peticion: " . $event->getRequest()->getMethod());
     }
 
 }
