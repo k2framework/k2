@@ -83,6 +83,10 @@ class ControllerResolver
         $this->contShortName = $controller;
         $this->action = $action;
 
+        $app = $this->container->get('app.context');
+        $app->setCurrentModule($module);
+        $app->setCurrentController($controller);
+
         return $this->createController($module, $controller, $action, $params);
     }
 
@@ -107,8 +111,7 @@ class ControllerResolver
 
     protected function isController($module, $controller)
     {
-        $namespaces = $this->container->get('app.context')->getModules();
-        $path = rtrim($namespaces[$module], '/');
+        $path = $this->container->get('app.context')->getModules($module);
         return is_file("{$path}/{$module}/Controller/{$this->camelcase($controller)}Controller.php");
     }
 
@@ -131,10 +134,12 @@ class ControllerResolver
         if ($reflectionClass->isSubclassOf('\\KumbiaPHP\\Kernel\\Controller\\Controller')) {
             //si es así le paso el contenedor como argumento
             $this->controller = $reflectionClass->newInstanceArgs(array($this->container));
+            $this->setViewDefault($action);
         } else {
             //si no es una instancia de Controller, lo creo como una simple clase PHP
             $this->controller = $reflectionClass->newInstance();
         }
+        
 
         if ($reflectionClass->hasProperty('limitParams')) {
             $limitParams = $reflectionClass->getProperty('limitParams');
@@ -224,27 +229,12 @@ class ControllerResolver
 
     public function getView($action)
     {
-        $view = $this->getParamValue('view');
-
-        if ($view == NULL) {
-            //si no se estableció una vista,
-            //retorna el mismo nombre de la acción
-            $view = $action;
-        }
-        return $this->getModulePath() . '/View/' . $this->contShortName . '/' . $view;
+        return $this->getParamValue('view');
     }
 
     public function getTemplate()
     {
-        $template = $this->getParamValue('template');
-
-        if ($template === NULL) {
-            return NULL;
-        }
-
-        $dirTemplatesApp = $this->container->get('app.context')->getAppPath() . 'view/templates/';
-
-        return $dirTemplatesApp . $template;
+        return $this->getParamValue('template');
     }
 
     public function getModulePath()
@@ -265,6 +255,18 @@ class ControllerResolver
 
         //y retorno su valor
         return $propertie->getValue($this->controller);
+    }
+
+    protected function setViewDefault($action)
+    {
+        $reflection = new \ReflectionClass($this->controller);
+
+        //obtengo el parametro del controlador.
+        $propertie = $reflection->getProperty('view');
+
+        //lo hago accesible para poderlo leer
+        $propertie->setAccessible(true);
+        $propertie->setValue($this->controller, $action);
     }
 
 }
