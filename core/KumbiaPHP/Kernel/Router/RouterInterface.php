@@ -14,5 +14,5 @@ interface RouterInterface
 
     public function toAction($action);
     
-    public function forward($url = NULL);
+    public function forward($url);
 }
