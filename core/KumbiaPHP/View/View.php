@@ -17,7 +17,6 @@ class View
     protected $template;
     protected $view;
     protected $variables;
-    protected $content;
 
     /**
      * 
@@ -31,6 +30,7 @@ class View
      */
     public function __construct(ContainerInterface $container)
     {
+        $this->container = $container;
         $this->variables['view'] = new ViewContainer($container);
     }
 
@@ -46,33 +46,61 @@ class View
     protected function getContent(Response $response = NULL)
     {
         extract($this->variables, EXTR_OVERWRITE);
+        ;
+
         //si va a mostrar vista
         if ($this->view !== NULL) {
 
-            if (!file_exists($this->view . '.phtml')) {
-                throw new \LogicException(sprintf("No existe la Vista <b>%s.phtml</b>", basename($this->view)));
-            }
             ob_start();
-            require_once $this->view . '.phtml';
-            $this->variables['view']->content = $this->content = ob_get_clean();
+            require_once $this->findView($this->view);
+            $this->variables['view']->content = $content = ob_get_clean();
         }
         if ($this->template !== NULL) {
 
-            if (!file_exists($this->template . '.phtml')) {
-                throw new \LogicException(sprintf("No existe El Template <b>%s.phtml</b>", basename($this->template)));
-            }
             ob_start();
-            $content = $this->content;
-            require_once $this->template . '.phtml';
-            $this->content = ob_get_clean();
+            require_once $this->findTemplate($this->template);
+            $content = ob_get_clean();
         }
 
         if ($response instanceof Response) {
-            $response->setContent($this->content);
+            $response->setContent($content);
             return $response;
         }
 
-        return new Response($this->content);
+        return new Response($content);
+    }
+
+    protected function findTemplate($template)
+    {
+        /* @var $app \KumbiaPHP\Kernel\AppContext */
+        $app = $this->container->get('app.context');
+
+        $template = explode(':', $template);
+
+        if (count($template) > 1) {
+            $module = rtrim($app->getModules($template[0]), '/') . '/' . $app->getCurrentModule();
+            $file = $module . '/View/_shared/templates/' . $template[1] . '.phtml';
+        } else {
+            $file = rtrim($app->getAppPath(), '/') . '/view/templates/' . $template[0] . '.phtml';
+        }
+        if (!file_exists($file)) {
+            throw new \LogicException(sprintf("No existe El Template <b>%s</b> en <b>%s</b>", basename($file), $file));
+        }
+        return $file;
+    }
+
+    protected function findView($view)
+    {
+        /* @var $app \KumbiaPHP\Kernel\AppContext */
+        $app = $this->container->get('app.context');
+        $module = $app->getCurrentModule();
+        $controller = $app->getCurrentController();
+        $file = rtrim($app->getModules($module), '/') . '/' . $module .
+                '/View/' . $controller . '/' . $view . '.phtml';
+        if (!file_exists($file)) {
+            throw new \LogicException(sprintf("No existe la Vista <b>%s</b> en <b>%s</b>", basename($file), $file));
+        }
+        return $file;
     }
 
 }
