@@ -5,6 +5,8 @@ namespace KumbiaPHP\Kernel\Router;
 use KumbiaPHP\Kernel\Router\RouterInterface;
 use KumbiaPHP\Kernel\AppContext;
 use KumbiaPHP\Kernel\RedirectResponse;
+use KumbiaPHP\Kernel\KernelInterface;
+use KumbiaPHP\Kernel\Request;
 
 /**
  * Description of Router
@@ -20,9 +22,17 @@ class Router implements RouterInterface
      */
     protected $app;
 
-    public function __construct(AppContext $app)
+    /**
+     *
+     * @var KernelInterface
+     */
+    protected $kernel;
+    private $forwards = 0;
+
+    public function __construct(AppContext $app, KernelInterface $kernel)
     {
         $this->app = $app;
+        $this->kernel = $kernel;
     }
 
     public function redirect($url = NULL)
@@ -55,9 +65,17 @@ class Router implements RouterInterface
         return new RedirectResponse($url);
     }
 
-    public function forward($url = NULL)
+    public function forward($url)
     {
-        //no hace nada por ahora
+        if ($this->forwards++ > 10) {
+            throw new \LogicException("Se ha detectado un ciclo de redirección Infinito...!!!");
+        }
+        //obtengo el request y le asigno la nueva url.
+        $request = $this->kernel->getContainer()->get('request');
+        $request->query->set('_url', $url);
+        
+        //retorno la respuesta del kernel.
+        return $this->kernel->execute($request);
     }
 
     protected function toSmallCase($string)
