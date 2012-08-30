@@ -85,9 +85,8 @@ abstract class Kernel implements KernelInterface
 
         //creamos la instancia del AppContext
         $context = new AppContext($this->request, $this->getAppPath(), $this->namespaces);
-
+        
         $config = new ConfigContainer($context);
-        $config->compile();
 
         $this->initContainer($config->getConfig());
 
@@ -111,7 +110,7 @@ abstract class Kernel implements KernelInterface
         //ejecutamos el evento request
         $this->dispatcher->dispatch(KumbiaEvents::REQUEST, new RequestEvent($request));
 
-            $resolver = new ControllerResolver($this->container);
+        $resolver = new ControllerResolver($this->container);
 
         //obtenemos la instancia del controlador, el nombre de la accion
         //a ejecutar, y los parametros que recibirá dicha acción
@@ -119,10 +118,9 @@ abstract class Kernel implements KernelInterface
 
         //ejecutamos el evento controller.
         $this->dispatcher
-               ->dispatch(KumbiaEvents::CONTROLLER, new ControllerEvent($request, array($controller, $action)));
+                ->dispatch(KumbiaEvents::CONTROLLER, new ControllerEvent($request, array($controller, $action)));
         //ejecutamos la acción de controlador pasandole los parametros.
         $response = $resolver->executeAction($action, $params);
-
 
         if (!$response instanceof Response) {
 
@@ -166,8 +164,8 @@ abstract class Kernel implements KernelInterface
 
         $definitions = new DefinitionManager();
 
-        foreach ($config->get('services')->all() as $id => $class) {
-            $definitions->addService(new \KumbiaPHP\Di\Definition\Service($id, $class));
+        foreach ($config->get('services')->all() as $id => $configs) {
+            $definitions->addService(new \KumbiaPHP\Di\Definition\Service($id, $configs));
         }
 
         foreach ($config->get('parameters')->all() as $id => $value) {

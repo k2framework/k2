@@ -59,10 +59,10 @@ class Container implements ContainerInterface
             throw new \Exception(sprintf('No existe el servicio <b>%s</b>', $id));
         }
 
-        $serviceClass = $this->definitioManager->getService($id)->getClassName();
+        $config = $this->definitioManager->getService($id)->getConfig();
 
         //retorna la instancia recien creada
-        return $this->di->newInstance($id, $serviceClass);
+        return $this->di->newInstance($id, $config);
     }
 
     public function has($id)
@@ -74,7 +74,9 @@ class Container implements ContainerInterface
     {
         $this->services->replace($id, $object);
         //y lo agregamos a las definiciones. (solo será a gregado si no existe)
-        $this->definitioManager->addService(new Service('container', get_class($object)));
+        $this->definitioManager->addService(new Service($id, array(
+                    'class' => get_class($object)
+                )));
     }
 
     public function getParameter($id)

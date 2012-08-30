@@ -15,35 +15,14 @@ class ConfigContainer
 
     /**
      *
-     * @var Parameters 
+     * @var Parameters
      */
-    protected $configs;
-
-    /**
-     *
-     * @var AppContext 
-     */
-    protected $app;
+    protected $config;
+    private $sectionsValid = array('config', 'parameters', 'listeners');
 
     public function __construct(AppContext $app)
     {
-        $this->app = $app;
-        $this->configs = new Parameters();
-
-        $this->init();
-    }
-
-    protected function init()
-    {
-        //obtengo la configuracion general de la App.
-        $iniApp = $this->app->getAppPath() . 'config/config.ini';
-        $this->configs->set('_default', parse_ini_file($iniApp, TRUE));
-        foreach (array_unique($this->app->getNamespaces()) as $namespace => $dir) {
-            $file = rtrim($dir, '/') . '/' . $namespace . '/config.ini';
-            if (is_file($file)) {
-                $this->configs->set($namespace, parse_ini_file($file, TRUE));
-            }
-        }
+        $this->config = $this->compile($app);
     }
 
     /**
@@ -51,53 +30,46 @@ class ConfigContainer
      * modulo en un solo esquema
      *  
      */
-    public function compile()
+    protected function compile(AppContext $app)
     {
-        $configsSection = new Parameters();
-        $servicesSection = new Parameters();
-        $listenersSection = new Parameters();
-        $parametersSection = new Parameters();
+        $section['config'] = new Parameters();
+        $section['services'] = new Parameters();
+        $section['listeners'] = new Parameters();
+        $section['parameters'] = new Parameters();
 
+        $namespaces = $app->getNamespaces();
 
-        foreach ($this->configs->all() as $module => $values) {
-            if (array_key_exists('config', $values)) {
-                foreach ($values['config'] as $index => $v) {
-                    $configsSection->set($index, $v);
+        $namespaces['app'] = dirname($app->getAppPath());
+
+        foreach (array_unique($namespaces) as $namespace => $dir) {
+            $configFile = rtrim($dir, '/') . '/' . $namespace . '/config/config.ini';
+            $servicesFile = rtrim($dir, '/') . '/' . $namespace . '/config/services.ini';
+
+            if (is_file($configFile)) {
+                foreach (parse_ini_file($configFile, TRUE) as $sectionType => $values) {
+
+                    if (in_array($sectionType, $this->sectionsValid)) {
+                        foreach ($values as $index => $v) {
+                            $section[$sectionType]->set($index, $v);
+                        }
+                    }
                 }
             }
-            if (array_key_exists('services', $values)) {
-                foreach ($values['services'] as $index => $v) {
-                    $servicesSection->set($index, $v);
-//                    $servicesSection->set($module . '.' . $index, $v);
-                }
-            }
-            if (array_key_exists('listeners', $values)) {
-                foreach ($values['listeners'] as $index => $v) {
-                    $listenersSection->set($index, $v);
-//                    $listenersSection->set($module . '.' . $index, $v);
-                }
-            }
-            if (array_key_exists('parameters', $values)) {
-                foreach ($values['parameters'] as $index => $v) {
-                    $parametersSection->set($index, $v);
-//                    $parametersSection->set($module . '.' . $index, $v);
+            if (is_file($servicesFile)) {
+                foreach (parse_ini_file($servicesFile, TRUE) as $serviceName => $config) {
+                    $section['services']->set($serviceName, $config);
                 }
             }
         }
 
-        $this->explodeIndexes($servicesSection, $parametersSection);
+        $section = $this->explodeIndexes($section);
 
-        $this->configs = new Parameters(array(
-                    'config' => $configsSection,
-                    'services' => $servicesSection,
-                    'listeners' => $listenersSection,
-                    'parameters' => $parametersSection,
-                ));
+        return new Parameters($section);
     }
 
     public function getConfig()
     {
-        return $this->configs;
+        return $this->config;
     }
 
     /**
@@ -121,24 +93,21 @@ class ConfigContainer
      * @param Parameters $services
      * @param Parameters $params 
      */
-    protected function explodeIndexes(Parameters $services, Parameters $params)
+    protected function explodeIndexes(array $section)
     {
-        foreach ($this->configs->get('_default') as $key => $value) {
-            if ($key === 'config') {
-                foreach ($value as $index => $val) {
-                    $explode = explode('.', $index);
-                    //si hay un punto y el valor delante del punto
-                    //es el nombre de un servicio existente
-                    if (count($explode) > 1 && $services->has($explode[0])) {
-                        //le asignamos el nuevo valor al parametro
-                        //que usará ese servicio
-                        if ($params->has($explode[1])) {
-                            $params->set($explode[1], $val);
-                        }
-                    }
+        foreach ($section['config'] as $key => $value) {
+            $explode = explode('.', $key);
+            //si hay un punto y el valor delante del punto
+            //es el nombre de un servicio existente
+            if (count($explode) > 1 && $section['services']->has($explode[0])) {
+                //le asignamos el nuevo valor al parametro
+                //que usará ese servicio
+                if ($section['parameters']->has($explode[1])) {
+                    $section['parameters']->set($explode[1], $val);
                 }
             }
         }
+        return $section;
     }
 
 }

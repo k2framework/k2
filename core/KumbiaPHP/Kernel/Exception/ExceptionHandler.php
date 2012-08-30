@@ -19,14 +19,18 @@ class ExceptionHandler {
         $HTML = sprintf('
 <html>
     <head>
-        <title>Error</title>
+        <title>Excepcion</title>
     </head>
     <body>
         <h1>%s</h1>
-        <p>%s<p> en la linea %s
+        <p>%s<p> en la linea %s del archivo <b>%s</b>
         <p>%s<p>
     </body>
-</html>', basename(get_class($e)), $e->getMessage(),$e->getLine(), join('<br>', explode('#', $e->getTraceAsString())));
+</html>', basename(get_class($e)), 
+                $e->getMessage(),
+                $e->getLine(),
+                $e->getFile(), 
+                join('<br>', explode('#', $e->getTraceAsString())));
 
         $response = new Response($HTML, $e->getCode());
         $response->send();

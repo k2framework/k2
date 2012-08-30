@@ -13,12 +13,12 @@ class Service implements DefinitionInterface
 {
 
     protected $id;
-    protected $className;
+    protected $config;
 
-    public function __construct($id, $className)
+    public function __construct($id, $config)
     {
         $this->id = $id;
-        $this->className = $className;
+        $this->config = $config;
     }
 
     public function getId()
@@ -31,14 +31,14 @@ class Service implements DefinitionInterface
         $this->id = $id;
     }
 
-    public function getClassName()
+    public function getConfig()
     {
-        return $this->className;
+        return $this->config;
     }
 
-    public function setClassName($className)
+    public function setConfig($config)
     {
-        $this->className = $className;
+        $this->config = $config;
     }
 
 }

@@ -4,7 +4,8 @@ namespace KumbiaPHP\Di;
 
 use KumbiaPHP\Di\DependencyInjectionInterface;
 use KumbiaPHP\Di\Container\Container;
-use KumbiaPHP\Di\Reader\AnnotationReader;
+use KumbiaPHP\Di\Exception\IndexNotDefinedException;
+use \ReflectionClass;
 
 /**
  * @Service(mi_servicio,$propiedad)
@@ -39,15 +40,19 @@ class DependencyInjection implements DependencyInjectionInterface
         $this->container = $container;
     }
 
-    public function newInstance($id, $className)
+    public function newInstance($id, $config)
     {
-        $reader = new AnnotationReader($className);
-        $services = $reader->getServices();
-        $parameters = $reader->getParameters();
-        
-        $class = $reader->getClass();
+        if (!isset($config['class'])) {
+            throw new IndexNotDefinedException("No se Encontró el indice <b>class</b> en la definicón del servicio $id");
+        }
 
-        $arguments = $this->getArgumentsFromConstruct($id, $class, $services, $parameters);
+        $reflection = new ReflectionClass($config['class']);
+
+        if (isset($config['__construct'])) {
+            $arguments = $this->getArgumentsFromConstruct($id, $config);
+        } else {
+            $arguments = array();
+        }
 
         //verificamos si ya se creó una instancia en una retrollamada del
         //metodo injectObjectIntoServicesQueue
@@ -55,35 +60,38 @@ class DependencyInjection implements DependencyInjectionInterface
             return $this->container->get($id);
         }
 
-        $instance = $class->newInstanceArgs($arguments);
+        $instance = $reflection->newInstanceArgs($arguments);
 
         //agregamos la instancia del objeto al contenedor.
         $this->container->set($id, $instance);
 
         $this->injectObjectIntoServicesQueue();
 
-        $this->setOtherDependencies($id, $instance, $services, $parameters);
-
+        $this->setOtherDependencies($id, $instance, $config);
+        //die('fin2');
         return $instance;
     }
 
-    protected function getArgumentsFromConstruct($id, \ReflectionClass $class, array $services = array(), array $parameters = array())
+    protected function getArgumentsFromConstruct($id, array $config)
     {
         $args = array();
         //lo agregamos a la cola hasta que se creen los servicios del
         //que depende
-        $this->addToQueue($id, $class->getName());
-        if (isset($services['__construct']) && count($services['__construct'])) {
-            foreach ($class->getConstructor()->getParameters() as $param) {
-                if (isset($services['__construct'][$param->getName()])) {
-                    $service = $services['__construct'][$param->getName()];
-                    $args[$param->getName()] = $this->container->get($service);
-                } elseif (isset($parameters['__construct'][$param->getName()])) {
-                    $p = $parameters['__construct'][$param->getName()];
-                    $args[$param->getName()] = $this->container->getParameter($p);
-                } else {
-                    throw new \BadFunctionCallException(sprintf("El servico <b>%s</b> en el argumento <b>%s</b> del constructor, espera un parametro ó servicio que no le está llegando ", $class->getName(), $param->getName()));
+        $this->addToQueue($id, $config);
+
+        if (is_array($config['__construct'])) {
+            foreach ($config['__construct'] as $serviceOrParameter) {
+                if ('@' === $serviceOrParameter[0]) {//si comienza con @ es un servicio lo que solicita
+                    $args[] = $this->container->get(substr($serviceOrParameter, 1));
+                } else { //si no comienza por arroba es un parametro lo que solicita
+                    $args[] = $this->container->getParameter($serviceOrParameter);
                 }
+            }
+        } else {
+            if ('@' === $config['__construct'][0]) {//si comienza con @ es un servicio lo que solicita
+                $args[] = $this->container->get(substr($config['__construct'], 1));
+            } else { //si no comienza por arroba es un parametro lo que solicita
+                $args[] = $this->container->getParameter($config['__construct']);
             }
         }
         //al tener los servicios que necesitamos
@@ -96,20 +104,19 @@ class DependencyInjection implements DependencyInjectionInterface
      *
      * @param type $class 
      */
-    protected function setOtherDependencies($id, $object, array $services = array(), array $parameters = array())
+    protected function setOtherDependencies($id, $object, array $config)
     {
-        if (isset($services['__construct'])) {
-            unset($services['__construct']);
-        }
-        if (isset($parameters['__construct'])) {
-            unset($parameters['__construct']);
+        unset($config['class']);
+        if (isset($config['__construct'])) {
+            unset($config['__construct']);
         }
 
-        foreach ($services as $method => $service_id) {
-            $object->$method($this->container->get($service_id));
-        }
-        foreach ($parameters as $method => $param_id) {
-            $object->$method($this->container->getParameter($param_id));
+        foreach ($config as $method => $serviceOrParameter) {
+            if ('@' === $serviceOrParameter[0]) {//si comienza con @ es un servicio lo que solicita
+                $object->$method($this->container->get(substr($serviceOrParameter, 1)));
+            } else { //si no comienza por arroba es un parametro lo que solicita
+                $object->$method($this->container->getParameter($serviceOrParameter));
+            }
         }
     }
 
@@ -124,8 +131,8 @@ class DependencyInjection implements DependencyInjectionInterface
     protected function injectObjectIntoServicesQueue()
     {
         $this->isQueue = TRUE;
-        foreach ($this->queue as $id => $class) {
-            $this->newInstance($id, $class);
+        foreach ($this->queue as $id => $config) {
+            $this->newInstance($id, $config);
         }
         $this->isQueue = FALSE;
     }
@@ -135,7 +142,7 @@ class DependencyInjection implements DependencyInjectionInterface
         return isset($this->queue[$id]);
     }
 
-    protected function addToQueue($id, $className)
+    protected function addToQueue($id, $config)
     {
         //si el servicio actual aparece en la cola de servicios
         //indica que dicho servicio tiene una dependencia a un servicio 
@@ -143,7 +150,7 @@ class DependencyInjection implements DependencyInjectionInterface
         if (!$this->isQueue && $this->inQueue($id)) {
             throw new \Exception("Se ha Detectado una Dependencia Circular entre Servicios");
         }
-        $this->queue[$id] = $className;
+        $this->queue[$id] = $config;
     }
 
     protected function removeToQueue($id)
