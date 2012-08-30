@@ -19,13 +19,16 @@ class AppContext
     protected $currentUrl;
     protected $modules;
     protected $currentModule;
+    protected $currentController;
+    protected $inProduction;
 
-    public function __construct(Request $request, $appPath, $namespaces)
+    public function __construct(Request $request, $inProduction, $appPath, $namespaces)
     {
         $this->baseUrl = $request->getBaseUrl();
+        $this->inProduction = $inProduction;
         $this->appPath = $appPath;
         $this->currentUrl = $request->get('_url');
-        $this->moduleDir = $appPath . '/modules/';
+        $this->moduleDir = $appPath . 'modules/';
         $this->namespaces = $namespaces;
         $this->modules = $namespaces;
         //debemos excluir el namespace del dir del core del propio fw
@@ -57,9 +60,33 @@ class AppContext
         return $this->namespaces;
     }
 
-    public function getModules()
+    public function getModules($module = NULL)
     {
-        return $this->modules;
+        if ($module) {
+            return isset($this->modules[$module]) ? $this->modules[$module] : NULL;
+        } else {
+            return $this->modules;
+        }
+    }
+
+    public function getCurrentModule()
+    {
+        return $this->currentModule;
+    }
+
+    public function setCurrentModule($currentModule)
+    {
+        $this->currentModule = $currentModule;
+    }
+
+    public function getCurrentController()
+    {
+        return $this->currentController;
+    }
+
+    public function setCurrentController($currentController)
+    {
+        $this->currentController = $currentController;
     }
 
 }
