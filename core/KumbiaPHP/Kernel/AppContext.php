@@ -94,5 +94,10 @@ class AppContext
         $this->currentController = $currentController;
     }
 
+    public function InProduction()
+    {
+        return $this->inProduction;
+    }
+
 }
 
