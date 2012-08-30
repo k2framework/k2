@@ -17,6 +17,6 @@ interface Validatable
      * 
      * @param ValidationBuilder $builder 
      */
-    public function build(ValidationBuilder $builder);
+    public function buildValidations(ValidationBuilder $builder);
 }
 
