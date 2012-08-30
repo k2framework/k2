@@ -66,15 +66,10 @@ abstract class Kernel implements KernelInterface
         $this->production = $production;
 
         Autoload::registerDirectories(
-                $this->registerNamespaces()
+                $this->namespaces = $this->registerNamespaces()
         );
-    }
 
-    protected function init()
-    {
-        $this->namespaces = $this->registerNamespaces();
-
-        if ($this->production) {
+        if ($production) {
             error_reporting(0);
             ini_set('display_errors', 'Off');
         } else {
@@ -82,9 +77,14 @@ abstract class Kernel implements KernelInterface
             ini_set('display_errors', 'On');
             ExceptionHandler::handle();
         }
+    }
+
+    protected function init()
+    {
+
 
         //creamos la instancia del AppContext
-        $context = new AppContext($this->request, $this->getAppPath(), $this->namespaces);
+        $context = new AppContext($this->request, $this->production, $this->getAppPath(), $this->namespaces);
 
         $config = new ConfigContainer($context);
 
