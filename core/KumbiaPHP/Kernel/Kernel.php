@@ -61,6 +61,12 @@ abstract class Kernel implements KernelInterface
      */
     protected $production;
 
+    /**
+     *
+     * @var string
+     */
+    protected $appPath;
+
     public function __construct($production = FALSE)
     {
         $this->production = $production;
@@ -81,18 +87,24 @@ abstract class Kernel implements KernelInterface
 
     protected function init()
     {
-
-
         //creamos la instancia del AppContext
         $context = new AppContext($this->request, $this->production, $this->getAppPath(), $this->namespaces);
-
+        //leemos la config de la app
         $config = new ConfigContainer($context);
-
+        //iniciamos el container con esa config
         $this->initContainer($config->getConfig());
+        //asignamos el kernel al container como un servicio
+        self::$container->set('app.kernel', $this);
+        //iniciamos el dispatcher con esa config
+        $this->initDispatcher($config->getConfig());
+
+        //le asignamos el servicio session al request
+        $this->request->setSession(self::$container->get('session'));
+
+        //agregamos el request al container
+        self::$container->set('request', $this->request);
 
         self::$container->set('app.context', $context);
-
-        $this->initDispatcher($config->getConfig());
     }
 
     //put your code here
@@ -100,12 +112,11 @@ abstract class Kernel implements KernelInterface
     {
         $this->request = $request;
 
-        $this->init();
-
-        //le asignamos el servicio session al request
-        $request->setSession(self::$container->get('session'));
-        //agregamos el request al container
-        self::$container->set('request', $request);
+        if (!self::$container) { //si no se ha creado el container lo creamos.
+            $this->init();
+        } else {//si ya se creó el container solo actualizamos el app.context con el nuevo request
+            self::$container->get('app.context')->setRequest($this->request);
+        }
 
         //ejecutamos el evento request
         $this->dispatcher->dispatch(KumbiaEvents::REQUEST, new RequestEvent($request));
@@ -146,7 +157,7 @@ abstract class Kernel implements KernelInterface
         //retornamos la respuesta
         return $response;
     }
-    
+
     /**
      *
      * @return \KumbiaPHP\Di\Container\ContainerInterface 
@@ -160,8 +171,11 @@ abstract class Kernel implements KernelInterface
 
     private function getAppPath()
     {
-        $r = new \ReflectionObject($this);
-        return dirname($r->getFileName()) . '/';
+        if (!$this->appPath) {
+            $r = new \ReflectionObject($this);
+            $this->appPath = dirname($r->getFileName()) . '/';
+        }
+        return $this->appPath;
     }
 
     /**
@@ -169,7 +183,7 @@ abstract class Kernel implements KernelInterface
      */
     protected function initContainer(Parameters $config)
     {
-        
+
         $definitions = new DefinitionManager();
 
         foreach ($config->get('services')->all() as $id => $configs) {
