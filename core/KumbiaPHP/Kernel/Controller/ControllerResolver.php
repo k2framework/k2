@@ -201,13 +201,17 @@ class ControllerResolver
     {
         $reflectionObject = new ReflectionObject($this->controller);
         if ($reflectionObject->hasMethod('beforeFilter')) {
-            $this->controller->beforeFilter();
+            $method = $reflectionObject->getMethod('beforeFilter');
+            $method->setAccessible(TRUE);
+            $method->invoke($this->controller);
         }
 
         $response = call_user_func_array(array($this->controller, $action), $arguments);
 
         if ($reflectionObject->hasMethod('afterFilter')) {
-            $this->controller->afterFilter();
+            $method = $reflectionObject->getMethod('afterFilter');
+            $method->setAccessible(TRUE);
+            $method->invoke($this->controller);
         }
 
         return $response;
@@ -240,7 +244,7 @@ class ControllerResolver
 
         $dirTemplatesApp = $this->container->get('app.context')->getAppPath() . 'view/templates/';
 
-        return $dirTemplatesApp . $template ;
+        return $dirTemplatesApp . $template;
     }
 
     public function getModulePath()
