@@ -83,10 +83,7 @@ class Controller
      */
     protected function render(Response $response, array $params = array())
     {
-        //por ahora no funciona el metodo ya que es el ControllerResolver
-        //quien está buscando la vista y el template, tarea que debe hacer
-        //es la lib View. pendiente con esto.
-        //return $this->get('view')->render($this->template, $this->view, $params);
+        return $this->get('view')->render($this->template, $this->view, $params, $response);
     }
 
 }
