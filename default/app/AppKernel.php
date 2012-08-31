@@ -2,7 +2,6 @@
 
 require_once '../../core/KumbiaPHP/Kernel/Kernel.php';
 
-use KumbiaPHP\Loader\Autoload;
 use KumbiaPHP\Kernel\Kernel;
 
 /**
@@ -18,6 +17,7 @@ class AppKernel extends Kernel
         return array(
             'KumbiaPHP' => __DIR__ . '/../../core/',
             'Index' => __DIR__ . '/modules/',
+            'Rest' => __DIR__ . '/modules/Demos/',
         );
     }
 
