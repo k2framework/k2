@@ -63,6 +63,8 @@ class ConfigContainer
 
         $section = $this->explodeIndexes($section);
 
+        unset($section['config']); //esta seccion esta disponible en parameters con el prefio config.*
+
         return new Parameters($section);
     }
 
@@ -94,7 +96,7 @@ class ConfigContainer
      */
     protected function explodeIndexes(array $section)
     {
-        foreach ($section['config'] as $key => $value) {
+        foreach ($section['config']->all() as $key => $value) {
             $explode = explode('.', $key);
             //si hay un punto y el valor delante del punto
             //es el nombre de un servicio existente
@@ -102,8 +104,10 @@ class ConfigContainer
                 //le asignamos el nuevo valor al parametro
                 //que usará ese servicio
                 if ($section['parameters']->has($explode[1])) {
-                    $section['parameters']->set($explode[1], $val);
+                    $section['parameters']->set($explode[1], $value);
                 }
+            } else {
+                $section['parameters']->set('config.' . $key, $value);
             }
         }
         return $section;
