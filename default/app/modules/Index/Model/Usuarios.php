@@ -2,7 +2,7 @@
 
 namespace Index\Model;
 
-use KumbiaPHP\KumbiaActiveRecord\ActiveRecord;
+use KumbiaPHP\ActiveRecord\ActiveRecord;
 
 /**
  * Description of Usuarios
