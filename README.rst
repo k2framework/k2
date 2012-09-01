@@ -23,7 +23,7 @@ Luego debes ejecutar el comando:
 
 ::
 
-    php composer.json install
+    php composer.phar install
 
 Este comando instalará las dependencias necesarias para tener el core de kumbiaphp listo para ejecutar tu proyecto.
 
