@@ -1,5 +1,6 @@
 {
     "require":{
-        'manuelj555/ActiveRecord': "php5.3"
+        'manuelj555/k2_core': "master",
+        'manuelj555/activerecord': "php5.3"
     }
 }
