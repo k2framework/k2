@@ -1,6 +1,6 @@
 [submodule "core/ActiveRecord"]
 	path = core/ActiveRecord
-	url = git@github.com:manuelj555/ActiveRecord.git
+	url = git@github.com:manuelj555/activerecord.git
 [submodule "core/KumbiaPHP"]
 	path = core/KumbiaPHP
-	url = git@github.com:manuelj555/K2_Core.git
+	url = git@github.com:manuelj555/k2_core.git
