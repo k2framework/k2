@@ -1,5 +1,5 @@
 <?php
-require_once '../../core/KumbiaPHP/Kernel/Kernel.php';
+require_once '../../vendor/autoload.php';
 
 use KumbiaPHP\Kernel\Kernel;
 
@@ -15,8 +15,7 @@ class AppKernel extends Kernel
     {
         return array(
             'modules' => __DIR__ . '/modules/',
-            'KumbiaPHP' => __DIR__ . '/../../core/',
-            'ActiveRecord' => __DIR__ . '/../../core/',
+            'KumbiaPHP' => __DIR__ . '/../../vendor/kumbiaphp/kumbiaphp/src/',
         );
     }
 

@@ -1,6 +1,11 @@
 {
     "require":{
-        "manuelj555/k2_core": "master",
-        "manuelj555/activerecord": "php5.3"
+        "kumbiaphp/kumbiaphp": "dev-master",
+        "kumbiaphp/activerecord": "dev-php5.3"
+    },
+    "autoload": {
+        "psr-0":{ 
+            "": "app/modules/"
+        }
     }
 }
