@@ -1,0 +1,5 @@
+{
+    "require":{
+        'manuelj555/ActiveRecord': "php5.3"
+    }
+}
