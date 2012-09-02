@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="es">
     <head>
-        <meta http-equiv='Content-type' content='text/html; charset=UTF-8' />
+        <meta http-equiv='Content-type' content='text/html; charset=<?php APP_CHARSET ?>' />
         <title>KumbiaPHP web &amp; App Framework</title>
-        <?php $view['tag']->css('css/bienvenida') ?>
-        <?php $view['tag']->css('css/style') ?>
-        <?php echo $view['tag']->includeCss() ?>
+        <?php KumbiaPHP\View\Helper\Tag::css('bienvenida'); ?>
+        <?php KumbiaPHP\View\Helper\Tag::css('style'); ?>
+        <?php echo KumbiaPHP\View\Helper\Html::includeCss() ?>
     </head>
     <body>
         <div id='content'>
             <div id='head'>
                 <div class='alignright'>
                     <p id='config'>
-                        <span class='app'><?php echo basename(dirname($view['app.context']->getAppPath())) ?></span>
-                        <?php echo $view['html']->link('pages/show/kumbia/status/', 'Config', 'title="Ver configuración de la aplicación"') ?>
+                        <span class='app'><?php echo basename(dirname(\KumbiaPHP\View\View::get('app.context')->getAppPath())) ?></span>
+                        <?php echo KumbiaPHP\View\Helper\Html::link('pages/show/kumbia/status/', 'Config', 'title="Ver configuración de la aplicación"') ?>
                     </p>
                 </div>
 
                 <h1 id='logo'>KumbiaPHP</h1>
-                <h2 id='info-app'>web &amp; app Framework versión <?php //echo kumbia_version()    ?></h2>
+                <h2 id='info-app'>web &amp; app Framework versión <?php //echo kumbia_version()     ?></h2>
             </div>
 
-            <?php echo $view ?>
+            <?php \KumbiaPHP\View\View::content() ?>
 
             <?php //View::partial('kumbia/footer') ?>
             <div id="footer">
@@ -39,14 +39,15 @@
                         <a href='http://groups.google.com/group/kumbia' title="Lista de Correo de KumbiaPHP donde podrás encontrar ayuda a problemas que tengas, hacer comentarios, proponer ideas, reportar bugs, socializar temas relacionados y disfrutar de KumbiaPHP.">Grupo</a> | <a href='http://foro.kumbiaphp.com' title="Foro de KumbiaPHP donde podrás encontrar ayuda a problemas que tengas, hacer comentarios, proponer ideas, reportar bugs, socializar temas relacionados y disfrutar de KumbiaPHP.">Foro</a></p>
                 </div>
                 <div class='alignleft clear'><a href='http://wiki.kumbiaphp.com/Team_Development_KumbiaPHP_Framework'>© 2007 - <?php echo date('Y'); ?> KumbiaPHP Team</a></div>
-                <div class='alignright'><p><?php //echo 'Tiempo: ' . round((microtime(1) - START_TIME), 4) . ' seg.';
+                <div class='alignright'><p><?php
+            //echo 'Tiempo: ' . round((microtime(1) - START_TIME), 4) . ' seg.';
             echo ', Memoria Usada: ' . number_format(memory_get_usage() / 1048576, 2) . ' MB';
             ?></p></div>
             </div>
 
         </div>
-        <?php $view['tag']->js('js/jquery/jquery.min', -100) ?>
-        <?php echo $view['tag']->includeJs() ?>
+        <?php KumbiaPHP\View\Helper\Tag::js('jquery/jquery.min', -100) ?>
+        <?php echo KumbiaPHP\View\Helper\Html::includeJs() ?>
     </body>
 </html>
 
