@@ -21,11 +21,18 @@ class AppKernel extends Kernel
 
     protected function registerRoutes()
     {
-        return array(
-            '/demo/rest' => __DIR__ . '/modules/Demos/Rest/',
-            '/demo/router' => __DIR__ . '/modules/Demos/Router/',
+        $routes = array(
             '/' => __DIR__ . '/modules/Index/',
         );
+
+        if (!$this->production) {
+            $routes['/demo/rest']     = __DIR__ . '/modules/Demos/Rest/';
+            $routes['/demo/router']   = __DIR__ . '/modules/Demos/Router/';
+            $routes['/demo/vistas']   = __DIR__ . '/modules/Demos/Vistas/';
+            $routes['/demo/modelos']  = __DIR__ . '/modules/Demos/Modelos/';
+            $routes['/demo/upload']   = __DIR__ . '/modules/Demos/SubiendoArchivos/';
+        }
+        return $routes;
     }
 
 }
