@@ -1,0 +1,11 @@
+<?php
+use KumbiaPHP\View\Helper\Form;
+?>
+<br/>
+<h3>Ejemplo de subida de Imagenes</h3>
+<?php echo Form::openMultipart() ?>
+<ul>
+    <li><label>Imagen: <?php echo Form::file('imagen') ?></label></li>
+    <li><input type="submit" value="Enviar Form" /></li>
+</ul>
+<?php echo Form::close() ?>

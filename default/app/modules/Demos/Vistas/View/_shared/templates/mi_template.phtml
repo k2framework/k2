@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta http-equiv='Content-type' content='text/html; charset=UTF-8' />
+        <title>KumbiaPHP web &amp; App Framework</title>
+        <?php $view['tag']->css('css/style') ?>
+        <?php echo $view['tag']->includeCss() ?>
+    </head>
+    <body>
+        <header>Cabecera de la Página</header>
+        <section>
+            <?php echo $view ?>
+        </section>
+        <footer>Pié de la página</footer>
+        <?php $view['tag']->js('js/jquery/jquery.min', -100) ?>
+        <?php echo $view['tag']->includeJs() ?>
+    </body>
+</html>
+
+
