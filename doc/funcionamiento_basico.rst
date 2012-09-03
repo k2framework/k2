@@ -22,8 +22,10 @@ Un módulo no es más que una carpeta dentro de nuestra aplicación que contiene
 	   |---Controller
 	   |	   |-------IndexController
 	   |	   |-------ReportesController
+	   |
 	   |-----Model
 	   |	   |-------Ventas
+	   |
 	   |-----View
 	   |	   |-------Ventas
 	   |	   |	       |----ultimas.phtml
@@ -33,13 +35,16 @@ Un módulo no es más que una carpeta dentro de nuestra aplicación que contiene
 	   |	   |	       |----ventas_semanales.phtml
 	   |	   |	       |----ventas_hoy.phtml
 	   |	   |-------_shared
-	   |	   |	        |----errors
+	   |	   	        |----errors
+	   |			|
 	   |----MisServicios    |	
 	   |	   |		|----templates
 	   |	   |		|----partiales
 	   |	   |		|----....
+	   |	   |
 	   |	   |-----GestorVentas
 	   |	   |-----ImpresorVentas
+	   |
 	   |----config
 		   |-----config.ini
 		   |-----services.ini
