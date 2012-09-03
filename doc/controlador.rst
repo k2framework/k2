@@ -14,6 +14,7 @@ Ejemplo de un Controlador
 _________________________
 
 ::
+
     //archivo app/modules/MiModulo/Controller/UsuariosController.php
     <?php
 
@@ -60,6 +61,28 @@ Una acción es un método de la clase controladora que puede ser ejecutada por e
 
 Nombres para las acciones
 _________________________
+
+En esta versión los nombres de las acciónes son camelCase ( la primera letra en minuscula ), esto para seguir con el estandar de codificación usado en la mayoría de frameworks y librerias de PHP.
+
+Como debe ser la Ruta para acceder a una Acción
+___________________________________________________
+
+Al igual que con los controladores, el kernel del framework hace una conversión de la ruta para convertirla en un nombre de acción válido en camelCase, veamos algunos ejemplos
+
+::
+
+    Supongamos que estamos en el Módulo Usuarios, controlador IndexController:
+
+    Modulo   / controlador / acción             =>      Controlador a ejecutar:   =>    Acción a ejecutar
+
+    /usuarios                                   =>        IndexController         =>         index()
+    /usuarios/index                             =>        IndexController         =>         index()
+    /usuarios/index/index                       =>        IndexController         =>         index()
+    /usuarios/index/crear                       =>        IndexController         =>         crear()
+    /usuarios/index/nuevo_ingreso               =>        IndexController         =>         nuevoIngreso()
+    /usuarios/index/modificar_perfil            =>        IndexController         =>         modificarPerfil()
+
+Como se puede apreciar las rutas siempre estan en minuscula, y en notación small_case, mientras que las acciones están en camelCase, entonces el kernel, al estudiar la url convertirá el patrón de ruta de la acción en camelCase, para encontrar y llamar a la misma de existir.
 
 Los Filtros
 -----------
