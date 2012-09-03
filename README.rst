@@ -3,7 +3,7 @@ KumbiaPHP 2
 
 Esta es una base para una nueva versión de KumbiaPHP framework, trabaja con php 5.3 ó superior.
 
-`Documentación <./k2/tree/master/doc/README.rst>`_
+`Documentación <./k2/tree/master/doc/>`_
 
 
 Instalación
