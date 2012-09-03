@@ -87,3 +87,11 @@ ________________________
 
 En realidad un prefijo puede ser cualquier patrón de url válido, y no necesariamente debe coincidir con el nombre del módulo, ejemplos de prefijos:
   
+::
+
+    "/usuarios"        =>  __DIR__ . "/modules/Admin/Usuarios/"
+    "/clientes"        =>  __DIR__ . "/modules/MisClientes/"
+    "/rest/carrito"    =>  __DIR__ . "/CarritoCompras/"
+    "/"                =>  __DIR__ . "/modules/Home"
+
+Estos son ejemplos validos de prefijos asignados a módulos, se puede apreciar que no existe ninguna restricción en cuanto al nombre del prefijo y el nombre del módulo, estos pueden ser muy distintos unos de otros.
