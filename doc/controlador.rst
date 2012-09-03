@@ -59,6 +59,8 @@ Las Acciónes
 
 Una acción es un método de la clase controladora que puede ser ejecutada por el framework, si se cumplen ciertas condiciones en la url de la petición.
 
+Cabe destacar que las acciónes para poder ser accedidas desde la Url, deben ser métodos públicos.
+
 Nombres para las acciones
 _________________________
 
@@ -87,8 +89,12 @@ Como se puede apreciar las rutas siempre estan en minuscula, y en notación smal
 Los Filtros
 -----------
 
+Los filtros en los controladores son métodos protegidos ó privados que se ejecutan antes y/o despues de la ejecución de la acción del controlador.
+
 beforeFilter
 ____________
+
+El método beforeFilter() es una función que puede tener una clase controladora
 
 afterFilter
 ___________
