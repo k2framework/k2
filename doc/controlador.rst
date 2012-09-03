@@ -10,6 +10,27 @@ Nombre de la Clase
 
 En esta versión del framework, tanto los nombres de clases como nombres de archivos se escriben exactamente igual. Preferiblemente en notación CamelCase ( Al menos para los controladores el CamelCase es Obligatorio ).
 
+Ejemplo de un Controlador
+_________________________
+
+::
+    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    <?php
+
+    namespace MiModulo\\Controller;
+
+    use KumbiaPHP\\Kernel\\Controller\\Controller;
+
+    class UsuariosController extends Controller //ahora se extiende de una clase base Controller.
+    {
+        public function index()
+        {
+            $this->mensaje = "Hola Mundo...!!!";
+        }
+    }
+
+Este es un ejemplo de un controlador llamado UsuariosController, el cual extiende de la clase base Controller ( esto no es obligatorio ), y tiene un método llamado index() que crea una variable "mensaje" con el valor "Hola Mundo...!!!".
+
 Como debe ser la Ruta para acceder a un Controlador
 ___________________________________________________
 
@@ -34,6 +55,8 @@ Como se puede apreciar las rutas siempre estan en minuscula, y en notación smal
 
 Las Acciónes
 ------------
+
+Una acción es un método de la clase controladora que puede ser ejecutada por el framework, si se cumplen ciertas condiciones en la url de la petición.
 
 Nombres para las acciones
 _________________________
