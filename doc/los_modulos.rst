@@ -7,7 +7,7 @@ En esta nueva versión de KumbiaPHP, la aplicación está constituida por módul
 Que es un Módulo
 ----------------
 
-Un módulo ó paquete no es más que una carpeta que contiene clases, carpetas y archivos de configuración que cumplen un objtivo en particular dentro de la aplicación.
+Un módulo ó paquete no es más que una carpeta que contiene clases, carpetas y archivos de configuración que cumplen un objetivo en particular dentro de la aplicación.
 
 Ejemplos de ellos son, un Backend, un API REST, un carrito de compras, etc.
 
@@ -27,11 +27,11 @@ Un ejemplo básico de la estructura de un módulo es:
 	
 	Ventas
 	   |---Controller
-	   |	   |-------IndexController
-	   |	   |-------ReportesController
+	   |	   |-------IndexController.php
+	   |	   |-------ReportesController.php
 	   |
 	   |-----Model
-	   |	   |-------Ventas
+	   |	   |-------Ventas.php
 	   |
 	   |-----View
 	   |	   |-------Ventas
@@ -43,14 +43,14 @@ Un ejemplo básico de la estructura de un módulo es:
 	   |	   |	       |----ventas_hoy.phtml
 	   |	   |-------_shared
 	   |	   	        |----errors
-	   |			|
-	   |----MisServicios    |	
-	   |	   |		|----templates
-	   |	   |		|----partiales
+	   |			|----templates
+	   |----MisServicios    |----partiales	
 	   |	   |		|----....
+	   |	   |		
 	   |	   |
-	   |	   |-----GestorVentas
-	   |	   |-----ImpresorVentas
+	   |	   |
+	   |	   |-----GestorVentas.php
+	   |	   |-----ImpresorVentas.php
 	   |
 	   |----config
 		   |-----config.ini
