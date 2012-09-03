@@ -106,3 +106,45 @@ ___________
 El método afterFilter() es una función que puede tener una clase controladora y que, de existir, el framework llamará y ejecutará justo despues de realizar el llamado y ejecución de la acción solicitada en la petición.
 
 NOTA: si el método beforeFilter() devuelve FALSE, este filtró no será ejecutado por el kernel del framework.
+
+Parametros de las Acciones
+--------------------------
+
+Una acción de un controlador puede tener parametros ó argumentos que esperan ciertos datos de una petición, un ejemplo de esto es el ID de un registro que queremos editar en un CRUD. el framework obtiene los valores para estos argumentos a traves de la URL, donde cada valor pasado por la url despues del nombre de la acción es un parametro de la misma, estos valores deben ir separados por un / unos de otros, veamos unos ejemplos:
+
+::
+
+    <?php  //controlador app/modules/Home/Controller/UsuariosController.php
+
+    namespaces Home\Controller;
+
+    use KumbiaPHP\Kernel\Controller\Controller;
+
+    class UsuariosController extends Controller
+    {
+        //   Ejemplos de url:
+        //  /home/usuarios/editar/5   válida
+        //  /home/usuarios/editar/10  válida
+        //  /home/usuarios/editar/    invalida, el método espera el parametro id, por lo que se lanzará una excepcion
+        public function editar($id){ //nuestra acción editar recibira en el parametro $id el valor 5
+            ...
+        }
+
+        //   Ejemplos de url:
+        //  /home/usuarios/fecha/10-10-2012   válida
+        //  /home/usuarios/fecha/20-10-2012   válida
+        //  /home/usuarios/fecha/             válida, si no se pasa el parametro, el mismo toma el valor por defecto.
+        public function fecha($fecha = 'now'){ //nuestra acción espera el parametro fecha, si no lo recibe toma "now"
+            $filtro = new DateTime($fecha); 
+            ...
+        }
+
+        //   Ejemplos de url:
+        //  /home/usuarios/filtrar_entre/03-05-2012/20-12-2012   válida
+        //  /home/usuarios/filtrar_entre/20-10-2012/10-08-2012   válida
+        //  /home/usuarios/filtrar_entre/                        invalida
+        public function filtrarEntre($fechaInico, $fechaFinal){
+            $filtro = new DateTime($fecha); 
+            ...
+        }
+    }
