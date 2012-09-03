@@ -3,7 +3,6 @@
 namespace Index\Services;
 
 use KumbiaPHP\Kernel\Event\RequestEvent;
-use KumbiaPHP\Validation\Validatable;
 use KumbiaPHP\Validation\ValidationBuilder;
 
 /**
@@ -11,7 +10,7 @@ use KumbiaPHP\Validation\ValidationBuilder;
  *
  * @author manuel
  */
-class Servicio implements Validatable
+class Servicio
 {
 
     public function __construct(\KumbiaPHP\Kernel\AppContext $app)
@@ -31,11 +30,6 @@ class Servicio implements Validatable
     public function onRequest(RequestEvent $event)
     {
         //$this->show("Metodo Peticion: " . $event->getRequest()->getMethod());
-    }
-
-    public function buildValidations(ValidationBuilder $builder)
-    {
-        
     }
 
 }
