@@ -16,7 +16,9 @@ Descagar el proyecto, abrir una consola en la raiz del proyecto y ejecutar el si
 
 ::
 
-    curl -s http://getcomposer.org/installer | php
+    curl -s http://getcomposer.org/installer | php  //si no funciona prueba con los comandos posteriores.
+
+    php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
 
 Este comando instalará composer en la carpeta del proyecto, al terminar de ejecutar el comando debes tener un 
 archivo llamado composer.phar.
