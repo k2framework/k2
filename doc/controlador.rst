@@ -91,10 +91,18 @@ Los Filtros
 
 Los filtros en los controladores son métodos protegidos ó privados que se ejecutan antes y/o despues de la ejecución de la acción del controlador.
 
+Son útiles para verificar que se cumplan ciertas condiciones para ejecutar la acción, ó realizar tareas que son comunes en un controlador y que no queremos repetir en cada acción del mismo.
+
 beforeFilter
 ____________
 
-El método beforeFilter() es una función que puede tener una clase controladora
+El método beforeFilter() es una función que puede tener una clase controladora y que, de existir, el framework llamará y ejecutará justo antes de realizar el llamado y ejecución de la acción solicitada en la petición.
+
+Este método ofrece la posibilidad de cambiar ó evitar la ejecución de una acción, esto se logra devolviendo una cadena con el nombre de la nueva acción a ejecutar ( en el caso de que queramos cambiar la ejecución de la acción actual por otra ), ó devolviendo FALSE si no queremos que se ejecute la acción del controlador.
 
 afterFilter
 ___________
+
+El método afterFilter() es una función que puede tener una clase controladora y que, de existir, el framework llamará y ejecutará justo despues de realizar el llamado y ejecución de la acción solicitada en la petición.
+
+NOTA: si el método beforeFilter() devuelve FALSE, este filtró no será ejecutado por el kernel del framework.
