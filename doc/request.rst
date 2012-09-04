@@ -48,3 +48,29 @@ Ahora, si tenemos un controlador que no extiende de Controller, y queremos obten
         }
     }
 
+Obteniendo valores de la Petición
+---------------------------------
+
+Generalmente una petición viene acompañada de valores que nos envia el cliente, ya sea por medio de un formulario, de la url, etc. y la aplicación debe recibir y procesar dichos datos de alguna manera dependiendo de la lógica de cada programa.
+
+La clase Request ofrece una serie de métodos para devolvernos esos valores de manera orientada a objetos, supongamos que tenemos un formulario de registro, en el que pedimos el login de la persona y la edad, dicha persona envia el formulario por medió del método POST, nosotros podremos obtener esos datos de la siguiente manera:
+
+::
+
+    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    <?php
+
+    namespace MiModulo\\Controller;
+
+    use KumbiaPHP\\Kernel\\Controller\\Controller;
+
+    class UsuariosController extends Controller
+    {
+        public function registrar()
+        {
+            $request = $this->getRequest(); //este método nos devuelve la instancia del request actual.
+            $login = $request->request->getAlnum("login"); //obtenemos el login filtrado solo con caracteres alfanumericos
+            $edad = $request->request->getInt("edad"); //obtenemos la edad filtrada son con números.
+            .... procesamos el formulario ....
+        }
+    }
