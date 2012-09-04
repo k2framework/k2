@@ -90,3 +90,45 @@ Estos atributos públicos, no solo son arreglos de datos como sus equivalentes e
 
 El método get($key, $default = NULL)
 ___________________________________
+
+El objeto Request ofrece un método llamado get($key, $default = NULL) el cual espera un indice y un valor por defecto si no se encuentra el valor buscado en el indice.
+
+Este método sirve para obtener un dato que esté en el atributo request, ó en el atributo query, ó en cookies, Siendo esta mismo el orden de busqueda, es decir, que primero verifica la existencia del $key en la propiedad public $request de la clase Request, y si no encuentra esa clave, busca en el atributo public $query, de no encontrar la clave acá tampoco, busca en $cookies, y si no existe en ninguno de los tres atributos, retorna el valor por defecto pasado como segundo parametro del método get.
+
+Ejemplo de uso:
+
+::
+
+    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    <?php
+
+    namespace MiModulo\\Controller;
+
+    use KumbiaPHP\\Kernel\\Controller\\Controller;
+
+    class UsuariosController extends Controller
+    {
+        public function registrar()
+        {
+            $busqueda = $this->getRequest()->get("q", "todos");
+            //el método get, buscará en $request y si no existe, buscará en $query, 
+            //y si acá tampoco existe, lo hará en $cookies. Por ultimo, sino está en ningun lado, devuelve "todos"
+        }
+    }
+
+Otros métodos Utiles
+====================
+
+Acá estan listados los métodos de la clase Request:
+
+    * get($key, $default = NULL): Devuelve el valor para un indice de las variables globales de la petición
+    * getSession(): Devuelve la instancia del manejador de sesiones.
+    * getAppContext(): Devuelve la instancia del objeto que tiene el contexto de la aplicación
+    * getMethod(): Devuelve el metodo de la petición
+    * getClientIp(): Devuelve la IP del cliente
+    * isAjax(): Devuelve TRUE si la petición es Ajax
+    * isMethod($method): Devuelve TRUE si el método de la petición es el pasado por parametro
+    * getBaseUrl(): Devuelve el url base del proyecto
+    * getRequestUrl(): Devuelve la url de la petición actual
+    * getContent(): Devuelve el Cuerpo de la petición
+    
