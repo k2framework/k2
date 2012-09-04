@@ -74,3 +74,19 @@ La clase Request ofrece una serie de métodos para devolvernos esos valores de m
             .... procesamos el formulario ....
         }
     }
+
+Las variables request, query, files, cookies, y server
+______________________________________________________
+
+La clase Request tiene 5 atributos publicos, los cuales son el equivalente a las variables globales de PHP, estas son:
+
+    * Request->request: representa a la variable $_POST de PHP y a las variables PUT y DELETE, que no existen en PHP.
+    * Request->query: representa a la variable $_GET de PHP.
+    * Request->files: representa a la variable $_FILES de PHP.
+    * Request->cookies: representa a la variable $_COOKIES de PHP.
+    * Request->server: representa a la variable $_SERVER de PHP.
+
+Estos atributos públicos, no solo son arreglos de datos como sus equivalentes en PHP, sino que son objetos con métodos para establecer y leer los datos que contienen.
+
+El método get($key, $default = NULL)
+___________________________________
