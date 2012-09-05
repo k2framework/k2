@@ -20,13 +20,12 @@ class IndexController extends Controller
 
             if ($this->getRequest()->files->has('imagen')) {
                 $file = Upload::factory($this->getRequest(), 'imagen');
+                if ($file->save(uniqid())) {
+                    $this->get('flash')->success("El archivo se subió con exito...!!!");
+                } else {
+                    $this->get('flash')->error(current($file->getErrors()));
+                }
             }
-            var_dump($file->save(uniqid()));
-            var_dump($file->getErrors());
-            return new Response();
-//            return new Response(json_encode($file->save()), 200, array(
-//                        'Content-Type' => 'application/json'
-//                    ));
         }
     }
 

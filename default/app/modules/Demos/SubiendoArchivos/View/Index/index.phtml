@@ -3,6 +3,13 @@ use KumbiaPHP\View\Helper\Form;
 ?>
 <br/>
 <h3>Ejemplo de subida de Imagenes</h3>
+<p>
+<ul>
+    <?php foreach(\KumbiaPHP\View\View::flash()->getAll() as $mensaje): ?>
+    <li><?php echo $mensaje ?></li>
+    <?php endforeach; ?>
+</ul>
+</p>
 <?php echo Form::openMultipart() ?>
 <ul>
     <li><label>Imagen: <?php echo Form::file('imagen') ?></label></li>
