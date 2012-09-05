@@ -3,17 +3,17 @@
     <head>
         <meta http-equiv='Content-type' content='text/html; charset=UTF-8' />
         <title>KumbiaPHP web &amp; App Framework</title>
-        <?php $view['tag']->css('css/style') ?>
-        <?php echo $view['tag']->includeCss() ?>
+        <?php KumbiaPHP\View\Helper\Tag::css('style') ?>
+        <?php echo \KumbiaPHP\View\Helper\Html::includeCss() ?>
     </head>
     <body>
         <header>Cabecera de la Página</header>
         <section>
-            <?php echo $view ?>
+            <?php \KumbiaPHP\View\View::content() ?>
         </section>
         <footer>Pié de la página</footer>
-        <?php $view['tag']->js('js/jquery/jquery.min', -100) ?>
-        <?php echo $view['tag']->includeJs() ?>
+        <?php KumbiaPHP\View\Helper\Tag::js('jquery/jquery.min', -100) ?>
+        <?php echo \KumbiaPHP\View\Helper\Html::includeJs() ?>
     </body>
 </html>
 
