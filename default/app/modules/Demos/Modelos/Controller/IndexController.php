@@ -15,17 +15,14 @@ class IndexController extends Controller
     
     protected function beforeFilter()
     {
-        $this->setView(NULL);
+        $this->setTemplate(NULL);
     }
 
     public function index()
     {
         $usr = new Usuarios();
         
-        //$usr->create();
-        
-        var_dump($this->get('validator')->validate($usr));
-        var_dump($usr->getErrors());
+        $this->usuarios = $usr->findAll();
         
     }
 
