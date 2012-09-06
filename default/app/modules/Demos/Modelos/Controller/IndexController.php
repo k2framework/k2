@@ -2,28 +2,20 @@
 
 namespace Demos\Modelos\Controller;
 
-use KumbiaPHP\Kernel\Controller\Controller;
 use Demos\Modelos\Model\Usuarios;
+use Scaffold\Controller\ScaffoldController;
 
 /**
  * Description of IndexController
  *
  * @author manuel
  */
-class IndexController extends Controller
+class IndexController extends ScaffoldController
 {
     
     protected function beforeFilter()
     {
-        $this->setTemplate(NULL);
+        //$this->setTemplate(NULL);
+        $this->model = new Usuarios();
     }
-
-    public function index()
-    {
-        $usr = new Usuarios();
-        
-        $this->usuarios = $usr->findAll();
-        
-    }
-
 }

@@ -18,7 +18,8 @@ abstract class ScaffoldController extends Controller
      *
      * @var ActiveRecord 
      */
-    protected $model;
+    public $model;
+    public $scaffold = 'kumbia';
 
     abstract protected function beforeFilter();
 
@@ -29,28 +30,65 @@ abstract class ScaffoldController extends Controller
         $this->paginator = $this->model->paginate($page);
     }
 
-    public function show($id)
+    public function ver($id)
     {
         $this->checkModel();
 
         $this->model = $this->model->findByPK((int) $id);
     }
 
-    public function create()
+    public function crear()
     {
         $this->checkModel();
 
         $this->form = new Form($this->model, true);
+
+        if ($this->getRequest()->isMethod('POST')) {
+            if ($this->form->bindRequest($this->getRequest())->isValid()) {
+                if ($this->form->getData()->save()) {
+                    $this->get('flash')->success("El registro fué exitoso");
+                    return $this->getRouter()->toAction('index');
+                }
+            }
+        }
     }
 
-    public function edit($id)
+    public function editar($id)
     {
-        
+        $this->checkModel();
+        $this->setView('crear');
+
+        if (!$model = $this->model->findByPK((int) $id)) {
+            $this->renderNotFound("No existe el Registro");
+        }
+
+        $this->form = new Form($model, true);
+
+        if ($this->getRequest()->isMethod('POST')) {
+            if ($this->form->bindRequest($this->getRequest())->isValid()) {
+                if ($this->form->getData()->save()) {
+                    $this->get('flash')->success("El Guardado fué exitoso");
+                    return $this->getRouter()->toAction('index');
+                }
+            }
+        }
     }
 
-    public function delete($id)
+    public function borrar($id)
     {
-        
+        $this->checkModel();
+
+        if (!$model = $this->model->findByPK((int) $id)) {
+            $this->renderNotFound("No existe el Registro");
+        }
+
+        if ($model->deleteByPK((int) $id)) {
+            $this->get('flash')->success("El Registro fué Eliminado");
+        } else {
+            $this->get('flash')->error("No se pudo eliminar el registro");
+        }
+
+        return $this->getRouter()->toAction('index');
     }
 
     private function checkModel()
