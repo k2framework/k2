@@ -30,24 +30,6 @@ En realidad esto es muy sencillo, en cualquier controlador que extienda de Contr
         }
     }
 
-Ahora, si tenemos un controlador que no extiende de Controller, y queremos obtener la instancia de Request, debemos tener como primer parametro en nuestra acción lo siguiente:
-
-::
-
-    //archivo app/modules/MiModulo/Controller/UsuariosController.php
-    <?php
-
-    namespace MiModulo\\Controller;
-
-    class UsuariosController
-    {
-        public function index(Request $request)
-        {
-            //el framework al llamar a la acción index, le pasará la instancia de $request al parametro.
-            $method = $request->getMethod(); 
-        }
-    }
-
 Obteniendo valores de la Petición
 ---------------------------------
 

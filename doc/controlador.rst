@@ -30,12 +30,12 @@ _________________________
         }
     }
 
-Este es un ejemplo de un controlador llamado UsuariosController, el cual extiende de la clase base Controller ( esto no es obligatorio ), y tiene un método llamado index() que crea una variable "mensaje" con el valor "Hola Mundo...!!!".
+Este es un ejemplo de un controlador llamado UsuariosController, el cual extiende de la clase base Controller, y tiene un método llamado index() que crea una variable "mensaje" con el valor "Hola Mundo...!!!".
 
 Como debe ser la Ruta para acceder a un Controlador
 ___________________________________________________
 
-Debido a que los nombres de los archivos y clases de controladores son en CamelCase, debe haber alguna manera de sin usar esta notación en la url, el kernel pueda encontrar y ejecutar al controlador solicitado. 
+Debido a que los nombres de los archivos y clases de controladores son en CamelCase, debe haber alguna manera de que sin usar esta notación en la url, el kernel pueda encontrar y ejecutar al controlador solicitado. 
 
 Esto se logra haciendo una conversión de la ruta, que debe estár en small_case, a CamelCase, veamos algunos ejemplos
 
@@ -147,44 +147,3 @@ Una acción de un controlador puede tener parametros ó argumentos que esperan c
             ...
         }
     }
-
-El parametro especial Request
-_____________________________
-
-Las acciones y filtros de un controlador, pueden, aparte de esperar los valores de los parametros de la URL, el objeto Request de la petición, esto es util en los casos en donde tenemos un controlador que no extiende de Controller.
-
-Acá tenemos un ejemplo:
-
-::
-
-    <?php  //controlador app/modules/Home/Controller/UsuariosController.php
-
-    namespaces Home\Controller;
-
-    use Kernel\\Respone;
-
-    class UsuariosController //nuestro controlador no extiende de Controller
-    {
-        protected function beforeFilter(Request $request){
-            //el kernel verificará si el filtro espera la instancia del request, de ser así se lo pasará.
-        }
-
-        public function index(Request $request){
-            return new Response("El método de la Petición es : " . $request->getMethod());
-        }
-
-        public function otroMetodo(Request $request){
-            return new Response("la url base de la aplicación es : " . $request->getBaseUrl());
-        }
-
-        //url : /home/usuarios/fecha/20-03-2012
-        public function fecha(Request $request, $fecha){
-            return new Response("la url base de la aplicación es : " . $request->getBaseUrl());
-        }
-
-        protected function afterFilter(){
-            //este método no puede esperar la instancia del request, solo las acciónes y el beforeFilter
-        }
-    }
-
-Como se puede apreciar, tenemos varios métodos esperando la instancia del Request en sus parametros, ademas si nos fijamos en el método "fecha(Request $request, $fecha)" este espera dos parametros, el request y un parametro fecha que viene de la url, en este caso no debemos preocuparnos de que el parametro de la url termine en el argumento $request, ya que el kernel se encargará de verificar si es un parametro ó el objeto Request lo que solicita la acción.
