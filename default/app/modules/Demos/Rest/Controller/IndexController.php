@@ -2,38 +2,32 @@
 
 namespace Demos\Rest\Controller;
 
-//use KumbiaPHP\Kernel\Controller\Controller;
-use KumbiaPHP\Kernel\Request;
+use KumbiaPHP\Kernel\Controller\Controller;
 use KumbiaPHP\Kernel\Response;
 
 /**
  * Ejemplo de un controlador REST FULL
  * 
- * Este controlador puede manejar peticiones de tipo rest, 
- * no hace falta que extienda de Controller si no va a realizar muchas tareas.
+ * Este controlador puede manejar peticiones de tipo rest
  *
  * @author maguirre
  */
-class IndexController //extends Controller
+class IndexController extends Controller
 {
 
     /**
      * Este filtro se ejecuta antes de la llamada a cualquier metodo del controlador
      * 
-     * En este ejemplo espera que le pasen el Request como argumento, pero
-     * esto es opcional.
-     * 
-     * @param Request $request
      * @return null|string
      * 
      * este filtro puede ó no retornar nada, ó retornar una cadena con el nombre
      * de la nueva acción a ejecutar en el controlador. 
      */
-    protected function beforeFilter(Request $request)
+    protected function beforeFilter()
     {
         //aqui le decimos que ejecute la accion que tenga el nombre
         //del metodo de petición.
-        return strtolower($request->getMethod());
+        return strtolower($this->getRequest()->getMethod()) . '_action';
     }
 
     /**
@@ -42,7 +36,7 @@ class IndexController //extends Controller
      * 
      * @return \KumbiaPHP\Kernel\Response 
      */
-    public function get()
+    public function get_action()
     {
         //creamos un arreglo de ejemplo para imprimirlo como json
         $data = array(
@@ -61,7 +55,7 @@ class IndexController //extends Controller
      * 
      * @return \KumbiaPHP\Kernel\Response 
      */
-    public function post()
+    public function post_action()
     {
         $data = array(
             'variable' => "Hola Mundo REST",
@@ -75,7 +69,7 @@ class IndexController //extends Controller
      * 
      * @return \KumbiaPHP\Kernel\Response 
      */
-    public function put()
+    public function put_action()
     {
         $data = array(
             'variable' => "Hola Mundo REST",
@@ -89,7 +83,7 @@ class IndexController //extends Controller
      * 
      * @return \KumbiaPHP\Kernel\Response 
      */
-    public function delete()
+    public function delete_action()
     {
         $data = array(
             'variable' => "Hola Mundo REST",
