@@ -31,6 +31,7 @@ class AppKernel extends Kernel
             $routes['/demo/vistas']   = __DIR__ . '/modules/Demos/Vistas/';
             $routes['/demo/modelos']  = __DIR__ . '/modules/Demos/Modelos/';
             $routes['/demo/upload']   = __DIR__ . '/modules/Demos/SubiendoArchivos/';
+            $routes['/admin']   = __DIR__ . '/modules/Demos/Seguridad/';
         }
         return $routes;
     }
