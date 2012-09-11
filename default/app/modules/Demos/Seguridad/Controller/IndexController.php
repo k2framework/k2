@@ -33,9 +33,15 @@ class IndexController extends Controller
         $this->form = new \KumbiaPHP\Form\Form('form_login');
 
         $this->form->setAction('_autenticate')
-                ->add('login')->setLabel('Nombre de Usuario: ');
+                ->add('username')->setLabel('Nombre de Usuario: ');
 
-        $this->form->add('clave', 'password')->setLabel('Contraseña: ');
+        $this->form->add('password', 'password')->setLabel('Contraseña: ');
+        
+        if ( $this->get('flash')->has('LOGIN_ERROR') ){
+            $this->form->setErrors(array(
+                $this->get('flash')->get('LOGIN_ERROR')
+            ));
+        }
     }
 
 }
