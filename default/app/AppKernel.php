@@ -1,4 +1,6 @@
 <?php
+
+require_once 'kernel.min.php';
 require_once '../../vendor/autoload.php';
 
 use KumbiaPHP\Kernel\Kernel;
