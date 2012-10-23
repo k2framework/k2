@@ -3,17 +3,17 @@
     <head>
         <meta http-equiv='Content-type' content='text/html; charset=<?php APP_CHARSET ?>' />
         <title>KumbiaPHP web &amp; App Framework</title>
-        <?php KumbiaPHP\View\Helper\Tag::css('bienvenida'); ?>
-        <?php KumbiaPHP\View\Helper\Tag::css('style'); ?>
-        <?php echo KumbiaPHP\View\Helper\Html::includeCss() ?>
+        <?php Tag::css('bienvenida'); ?>
+        <?php Tag::css('style'); ?>
+        <?php echo Html::includeCss() ?>
     </head>
     <body>
         <div id='content'>
             <div id='head'>
                 <div class='alignright'>
                     <p id='config'>
-                        <span class='app'><?php echo basename(dirname(\KumbiaPHP\View\View::get('app.context')->getAppPath())) ?></span>
-                        <?php echo KumbiaPHP\View\Helper\Html::link('pages/show/kumbia/status/', 'Config', 'title="Ver configuración de la aplicación"') ?>
+                        <span class='app'><?php echo basename(dirname(KumbiaPHP\View\View::get('app.context')->getAppPath())) ?></span>
+                        <?php echo Html::link('pages/show/kumbia/status/', 'Config', 'title="Ver configuración de la aplicación"') ?>
                     </p>
                 </div>
 
@@ -21,7 +21,7 @@
                 <h2 id='info-app'>web &amp; app Framework versión <?php //echo kumbia_version()     ?></h2>
             </div>
 
-            <?php \KumbiaPHP\View\View::content() ?>
+            <?php KumbiaPHP\View\View::content() ?>
 
             <?php //View::partial('kumbia/footer') ?>
             <div id="footer">
@@ -46,8 +46,8 @@
             </div>
 
         </div>
-        <?php KumbiaPHP\View\Helper\Tag::js('jquery/jquery.min', -100) ?>
-        <?php echo KumbiaPHP\View\Helper\Html::includeJs() ?>
+        <?php Tag::js('jquery/jquery.min', -100) ?>
+        <?php echo Html::includeJs() ?>
     </body>
 </html>
 

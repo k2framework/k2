@@ -1,4 +1,4 @@
-<?php KumbiaPHP\View\Helper\Tag::css('scaffold')?>
+<?php Tag::css('scaffold')?>
 <div id="scaffold">
 <h1><?php echo ucwords(basename(get_class($model)))//,": <span>$action_name</span>" ?></h1>
 <ul class="menssages">
@@ -20,9 +20,9 @@
             <?php foreach (get_object_vars($item) as $field) : ?>
             <td><?php h\eh($field)?></td>
             <?php endforeach?>
-            <td><?php echo \KumbiaPHP\View\Helper\Html::linkAction("ver/$item->id",'Ver')?> |
-                <?php echo \KumbiaPHP\View\Helper\Html::linkAction("editar/$item->id",'Editar')?> |
-                <?php echo \KumbiaPHP\View\Helper\Html::linkAction("borrar/$item->id",'Borrar', 'onclick="return confirm(\'¿Está seguro?\')"')?>
+            <td><?php echo Html::linkAction("ver/$item->id",'Ver')?> |
+                <?php echo Html::linkAction("editar/$item->id",'Editar')?> |
+                <?php echo Html::linkAction("borrar/$item->id",'Borrar', 'onclick="return confirm(\'¿Está seguro?\')"')?>
             </td>
         </tr>
     <?php endforeach?>
@@ -36,6 +36,6 @@
 
 </div>
 <div class="actions">
-    <?php echo \KumbiaPHP\View\Helper\Html::linkAction("crear/",'Crear registro')?>
+    <?php echo Html::linkAction("crear/",'Crear registro')?>
 </div>
 <?php //var_dump($results)?>
