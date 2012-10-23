@@ -21,9 +21,7 @@ class IndexController extends Controller
 
     public function index()
     {
-        $response = new \KumbiaPHP\Kernel\Response();
-        $response->cache('+1 min');
-        return $this->render($response);
+        //$this->cache('+10 sec');
     }
 
     public function otro()
