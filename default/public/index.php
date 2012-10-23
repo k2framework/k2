@@ -8,7 +8,7 @@ require_once '../app/AppKernel.php';
 use KumbiaPHP\Kernel\Request;
 use KumbiaPHP\Cache\AppCache;
 
-$app = new AppKernel(true);
+$app = new AppKernel(false);
 
 //$app = new AppCache($app);
 
