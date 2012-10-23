@@ -32,7 +32,7 @@ namespace KumbiaPHP\Kernel;
 use KumbiaPHP\Kernel\Collection;
 
 
-class Response
+class Response implements \Serializable
 {
 
     
@@ -120,6 +120,25 @@ class Response
                 header("{$value}", false);
             }
         }
+    }
+
+    public function serialize()
+    {
+        return array(
+            'headers' => $this->headers->all(),
+            'content' => $this->getContent(),
+            'statusCode' => $this->getStatusCode(),
+            'charset' => $this->getCharset(),
+        );
+    }
+
+    public function unserialize($serialized)
+    {
+        $data = unserialize($serialized);
+        $this->headers = new Collection($data['headers']);
+        $this->setContent($data['content']);
+        $this->setStatusCode($data['statusCode']);
+        $this->setCharset($data['charset']);
     }
 
     
@@ -463,6 +482,28 @@ class View
     public static function get($service)
     {
         return self::$container->get($service);
+    }
+
+    public static function partial($partial, $time = FALSE, $params = array())
+    {
+        
+        $app = self::$container->get('app.context');
+
+        $partial = explode(':', $partial);
+
+        if (count($partial) > 1) {
+            $modulePath = rtrim($app->getModulesPath(), '/') . '/' . $partial[0];
+            $file = $modulePath . '/View/_shared/partials/' . $partial[1] . '.phtml';
+        } else {
+            $file = rtrim($app->getAppPath(), '/') . '/view/partials/' . $partial[0] . '.phtml';
+        }
+        
+        extract($params, EXTR_OVERWRITE);
+        
+        if (!file_exists($file)) {
+            throw new \LogicException(sprintf("No existe El Partial \"%s\" en \"%s\"", basename($file), $file));
+        }
+        include $file;
     }
 
     protected function findTemplate($template)
