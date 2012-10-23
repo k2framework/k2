@@ -124,12 +124,12 @@ class Response implements \Serializable
 
     public function serialize()
     {
-        return array(
+        return serialize(array(
             'headers' => $this->headers->all(),
             'content' => $this->getContent(),
             'statusCode' => $this->getStatusCode(),
             'charset' => $this->getCharset(),
-        );
+        ));
     }
 
     public function unserialize($serialized)
@@ -2399,56 +2399,6 @@ class Request
         } else {
             return $uri;
         }
-    }
-
-}
-
-
-
-namespace KumbiaPHP\Kernel\Exception;
-
-use KumbiaPHP\Kernel\KernelInterface;
-use KumbiaPHP\Kernel\Response;
-
-
-class ExceptionHandler
-{
-
-    
-    static private $kernel;
-
-    static public function handle(KernelInterface $kernel)
-    {
-        set_exception_handler(array(__CLASS__, 'onException'));
-        self::$kernel = $kernel;
-    }
-
-    public static function onException(\Exception $e)
-    {
-        
-        $app = self::$kernel->getContainer()->get('app.context');
-
-        $code = $e->getCode();
-
-        while (ob_get_level()) {
-            ob_end_clean(); //vamos limpiando todos los niveles de buffer creados.
-        }
-
-        ob_start();
-        if ($app->InProduction()) {
-            if (404 === $e->getCode()) {
-                header('HTTP/1.1 404 Not Found');
-                $code = 404;
-            } else {
-                header('HTTP/1.1 500 Internal Server Error');
-                $code = 500;
-            }
-            include $app->getAppPath() . 'view/errors/404.phtml';
-        } else {
-            include __DIR__ . '/files/exception.php';
-        }
-        $response = new Response(ob_get_clean(), $code);
-        $response->send();
     }
 
 }
