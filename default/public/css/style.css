@@ -21,7 +21,7 @@
 	background-image: url('../img/default/info.png');
 }
 
-.valid {
+.valid, .success {
 	color: #4F8A10;
 	background-color: #DFF2BF;
 	background-image:url('../img/default/valid.png');
