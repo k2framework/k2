@@ -655,8 +655,9 @@ class Event
 
 namespace KumbiaPHP\Kernel\Event;
 
-use KumbiaPHP\EventDispatcher\Event;
 use KumbiaPHP\Kernel\Request;
+use KumbiaPHP\Kernel\Response;
+use KumbiaPHP\EventDispatcher\Event;
 
 
 class RequestEvent extends Event
@@ -665,14 +666,36 @@ class RequestEvent extends Event
     
     protected $request;
 
+    
+    protected $response;
+
     function __construct(Request $request)
     {
         $this->request = $request;
     }
 
+    
     public function getRequest()
     {
         return $this->request;
+    }
+
+    
+    public function hasResponse()
+    {
+        return $this->response instanceof Response;
+    }
+
+    
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
     }
 
 }
@@ -747,13 +770,12 @@ class EventDispatcher implements EventDispatcherInterface
         if (is_array($this->listeners[$eventName]) && count($this->listeners[$eventName])) {
             foreach ($this->listeners[$eventName] as $listener) {
                 $service = $this->container->get($listener[0]);
-                $result = call_user_func(array($service, $listener[1]), $event);
+                call_user_func(array($service, $listener[1]), $event);
                 if ($event->isPropagationStopped()) {
-                    return $result;
+                    return;
                 }
             }
         }
-        return $result;
     }
 
     
