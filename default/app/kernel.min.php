@@ -417,7 +417,8 @@ class ControllerResolver
     
     protected function camelcase($string, $firstLower = FALSE)
     {
-        $string = str_replace(' ', '', ucwords(str_replace('_', ' ', strtolower($string))));
+        $string = str_replace(' ', '', ucwords(preg_replace('@(.+)_(\w)@', '$1 $2', strtolower($string))));
+                
         if ($firstLower) {
             // Notacion lowerCamelCase
             $string[0] = strtolower($string[0]);
@@ -1584,7 +1585,8 @@ class AppContext
     public function createUrl($parameters = FALSE)
     {
         if ('/' !== $this->currentModule) {
-            $url = $this->currentModule . '/' . $this->currentController . '/' . $this->currentAction;
+            $url = $this->currentModule . '/' . $this->currentController .
+                    '/' . $this->currentAction;
         } else {
             $url = $this->currentController . '/' . $this->currentAction;
         }
@@ -1595,7 +1597,7 @@ class AppContext
             $url .= substr($this->currentUrl, strlen($url) + 1);
         }
 
-        return rtrim($url, '/');
+        return trim($url, '/') . '/';
     }
 
     
@@ -1612,8 +1614,8 @@ class AppContext
     protected function toSmallCase($string)
     {
         $string[0] = strtolower($string[0]);
-
-        return strtolower(preg_replace('/([A-Z])/', "_$1", $string));
+        
+        return strtolower(preg_replace('/\w([A-Z])/', "_$1", $string));
     }
 
 }
