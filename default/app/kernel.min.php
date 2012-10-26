@@ -359,7 +359,7 @@ class ControllerResolver
     protected $contShortName;
     protected $action;
 
-    function __construct(ContainerInterface $con)
+    public function __construct(ContainerInterface $con)
     {
         $this->container = $con;
     }
@@ -417,7 +417,8 @@ class ControllerResolver
     
     protected function camelcase($string, $firstLower = FALSE)
     {
-        $string = str_replace(' ', '', ucwords(str_replace('_', ' ', strtolower($string))));
+        $string = str_replace(' ', '', ucwords(preg_replace('@(.+)_(\w)@', '$1 $2', strtolower($string))));
+                
         if ($firstLower) {
             // Notacion lowerCamelCase
             $string[0] = strtolower($string[0]);
@@ -569,6 +570,7 @@ class ControllerResolver
                 if (FALSE === $result) {
                     //si el resultado es false, es porque no queremos que se ejecute la acción
                     $this->action = FALSE;
+                    $this->container->get('app.context')->setCurrentAction(FALSE);
                     return;
                 }
                 if (!is_string($result)) {
@@ -580,6 +582,7 @@ class ControllerResolver
                 //si el beforeFilter del controlador devuelve un valor, el mismo será
                 //usado como el nuevo nombre de la acción a ejecutar.
                 $this->action = $result;
+                $this->container->get('app.context')->setCurrentAction($result);
             }
         }
     }
@@ -1005,10 +1008,11 @@ interface DependencyInjectionInterface
 
 namespace KumbiaPHP\Di;
 
-use KumbiaPHP\Di\DependencyInjectionInterface;
-use KumbiaPHP\Di\Container\Container;
-use KumbiaPHP\Di\Exception\IndexNotDefinedException;
 use \ReflectionClass;
+use KumbiaPHP\Di\Container\Container;
+use KumbiaPHP\Di\Exception\DiException;
+use KumbiaPHP\Di\DependencyInjectionInterface;
+use KumbiaPHP\Di\Exception\IndexNotDefinedException;
 
 
 class DependencyInjection implements DependencyInjectionInterface
@@ -1019,6 +1023,7 @@ class DependencyInjection implements DependencyInjectionInterface
 
     
     private $queue = array();
+
     
     private $isQueue = FALSE;
 
@@ -1037,20 +1042,29 @@ class DependencyInjection implements DependencyInjectionInterface
 
         $reflection = new ReflectionClass($config['class']);
 
-        if (isset($config['construct'])) {
-            $arguments = $this->getArgumentsFromConstruct($id, $config);
+        if (isset($config['factory'])) {
+            $method = $config['factory']['method'];
+            if (isset($config['factory']['argument'])) {
+                $instance = $this->callFactory($reflection, $method, $config['factory']['argument']);
+            } else {
+                $instance = $this->callFactory($reflection, $method);
+            }
         } else {
-            $arguments = array();
+
+            if (isset($config['construct'])) {
+                $arguments = $this->getArgumentsFromConstruct($id, $config);
+            } else {
+                $arguments = array();
+            }
+
+            //verificamos si ya se creó una instancia en una retrollamada del
+            //metodo injectObjectIntoServicesQueue
+            if ($this->container->has($id)) {
+                return $this->container->get($id);
+            }
+
+            $instance = $reflection->newInstanceArgs($arguments);
         }
-
-        //verificamos si ya se creó una instancia en una retrollamada del
-        //metodo injectObjectIntoServicesQueue
-        if ($this->container->has($id)) {
-            return $this->container->get($id);
-        }
-
-        $instance = $reflection->newInstanceArgs($arguments);
-
         //agregamos la instancia del objeto al contenedor.
         $this->container->set($id, $instance);
 
@@ -1059,6 +1073,7 @@ class DependencyInjection implements DependencyInjectionInterface
         if (isset($config['call'])) {
             $this->setOtherDependencies($id, $instance, $config['call']);
         }
+        
         return $instance;
     }
 
@@ -1136,6 +1151,34 @@ class DependencyInjection implements DependencyInjectionInterface
         if ($this->inQueue($id)) {
             unset($this->queue[$id]);
         }
+    }
+
+    
+    protected function callFactory(\ReflectionClass $class, $method, $argument = NULL)
+    {
+        if (!$class->hasMethod($method)) {
+            throw new DiException("No existe el Método \"$method\" en la clase \"{$class->name}\"");
+        }
+
+        $method = $class->getMethod($method);
+
+        if (!$method->isStatic()) {
+            throw new DiException("El Método \"$method\" de la clase \"{$class->name}\" debe ser Estático");
+        }
+
+        if ('@' === $argument[0]) {//si comienza con @ es un servicio lo que solicita
+            $argument = $this->container->get(substr($argument, 1));
+        } elseif ($argument) { //si no comienza por arroba es un parametro lo que solicita
+            $argument = $this->container->getParameter($argument);
+        }
+
+        $class = $method->invoke(NULL, $argument);
+
+        if (!is_object($class)) {
+            throw new DiException("El Método \"$method\" de la clase \"{$class->name}\" debe retornar un Objeto");
+        }
+
+        return $class;
     }
 
 }
@@ -1440,6 +1483,9 @@ class AppContext
     protected $currentController;
 
     
+    protected $currentAction;
+
+    
     protected $inProduction;
 
     
@@ -1525,6 +1571,36 @@ class AppContext
     }
 
     
+    public function getCurrentAction()
+    {
+        return $this->currentController;
+    }
+
+    
+    public function setCurrentAction($currentAction)
+    {
+        $this->currentAction = $currentAction;
+    }
+
+    public function createUrl($parameters = FALSE)
+    {
+        if ('/' !== $this->currentModule) {
+            $url = $this->currentModule . '/' . $this->currentController .
+                    '/' . $this->currentAction;
+        } else {
+            $url = $this->currentController . '/' . $this->currentAction;
+        }
+
+        $url = $this->toSmallCase($url);
+
+        if ($parameters) {
+            $url .= substr($this->currentUrl, strlen($url) + 1);
+        }
+
+        return trim($url, '/') . '/';
+    }
+
+    
     public function InProduction()
     {
         return $this->inProduction;
@@ -1538,8 +1614,8 @@ class AppContext
     protected function toSmallCase($string)
     {
         $string[0] = strtolower($string[0]);
-
-        return strtolower(preg_replace('/([A-Z])/', "_$1", $string));
+        
+        return strtolower(preg_replace('/\w([A-Z])/', "_$1", $string));
     }
 
 }

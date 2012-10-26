@@ -1,9 +1,8 @@
 /* Scaffold */
 #scaffold {
-
-margin: 1em;
 font-family:arial;
 font-size: 14px;
+margin: 40px;
 }
 #scaffold table{
 width:100%;
@@ -62,6 +61,7 @@ margin: .5em .1em;
 .actions {
 border-top: dotted 1px grey;
 padding-top: 1em;
+padding-bottom: 1em;
 margin: .5em 0 0;
 }
 .actions a{

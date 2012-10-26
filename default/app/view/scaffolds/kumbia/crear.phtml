@@ -1,17 +1,11 @@
 <?php Tag::css('scaffold') ?>
 <div id="scaffold">
-    <h1><?php echo ucwords(basename(get_class($model)))//, ": <span>$action_name</span>" ?></h1>
+    <h1><?php echo ucwords(basename(get_class($model)))//, ": <span>$action_name</span>"  ?></h1>
+    <?php \KumbiaPHP\View\View::content(true) ?>
 
-    <ul class="menssages">
-        <?php foreach (\KumbiaPHP\View\View::flash()->getAll() as $type => $value) :?>
-            <li class="<?php echo $type ?>"><?php echo $value ?></li>
-        <?php endforeach?>
-    </ul>
-    
     <?php echo $form ?>
 
     <div class="actions">
         <a href="../">Listado</a>
     </div>
-    <?php //View::partial('editors/tinymce') // ya veremos si incluimos algun wysiwyg?>
 </div>
