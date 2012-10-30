@@ -325,6 +325,8 @@ Establece el tiempo de caché para una vista ó controlador completos, se debe p
         }
     } 
 
+Cabe destacar que la cache solo se activa en produccíon y si se usa la clase AppCache() en public/index.php
+
 render()
 _______
 
@@ -332,11 +334,17 @@ _______
 
     Controller->render(array $params = array(), $time = NULL)
 
+LLama al servicio @view y nos devuelve la respuesta ya construida con el template y view especificados. Se le pueden pasar parametros que serán las variables en la vista y un tiempo de cache.
+
+Este método es util cuando queremos enviar la respuesta por correo por ejemplo. crear un PDF, etc.
+
 renderNotFound()
 _______________
 
 :: 
 
     Controller->renderNotFound($message)
+
+Este método lanza una excepcion NotFoundException, podemos mostrar un mensaje para verlo en el entorno de desarrollo, en producción se mostrará la vista 404.phtml de "app/views/errors/"
 
 
