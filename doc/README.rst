@@ -42,7 +42,9 @@ Preguntas Frecuentes
   * ¿Cómo crear un formulario?
   * ¿Cómo incluir un partial?
   * ¿Cómo Crear un Modelo?
-  * `¿Como obtener un servicio desde el controlador? <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#get>`_
-  * ¿Como obtener un servicio desde la Vista?
-  * ¿Como retornar una respuesta JSON?
-  * `¿Como crear un módulo en mi aplicación? <./los_modulos.rst>`_
+  * `¿Cómo obtener un servicio desde el controlador? <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#get>`_
+  * ¿Cómo obtener un servicio desde la Vista?
+  * ¿Cómo retornar una respuesta JSON?
+  * `¿Cómo crear un módulo en mi aplicación? <https://github.com/manuelj555/k2/blob/master/doc/los_modulos.rst>`_
+  * `¿Cómo obtengo un valor que viene por POST? <https://github.com/manuelj555/k2/blob/master/doc/request.rst#el-metodo-get>`_
+  * `¿Cómo obtengo un valor que viene por GET? <https://github.com/manuelj555/k2/blob/master/doc/request.rst#el-metodo-get>`_
