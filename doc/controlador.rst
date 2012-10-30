@@ -3,7 +3,7 @@ El Controlador
 
 Los controladores en KumbiaPHP 2 son muy parecidos a los controladores de la versión 1 del framework, estan compuestos de métodos que si concuerdan con el patrón de la url de una petición, el kernel del framework los invoca y le pasa los parametros que estos soliciten.
 
-Ademas se siguen teniendo los filtros pre y post ejecución de la acción correspondiente.
+.. contents:: Ademas se siguen teniendo los filtros pre y post ejecución de la acción correspondiente.
 
 Nombre de la Clase
 ------------------
