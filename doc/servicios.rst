@@ -27,6 +27,8 @@ Se debe tener cuidado al nombrar los servicios, ya que si 2 servicios tienen el 
 Nombre del Servicio
 ___________________
 
+el nombre del servicio es cualquier cadena valida, no debe llevar espacios en blanco ni caracteres especiales, solo...
+
 Estableciendo Dependencias
 --------------------------
 
