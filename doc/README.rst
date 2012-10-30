@@ -10,3 +10,11 @@ Indice de Contenidos
    * `El Objeto Response ( la Respuesta ) <./response.rst>`_
    * `Las Vistas <./vistas.rst>`_
    * `Creando y Usando Servicios <./servicios.rst>`_
+
+Preguntas Frecuentes
+====================
+
+  * ¿Comó hacer una redirección en el controlador?
+  * ¿Comó enviar un mensaje FLASH?
+  * ¿Comó seleccionar el template a usar en mi controlador?
+  * ¿Comó seleccionar la vista a usar en mi controlador?
