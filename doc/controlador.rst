@@ -155,34 +155,95 @@ Todos los controladores de la aplicación deben extender de la clase base "Kumbi
 
 Esta clase ofrece ciertos métodos de gran utilidad para ser usados por los controladores de la aplicación, a continuación se detallarán cada uno de ellos:
 
-get($id)
-_______
+get()
+________
+
+:: 
+
+    Controller->get($id)
+
+Este método devuelve la instancia del servicio, para ser usado en las acciónes del controlador. por ejemplo:
+
+::
+
+    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    <?php
+
+    namespace MiModulo\Controller;
+
+    use KumbiaPHP\Kernel\Controller\Controller;
+
+    class UsuariosController extends Controller //ahora se extiende de una clase base Controller.
+    {
+        public function index()
+        {
+            echo "Método de la petición: " $this->get("request")->getMethod();
+        }
+    }    
+
+Con $this->get("request") obtenemos la instancia del objeto request, y luego llamamos al método getMethod() de dicho objeto. Tambien se puede guardar la instancia del objeto en una variable y luego usar los métodos del objeto.
 
 getRequest()
 ___________
 
+:: 
+
+    Controller->getRequest()
+
 getRouter()
 __________
+
+:: 
+
+    Controller->getRouter()
 
 getView()
 _________
 
-setView($view, $template = FALSE)
-________________________________
+:: 
+
+    Controller->getView()
+
+setView()
+________
+
+:: 
+
+    Controller->setView($view, $template = FALSE)
 
 getTemplate()
 ____________
 
-setTemplate($template)
-_____________________
+:: 
 
-cache($time = FALSE)
-___________________
+    Controller->getTemplate()
 
-render(array $params = array(), $time = NULL)
-____________________________________________
+setTemplate()
+____________
 
-renderNotFound($message)
-_______________________
+:: 
+
+    Controller->setTemplate($template)
+
+cache()
+______
+
+:: 
+
+    Controller->cache($time = FALSE)
+
+render()
+_______
+
+:: 
+
+    Controller->render(array $params = array(), $time = NULL)
+
+renderNotFound()
+_______________
+
+:: 
+
+    Controller->renderNotFound($message)
 
 
