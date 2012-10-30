@@ -1,6 +1,9 @@
 Indice de Contenidos
 ====================
 
+Lo Básico
+---------
+
    * Instalación y Requerimientos
    * `Funcionamiento Básico <./funcionamiento_basico.rst>`_
    * `Los Módulos <./los_modulos.rst>`_
@@ -10,6 +13,23 @@ Indice de Contenidos
    * `El Objeto Response ( la Respuesta ) <./response.rst>`_
    * `Las Vistas <./vistas.rst>`_
    * `Creando y Usando Servicios <./servicios.rst>`_
+
+Servicios
+---------
+
+  * @router
+  * @flash
+  * @validator
+  * @security
+  * @session
+  * @view
+  * @cache
+
+Librerias 
+---------
+
+  * ActiveRecord
+  * Upload
 
 Preguntas Frecuentes
 ====================
