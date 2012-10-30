@@ -36,8 +36,8 @@ Preguntas Frecuentes
 
   * ¿Cómo hacer una redirección en el controlador?
   * ¿Cómo enviar un mensaje FLASH?
-  * ¿Cómo seleccionar el template a usar en mi controlador?
-  * ¿Cómo seleccionar la vista a usar en mi controlador?
+  * `¿Cómo seleccionar el template a usar en mi controlador? <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#settemplate>`_
+  * `¿Cómo seleccionar la vista a usar en mi controlador? <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#id17>`_
   * ¿Cómo crear un servicio?
   * ¿Cómo crear un formulario?
   * ¿Cómo incluir un partial?
