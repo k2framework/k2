@@ -3,7 +3,7 @@ El Objeto Request
 
 Este objeto es una capa de abstracción orientada a objetos de las variables globales de PHP, es decir, permite obtener valores de $_GET, $_POST, $_FILES, y $_SERVER por medio de una capa ( Clase Request ), orientada a objetos.
 
-Las ventajas de esto son que evitamos tener que realizar tareas comunes que requieren un poco más de trabajo haciendolas a mano.
+.. contents:: Las ventajas de esto son que evitamos tener que realizar tareas comunes que requieren un poco más de trabajo haciendolas a mano.
 
 Como obtengo la instancia del Request actual
 --------------------------------------------
@@ -30,7 +30,7 @@ En realidad esto es muy sencillo, en cualquier controlador que extienda de Contr
         }
     }
 
-Obteniendo valores de la Petición
+Obteniendo valores de la Peticion
 ---------------------------------
 
 Generalmente una petición viene acompañada de valores que nos envia el cliente, ya sea por medio de un formulario, de la url, etc. y la aplicación debe recibir y procesar dichos datos de alguna manera dependiendo de la lógica de cada programa.
@@ -70,8 +70,12 @@ La clase Request tiene 5 atributos publicos, los cuales son el equivalente a las
 
 Estos atributos públicos, no solo son arreglos de datos como sus equivalentes en PHP, sino que son objetos con métodos para establecer y leer los datos que contienen.
 
-El método get($key, $default = NULL)
-___________________________________
+El metodo get()
+______________
+
+::
+
+    public function get($key, $default = NULL)
 
 El objeto Request ofrece un método llamado get($key, $default = NULL) el cual espera un indice y un valor por defecto si no se encuentra el valor buscado en el indice.
 
@@ -98,7 +102,7 @@ Ejemplo de uso:
         }
     }
 
-Otros métodos Utiles
+Otros metodos Utiles
 ====================
 
 Acá estan listados los métodos de la clase Request:
