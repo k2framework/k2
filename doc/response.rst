@@ -1,6 +1,8 @@
 La Clase Response
 =================
 
+.. contents:: Índice:
+
 Esta clase es la encargada de mostrar el contenido que se devuelva en la petición, es decir, todo lo que queramos mostrar ó devolver como resultado de la ejecución de una patetición, debemos hacerlo a traves de la clase Response.
 
 Ejemplo:
@@ -42,6 +44,7 @@ Ejemplo:
 
     use KumbiaPHP\\Kernel\\Controller\\Controller;
     use KumbiaPHP\\Kernel\\Response;
+    use KumbiaPHP\\Kernel\\JsonResponse;
 
     class UsuariosController extends Controller
     {
@@ -53,8 +56,8 @@ Ejemplo:
 
         public function json()
         {
-            $content = array("nombres" => "Manuel José", "edad" => "23");
-            return new Response(json_encode($content), 200, array( "Content-Type" => "application/json" ));
+            $data = array("nombres" => "Manuel José", "edad" => "23");
+            return new JsonResponse($data);//esta clase crear el json y los headers automaticamente.
         }
 
         public function redirect()
