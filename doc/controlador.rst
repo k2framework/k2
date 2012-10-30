@@ -190,12 +190,16 @@ ___________
 
     Controller->getRequest()
 
+Este método nos devuelve la instancia del objeto request, es una manera más sencilla de hacer $this->get("request") y ademas nos brinda la posibilidad de ver los métodos disponibles al utilizar un IDE que lea la PhpDoc.
+
 getRouter()
 __________
 
 :: 
 
     Controller->getRouter()
+
+Este método nos devuelve la instancia del objeto router, es una manera más sencilla de hacer $this->get("router") y ademas nos brinda la posibilidad de ver los métodos disponibles al utilizar un IDE que lea la PhpDoc.
 
 getView()
 _________
@@ -204,12 +208,38 @@ _________
 
     Controller->getView()
 
+Este método nos devuelve una cadena que representa el nombre de la vista a renderizar por el servicio @view.
+
 setView()
 ________
 
 :: 
 
     Controller->setView($view, $template = FALSE)
+
+Este método permite establecer la vista que el servicio @view deberá renderizar. Ademas podemos establecer de 
+una vez el template a usar. Tambien es posible dejar de mostrar la vista y/ó el template pasando null en los parametros.
+
+::
+
+    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    <?php
+
+    namespace MiModulo\Controller;
+
+    use KumbiaPHP\Kernel\Controller\Controller;
+
+    class UsuariosController extends Controller //ahora se extiende de una clase base Controller.
+    {
+        public function index()
+        {
+            $this->setView("listado"); //va a renderizar la vista listado.phtml
+            $this->setView(null); //no se va a renderizar ninguna vista solo el template.
+            $this->setView("listado",null); //va a renderizar la vista listado.phtml sin template
+            $this->setView(null,null); //no se mostrará ni vista ni template
+            $this->setView("listado","otro_template"); //vista listado.phtml y template otro_template.phtml
+        }
+    }  
 
 getTemplate()
 ____________
@@ -218,6 +248,8 @@ ____________
 
     Controller->getTemplate()
 
+Este método nos devuelve una cadena que representa el nombre del template a renderizar por el servicio @view.
+
 setTemplate()
 ____________
 
@@ -225,12 +257,73 @@ ____________
 
     Controller->setTemplate($template)
 
+Este método permite establecer el template que el servicio @view deberá renderizar. Tambien es posible pasar
+null para indicar que no queremos que se muestre el template. 
+
+Los templates se pueden clasificar en dos grupos:
+
+    * Templates Publicos : Se encuentran en "proyecto/app/view/templates/"
+    * Templates de Módulos: Se encuentran en la carpeta "view/_shared/templates/" de cada módulo de la app.
+
+::
+
+    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    <?php
+
+    namespace MiModulo\Controller;
+
+    use KumbiaPHP\Kernel\Controller\Controller;
+
+    class UsuariosController extends Controller //ahora se extiende de una clase base Controller.
+    {
+        public function index()
+        {
+            $this->setTemplate("admin"); //va a renderizar el template publico admin.phtml
+            $this->setTemplate("MiModulo:admin"); //va a renderizar el template admin.phtml del módulo "MiModulo"
+            $this->setTemplate("K2/Backend:default");//renderiza el template default.phtml del módulo "K2/Backend"
+        }
+    } 
+
+Cuando queremos utilizar un template de un módulo y no uno público, debemos especificar el nombre del módulo seguido del simbolo de dos puntos ":" y luego el nombre del template, por ejemplo:
+
+    * **K2/Backend:default** -> el módulo es K2/Backend y el template es default.phtml
+    * **K2/EmailTemplate:default** -> el módulo es K2/EmailTemplate y el template es default.phtml
+    * **Twitter:default** -> el módulo es K2/Backend y el template es default.phtml
+
+El nombre del módulo es el namespace del módulo hasta la carpeta donde se encuentren los controladores, módelos, vistas y demas archivos del mismo.
+
 cache()
 ______
 
 :: 
 
     Controller->cache($time = FALSE)
+
+Establece el tiempo de caché para una vista ó controlador completos, se debe pasar un `intervalo de tiempo válido <http://www.php.net/manual/es/datetime.formats.relative.php>`_, si se pasa false, no se cachea. Por ejemplo:
+
+::
+
+    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    <?php
+
+    namespace MiModulo\Controller;
+
+    use KumbiaPHP\Kernel\Controller\Controller;
+
+    class UsuariosController extends Controller //ahora se extiende de una clase base Controller.
+    {
+        protected function beforeFilter()
+        {
+            $this->cache('+10 min'); //se cachean todas las respuestas del controlador por 10 minutos.
+        }
+
+        public function index()
+        {
+            $this->cache('+1 min'); //se cachea la respuesta por 1 minuto
+            $this->cache('+10 hour'); //se cachea la respuesta por 10 horas
+            $this->cache(false); //deja de cachear la respuesta
+        }
+    } 
 
 render()
 _______
