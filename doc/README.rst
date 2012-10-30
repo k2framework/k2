@@ -5,14 +5,14 @@ Lo Básico
 ---------
 
    * Instalación y Requerimientos
-   * `Funcionamiento Básico <./funcionamiento_basico.rst>`_
-   * `Los Módulos <./los_modulos.rst>`_
-   * `El AppKernel <./app_kernel.rst>`_
-   * `El Controlador <./controlador.rst>`_
-   * `El Objeto Request ( Petición ) <./request.rst>`_
-   * `El Objeto Response ( la Respuesta ) <./response.rst>`_
+   * `Funcionamiento Básico <https://github.com/manuelj555/k2/blob/master/doc/funcionamiento_basico.rst>`_
+   * `Los Módulos <https://github.com/manuelj555/k2/blob/master/doc/los_modulos.rst>`_
+   * `El AppKernel <https://github.com/manuelj555/k2/blob/master/doc/app_kernel.rst>`_
+   * `El Controlador <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst>`_
+   * `El Objeto Request ( Petición ) <https://github.com/manuelj555/k2/blob/master/doc/request.rst>`_
+   * `El Objeto Response ( la Respuesta ) <https://github.com/manuelj555/k2/blob/master/doc/response.rst>`_
    * `Las Vistas <./vistas.rst>`_
-   * `Creando y Usando Servicios <./servicios.rst>`_
+   * `Creando y Usando Servicios <https://github.com/manuelj555/k2/blob/master/doc/servicios.rst>`_
 
 Servicios
 ---------
