@@ -44,7 +44,7 @@ Preguntas Frecuentes
   * ¿Cómo Crear un Modelo?
   * `¿Cómo obtener un servicio desde el controlador? <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#get>`_
   * ¿Cómo obtener un servicio desde la Vista?
-  * ¿Cómo retornar una respuesta JSON?
+  * `¿Cómo retornar una respuesta JSON? <https://github.com/manuelj555/k2/blob/master/doc/response.rst#parametros-de-la-respuesta>`_
   * `¿Cómo crear un módulo en mi aplicación? <https://github.com/manuelj555/k2/blob/master/doc/los_modulos.rst>`_
   * `¿Cómo obtengo un valor que viene por POST? <https://github.com/manuelj555/k2/blob/master/doc/request.rst#el-metodo-get>`_
   * `¿Cómo obtengo un valor que viene por GET? <https://github.com/manuelj555/k2/blob/master/doc/request.rst#el-metodo-get>`_
