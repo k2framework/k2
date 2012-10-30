@@ -18,9 +18,9 @@ _________________________
     //archivo app/modules/MiModulo/Controller/UsuariosController.php
     <?php
 
-    namespace MiModulo\\Controller;
+    namespace MiModulo\Controller;
 
-    use KumbiaPHP\\Kernel\\Controller\\Controller;
+    use KumbiaPHP\Kernel\Controller\Controller;
 
     class UsuariosController extends Controller //ahora se extiende de una clase base Controller.
     {
@@ -116,9 +116,9 @@ Una acción de un controlador puede tener parametros ó argumentos que esperan c
 
     <?php  //controlador app/modules/Home/Controller/UsuariosController.php
 
-    namespaces Home\\Controller;
+    namespaces Home\Controller;
 
-    use KumbiaPHP\Kernel\\Controller\\Controller;
+    use KumbiaPHP\Kernel\Controller\Controller;
 
     class UsuariosController extends Controller
     {
@@ -147,3 +147,42 @@ Una acción de un controlador puede tener parametros ó argumentos que esperan c
             ...
         }
     }
+
+La clase base Controller
+-------------------------
+
+Todos los controladores de la aplicación deben extender de la clase base "KumbiaPHP\Kernel\Controller\Controller", si no lo hacen, el framework lanzará una excepción indicandonos que debemos extender de dicha clase.
+
+Esta clase ofrece ciertos métodos de gran utilidad para ser usados por los controladores de la aplicación, a continuación se detallarán cada uno de ellos:
+
+get($id)
+_______
+
+getRequest()
+___________
+
+getRouter()
+__________
+
+getView()
+_________
+
+setView($view, $template = FALSE)
+________________________________
+
+getTemplate()
+____________
+
+setTemplate($template)
+_____________________
+
+cache($time = FALSE)
+___________________
+
+render(array $params = array(), $time = NULL)
+____________________________________________
+
+renderNotFound($message)
+_______________________
+
+
