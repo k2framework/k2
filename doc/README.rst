@@ -38,7 +38,7 @@ Preguntas Frecuentes
   * ¿Cómo enviar un mensaje FLASH?
   * `¿Cómo seleccionar el template a usar en mi controlador? <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#settemplate>`_
   * `¿Cómo seleccionar la vista a usar en mi controlador? <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#setview>`_
-  * ¿Cómo crear un servicio?
+  * `¿Cómo crear un servicio? <https://github.com/manuelj555/k2/blob/master/doc/servicios.rst#definiendo-un-servicio>`_
   * ¿Cómo crear un formulario?
   * ¿Cómo incluir un partial?
   * ¿Cómo Crear un Modelo?
