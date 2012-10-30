@@ -15,7 +15,7 @@ Lo Básico
    * `Creando y Usando Servicios <./servicios.rst>`_
 
 Servicios
----------
+---
 
   * @router
   * @flash
@@ -28,7 +28,7 @@ Servicios
 Librerias 
 ---------
 
-  * ActiveRecord
+  * `ActiveRecord <https://github.com/manuelj555/activerecord>`_
   * Upload
 
 Preguntas Frecuentes
@@ -42,7 +42,7 @@ Preguntas Frecuentes
   * ¿Cómo crear un formulario?
   * ¿Cómo incluir un partial?
   * ¿Cómo Crear un Modelo?
-  * ¿Como obtener un servicio desde el controlador?
+  * `¿Como obtener un servicio desde el controlador? <>`_
   * ¿Como obtener un servicio desde la Vista?
   * ¿Como retornar una respuesta JSON?
-  * ¿?
+  * `¿Como crear un módulo en mi aplicación? <./los_modulos.rst>`_
