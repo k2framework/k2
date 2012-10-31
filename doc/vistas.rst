@@ -72,8 +72,23 @@ _______________________________
 Helpers
 -------
 
-	* Html
-	* Form
-	* Tag
-	* Js
-	* Ajax
+Los Helpers son clases estáticas que ofrecen métodos utiles que facilitan la creacion de ciertos elementos html como links, imagenes, inserccion de stripts y css, creacion de elementos de formularios, etc. A continuación se listan los helpers disponibles:
+
+	* `Html <https://github.com/manuelj555/k2_core/blob/master/src/KumbiaPHP/View/Helper/Html.php>`_
+	* `Form <https://github.com/manuelj555/k2_core/blob/master/src/KumbiaPHP/View/Helper/Form.php>`_
+	* `Tag <https://github.com/manuelj555/k2_core/blob/master/src/KumbiaPHP/View/Helper/Tag.php>`_
+	* `Js <https://github.com/manuelj555/k2_core/blob/master/src/KumbiaPHP/View/Helper/Js.php>`_
+	* `Ajax <https://github.com/manuelj555/k2_core/blob/master/src/KumbiaPHP/View/Helper/Ajax.php>`_
+
+Las Funciones h() y eh()
+-----------------------
+
+Estas dos funciones ofrecen alias para escapar cadenas de texto y mostrarlas, ejemplos:
+
+::
+
+	<?php
+
+	echo h("<h1>hola cómo estás</h1>"); //muestra el texto escapado, es decir el <h1> se imprime como texto.
+	$txt = h("<span class='span3'>Mensaje</span>"); //escapa el span y lo devuelve como texto
+	eh("mensaje"); //es como hacer echo h("mensaje") ó echo htmlspecialchars("mensaje");
