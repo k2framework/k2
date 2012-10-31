@@ -80,8 +80,114 @@ _________________________
 |                              |      listen[miMetodo] = kumbia.response ;ejecutado en el evento kumbia.response     |
 |                              |      listen[onError] = kumbia.exception ;ejecutado al ocurrir una excepcion         |
 +------------------------------+-------------------------------------------------------------------------------------+
+
+Ejemplos de Definiciones de Servicios:
+______________________________________
+
+::
+
+   [session]
+   class = KumbiaPHP\Kernel\Session\Session
+   construct = @request ;el servicio @session usa el servicio @request
+   
+   [router]
+   class =  KumbiaPHP\Kernel\Router\Router
+   construct[] = @app.context ;el servicio @router usa el servicio @app.context
+   construct[] = @app.kernel  ;el servicio @router usa el servicio @kernel
+   
+   [view]
+   class = KumbiaPHP\View\View
+   construct[] = @container ;el servicio @view usa el servicio @container
+   
+   [cache]
+   class = KumbiaPHP\Cache\Cache
+   factory[method] = factory   ;se llamará al método estático factory()
+   factory[argument] = app_dir ;y se le pasará como parametro el valor del parametro app_dir
+   
+   [flash]
+   class = KumbiaPHP\Flash\Flash
+   construct[] = @session ;el servicio @flash usa el servicio @session
+   
+   [validator]
+   class = KumbiaPHP\Validation\Validator  ;no usa otros servicios
+   
+   [security]
+   class = KumbiaPHP\Security\Security
+   construct[] = @session
+   
+   [activerecord.provider]
+   class = KumbiaPHP\Security\Auth\Provider\ActiveRecord
+   construct[] = @container
+
 Estableciendo Dependencias
 --------------------------
+
+Algunos servicios (clases) necesitan de otros servicios ( otras clases ) para realizar algunas tareas especificas, por ejemplo el servicio para crear mensajes Flash necesita del servicio @session para guardar los mensajes entre una petición y otra, el servicio @router necesita dos servicios: el @app.context y el @app.kernel para poder trabajar con las redirecciónes dentro de la aplicación. Todo esto quiere decir que algunos servicios **dependen** de otros para su correcto funcionamiento.
+
+Podemos lograr que a un servicio le lleguen las instancias de los servicios que necesitan mediante métodos de la clase ó desde el mismo constructor. Pero para lograr esto debemos configurarlo en nuestro archivo services.ini, en donde hallamos colocado la definición del servicio. Esto se logra de la siguiente manera:
+
+::
+
+   //codigo en services.ini
+   [api.twitter]
+   class = K2\Twitter\Twitter
+   construct[] = @request ;el servicio @apt.twitter usa el servicio @request y le llegará en el constructor
+   call[establecerSession] = @session ;se le pasa el servicio @session por medio del método establecerSession()
+   call[setFlash]          = @flash   ;se le pasa el servicio @flash por medio del método setFlash()
+
+   //servicio @Twitter
+
+   namespace K2\Twitter\Twitter;
+
+   class Twitter
+   {
+      protected $session;
+      protected $flash;
+      protected $request;
+
+      public function __construct(Request $r) //acá estamos esperando la instancia del servicio @request.
+      {
+         //al solicitar la instancia del servicio @api.twitter, el inyector de dependencias le pasará a esta clase
+         //el servicio @request en el constructor.
+         $this->request = $r;
+      }
+
+      public function establecerSession(Session $session) //acá estamos esperando la instancia del servicio @session.
+      {
+         //al solicitar la instancia del servicio @api.twitter, el inyector de dependencias le pasará a esta clase
+         //el servicio session en el constructor.
+         $this->session = $session;
+      }
+
+      public function setFlash(Flash $flash)
+      {
+         $this->flash = $flash;
+      }
+   }
+
+::
+
+   //codigo en services.ini
+   [flash]
+   class = KumbiaPHP\Flash\Flash
+   construct[] = @session ;el servicio @flash usa el servicio @session y le llegará en el constructor
+
+   //servicio @flash
+
+   namespace KumbiaPHP\Flash\Flash; 
+
+   class Flash
+   {
+      protected $session;
+
+      public function __construct(Session $session) //acá estamos esperando la instancia del servicio @session.
+      {
+         //al solicitar la instancia del servicio @flash, el inyector de dependencias le pasará a esta clase
+         //el servicio session en el constructor.
+         $this->session = $session;
+      }
+   }
+
 
 Escuchando Eventos
 ------------------
