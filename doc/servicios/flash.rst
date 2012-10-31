@@ -123,7 +123,7 @@ En el siguiente ejemplo enviaremos 1 mensaje de información desde un controlado
 
     //tambien se pueden imprimir todos los mensajes:
 
-    <?php foreach(View::flash()->getAll() as $type as $msj): ?>
+    <?php foreach(View::flash()->getAll() as $type => $msj): ?>
         <div class="<?php echo $type ?>"><?php echo $msj ?></div>
     <?php endforeach; ?>
 
