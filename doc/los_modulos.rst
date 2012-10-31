@@ -1,7 +1,7 @@
 Los Módulos
 ===========
 
-En esta nueva versión de KumbiaPHP, la aplicación está constituida por módulos ó paquetes.
+.. contents:: En esta nueva versión de KumbiaPHP, la aplicación está constituida por módulos ó paquetes.
 
 
 Que es un Módulo
@@ -59,4 +59,10 @@ Un ejemplo básico de la estructura de un módulo es:
 Como podemos ver en el ejemplo tenemos un módulo llamado Ventas que contiene una serie de carpetas ( Ninguna de las carpetas es obligatoria ), de las cuales las carpetas Controller y View deben tener siempre esos nombres, ya que el framework busca los controladores y vistas dentro de las mismas. La carpeta Model contendrá los modelos, realmente no importa el nombre de la carpeta que contiene los modelos ó si estos se encuentran en carpeta alguna, ya que el autoload PSR-0 los buscará a traves de su namespace. Tambien tenemos una carpeta llamada MisServicios, donde su nombre no es relevante, y contiene los servicios que posee el módulo.
 
 Por ultimo tenemos la carpeta config, y puede tener dos archivos, config.ini y services.ini, en el primero podemos definir parametros de configuración para el módulo y en services.ini estarán definidos los servicios que ofrece nuestro módulo, que para el ejemplo son el servicio GestorVentas y el servicio ImpresorVentas.
+
+Instalando Módulos de Terceros
+------------------------------
+
+Donde debo colocar Los Módulos
+------------------------------
 
