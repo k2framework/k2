@@ -60,5 +60,20 @@ Las vistas para ese controlador deben ir en:
 Los Templates
 -------------
 
+Nombre del Template
+___________________
+
+Donde debe ir el Template
+_________________________
+
+Templates Publicos y de Módulos
+_______________________________
+
 Helpers
 -------
+
+	* Html
+	* Form
+	* Tag
+	* Js
+	* Ajax
