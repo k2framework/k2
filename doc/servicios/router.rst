@@ -79,4 +79,44 @@ ______________
         }
     }
 
-El return es Obligatorio, ya que debemos retornar el objeto Response creado por los métodos del servicio @router, de no hacerlo, no se hará la redirección.
+El return es OBLIGATORIO, ya que debemos retornar el objeto Response creado por los métodos del servicio @router, de no hacerlo, no se hará la redirección
+
+**Ahora un Ejemplo más Avanzado:**
+
+    Se enviará un correo a travez de un servicio ficticio llamado @mail, el correo es una vista/template de la aplicación, que da la bienvenida a un usuario recien registrado.
+
+::
+
+    <?php
+
+    namespace Registro\Controller;
+
+    use KumbiaPHP\Kernel\Controller\Controller;
+
+    class RegistroController extends Controller
+    {
+        public function enviarCorreo($usuarioId)
+        {
+            //obtenemos el contenido de la url email_templates/usuarios/registro/{id}
+            //el cual es el html que se enviará por correo.
+
+            $response = $this->getRouter()->forward("email_templates/usuarios/registro/$usuarioId");
+
+            if ( 200 === $response->getStatus() ){ //si la respuesta es exitosa.
+                $email = $this->get("mail")
+                                    ->setSubject("Registro Exitoso")
+                                    ->setContent($response->getContet());
+                if ( $email->send() ){
+                    $this->get("flash")->success("El correo fué enviado con éxito...!!!");
+                }else{ //si hubo un error.
+                    $this->get("flash")->error("No se Pudo enviar el Correo...!!!");
+                }
+            }else{ //si hubo un error.
+                $this->get("flash")->error("No se Pudo enviar el Correo...!!!");
+            }
+        }
+    }
+
+Como se puede ver, este es un ejemplo avanzado del uso del router, se usa el método forward para obtener la respuesta de otra petición, este método devuelve un objeto Response, a travez del cual podemos verficar el status de la respuesta y el contenido html que nos devolvió.
+
+Luego de obtener y validar la respuesta, usamos el servicio @mail para enviar el correo.
