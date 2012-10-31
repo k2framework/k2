@@ -4,7 +4,7 @@ Indice de Contenidos
 Lo Básico
 ---------
 
-   * Instalación y Requerimientos
+   * `Instalación y Requerimientos <https://github.com/manuelj555/k2/blob/master/doc/instalacion_requerimientos.rst>`_
    * `Funcionamiento Básico <https://github.com/manuelj555/k2/blob/master/doc/funcionamiento_basico.rst>`_
    * `Los Módulos <https://github.com/manuelj555/k2/blob/master/doc/los_modulos.rst>`_
    * `El AppKernel <https://github.com/manuelj555/k2/blob/master/doc/app_kernel.rst>`_
