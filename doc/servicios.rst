@@ -188,6 +188,33 @@ Podemos lograr que a un servicio le lleguen las instancias de los servicios que 
       }
    }
 
+::
+
+   //codigo en services.ini
+   [cache]
+   class = KumbiaPHP\Cache\MiCache
+   factory[method] = crearInstancia  ;se llamará a este método, el cual debe crear la instancia del servicio.
+   factory[argument] = cache.driver  ;espera el valor contenido en el parametro de algun config.ini de la App.
+
+   //servicio @MiCache
+
+   namespace KumbiaPHP\Cache\MiCache;
+
+   class MiCache
+   {
+      public static function crearInstancia($driver)
+      {
+         $driverClass = "KumbiaPHP\\Cache\\Adapter\\$driver"; creamos el nombre de la clase con el namespace.
+
+         if ( !class_exist($driverClass) )  //si no existe la clase lanzamos una excepción.
+         {
+            throw new InvalidArgumentException("No existe el driver de cache $driver");
+         }
+
+         //si existe, creamos y retornamos la instancia del adaptador.
+         return new $driverClass();
+      }
+   }
 
 Escuchando Eventos
 ------------------
