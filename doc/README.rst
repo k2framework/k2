@@ -17,13 +17,17 @@ Lo Básico
 Servicios
 ---------
 
-  * @router
-  * @flash
-  * @validator
-  * @security
-  * @session
-  * @view
-  * @cache
+  * `@app.context <https://github.com/manuelj555/k2/edit/master/doc/servicios/app_context.rst>`_
+  * `@request <https://github.com/manuelj555/k2/edit/master/doc/request.rst>`_
+  * `@router <https://github.com/manuelj555/k2/edit/master/doc/servicios/router.rst>`_
+  * `@flash <https://github.com/manuelj555/k2/edit/master/doc/servicios/flash.rst>`_
+  * `@validator <https://github.com/manuelj555/k2/edit/master/doc/servicios/validator.rst>`_
+  * `@security <https://github.com/manuelj555/k2/edit/master/doc/servicios/seguridad.rst>`_
+  * `@session <https://github.com/manuelj555/k2/edit/master/doc/servicios/session.rst>`_
+  * `@view <https://github.com/manuelj555/k2/edit/master/doc/servicios/view.rst>`_
+  * `@cache <https://github.com/manuelj555/k2/edit/master/doc/servicios/cache.rst>`_
+  * `@firewall <https://github.com/manuelj555/k2/edit/master/doc/servicios/seguridad.rst>`_
+  * `@container <https://github.com/manuelj555/k2/edit/master/doc/servicios/container.rst>`_
 
 Librerias 
 ---------
