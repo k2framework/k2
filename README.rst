@@ -16,8 +16,8 @@ Tambien puedes descargar la versión de tu preferencia en la sección de desacar
 
 `Descargas <https://github.com/manuelj555/k2/downloads>`_
 
-Requerimientos de KumbiaPHP 2
------------------------------
+Requerimientos
+--------------
 
 Esta esta versión necesita PHP 5.3.* en adelante para trabajar, ya que se incorporan los namespaces que ofrecen las nuevas versiones de php.
 
