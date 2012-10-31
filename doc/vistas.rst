@@ -17,6 +17,35 @@ __________________
 
 El nombre de la vista por defecto debe ser igual al nombre de la acción (método de la clase controladora) ejecutada en la petición. Sin embargo en el controlador se puede cambiar la vista a mostrar con `setView() <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#setview>`_.
 
+::
+
+    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    <?php
+
+    namespace MiModulo\Controller;
+
+    use KumbiaPHP\Kernel\Controller\Controller;
+
+    class UsuariosController extends Controller
+    {
+		public function index()
+		{
+			//se mostrará la vista app/modules/MiModulo/View/Usuarios/index.phtml
+		}
+		
+		public function crear()
+		{
+			//se mostrará la vista app/modules/MiModulo/View/Usuarios/crear.phtml
+		}
+		
+		public function editar()
+		{
+			$this->setView("crear"); //se cambia la vista a renderizar.
+		
+			//se mostrará la vista app/modules/MiModulo/View/Usuarios/crear.phtml
+		}
+    }
+
 Donde debe ir la vista
 ______________________
 
