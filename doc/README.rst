@@ -48,3 +48,4 @@ Preguntas Frecuentes
   * `¿Cómo crear un módulo en mi aplicación? <https://github.com/manuelj555/k2/blob/master/doc/los_modulos.rst>`_
   * `¿Cómo obtengo un valor que viene por POST? <https://github.com/manuelj555/k2/blob/master/doc/request.rst#el-metodo-get>`_
   * `¿Cómo obtengo un valor que viene por GET? <https://github.com/manuelj555/k2/blob/master/doc/request.rst#el-metodo-get>`_
+  * ¿Cómo crear un Scaffold?
