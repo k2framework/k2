@@ -16,9 +16,9 @@ Definiendo un Servicio
 
 Los servicios se definen en un archivo llamado services.ini que se puede encontrar en "proyecto/app/config/services.ini" y/ó dentro de la carpeta config de cada módulo. Ejemplos:
 
-  * app/config/services.ini                           archivo services global de la App
-  * app/moudles/K2/Backend/config/services.ini        archivo services del módulo K2/Backend
-  * app/modules/Index/config/services.ini             archivo services del módulo Index
+    * app/config/services.ini                           archivo services global de la App
+    * app/moudles/K2/Backend/config/services.ini        archivo services del módulo K2/Backend
+    * app/modules/Index/config/services.ini             archivo services del módulo Index
 
 En cada uno de esos archivos se pueden definir servicios que luego serán creados por el framework solo si son necesitados.
 
@@ -27,7 +27,39 @@ Se debe tener cuidado al nombrar los servicios, ya que si 2 servicios tienen el 
 Nombre del Servicio
 ___________________
 
-el nombre del servicio es cualquier cadena valida, no debe llevar espacios en blanco ni caracteres especiales, solo...
+El nombre del servicio puede ser cualquier cadena válida, no debe llevar espacios en blanco ni caracteres especiales, solo guiones, puntos y/ó underescores, cada servicio representa una sección dentro del archivo services.ini y los pares clave valor dentro de estas secciones son las configuraciónes de cada servicio. Algunos ejemplos son:
+
+    * [mi_servicio]
+    * [otro-servicio]
+    * [twitter]
+    * [session]
+    * [app.context]
+    * [view]
+    * [PHPExcel]
+
+Propiedades de la Sección
+_________________________
+
+=============================    ====
+ **class** (obligatorio)            clase que será creada, ejemplo::
+                    
+                                        class = KumbiaPHP\Kernel\Session\Session
+ **construct[]** (opcional)         parametros a pasar al servicio en el constructor, ejemplo::
+
+                                        ;pasando 1 solo parametro al constructor:
+                                        construct = @app.context ;si solo es un parametro obviamos los corchetes
+                                        
+                                        //pasando más de un parametro al constructor:
+                                        construct[] = @app.context ;esperamos un primer parametro
+                                        construct[] = @session    ;esperamos un segundo parametro.
+                                        construct[] = config.name ;esperamos un parametro de configuración llamado config.name
+
+ **call[metodo]** (opcional)        metodo a llamar para insertar un servicio ó parametro, ejemplo::
+
+                                        call[setSession] = @session   ;espera la instancia de la sesion al método setSession().
+                                        call[setAppContext] = @app.context ;espera la instancia de AppContext.
+                                        call[setAppName] = config.name ;espera un parametro de config con el nombre de la aplicación.
+=============================    ====
 
 Estableciendo Dependencias
 --------------------------
