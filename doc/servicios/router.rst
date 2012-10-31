@@ -5,7 +5,7 @@ El servicio KumbiaPHP\Kernel\Router\Router ofrece la posibilidad de redirigir la
 
 .. contents:: Esta clase lo que hace es devolver un objeto Response con las cabeceras http necesarias para redirir una petición a otra ubicación.
 
-Métodos Disponibles
+Metodos Disponibles
 -------------------
 
 redirect()
@@ -45,7 +45,7 @@ ________
 
 Ejemplo de Uso
 --------------
-Ejemplo Básico
+Ejemplo Basico
 ______________
 ::
 
@@ -81,7 +81,8 @@ ______________
 
 El return es OBLIGATORIO, ya que debemos retornar el objeto Response creado por los métodos del servicio @router, de no hacerlo, no se hará la redirección
 
-**Ahora un Ejemplo más Avanzado:**
+Ejemplo Avanzado
+________________
 
     Se enviará un correo a travez de un servicio ficticio llamado @mail, el correo es una vista/template de la aplicación, que da la bienvenida a un usuario recien registrado.
 
