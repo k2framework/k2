@@ -40,27 +40,46 @@ El nombre del servicio puede ser cualquier cadena válida, no debe llevar espaci
 Propiedades de la Sección
 _________________________
 
-=============================    ====
- **class** (obligatorio)            clase que será creada, ejemplo::
-                    
-                                        class = KumbiaPHP\Kernel\Session\Session
- **construct[]** (opcional)         parametros a pasar al servicio en el constructor, ejemplo::
-
-                                        ;pasando 1 solo parametro al constructor:
-                                        construct = @app.context ;si solo es un parametro obviamos los corchetes
-                                        
-                                        //pasando más de un parametro al constructor:
-                                        construct[] = @app.context ;esperamos un primer parametro
-                                        construct[] = @session    ;esperamos un segundo parametro.
-                                        construct[] = config.name ;esperamos un parametro de configuración llamado config.name
-
- **call[metodo]** (opcional)        metodo a llamar para insertar un servicio ó parametro, ejemplo::
-
-                                        call[setSession] = @session   ;espera la instancia de la sesion al método setSession().
-                                        call[setAppContext] = @app.context ;espera la instancia de AppContext.
-                                        call[setAppName] = config.name ;espera un parametro de config con el nombre de la aplicación.
-=============================    ====
-
++------------------------------+-------------------------------------------------------------------------------------+
+|**class** (obligatorio)       | clase que será creada, ejemplo::                                                    |
+|                              |                                                                                     |
+|                              |    class = KumbiaPHP\Kernel\Session\Session                                         |
++------------------------------+-------------------------------------------------------------------------------------+
+|**construct[]** (opcional)    | parametros a pasar al servicio en el constructor, ejemplo::                         |
+|                              |                                                                                     |
+|                              |    ;pasando 1 solo parametro al constructor:                                        |
+|                              |    construct = @app.context ;si solo es un parametro obviamos los corchetes         |
+|                              |                                                                                     |           
+|                              |    //pasando más de un parametro al constructor:                                    |  
+|                              |    construct[] = @app.context ;esperamos un primer parametro                        | 
+|                              |    construct[] = @session     ;esperamos un segundo parametro.                      |
+|                              |    construct[] = config.name  ;esperamos un parametro de configuración llamado      |
+|                              |                               config.name                                           |
++------------------------------+-------------------------------------------------------------------------------------+
+|                              |                                                                                     |
+|**call[metodo]** (opcional)   | metodo a llamar para insertar un servicio ó parametro, ejemplo::                    |
+|                              |                                                                                     |
+|                              |     call[setSession] = @session ;espera la instancia de la sesion en el método      |              
+|                              |                                  setSession().                                      | 
+|                              |     call[setAppContext] = @app.context ;espera la instancia de AppContext.          |
+|                              |     call[setAppName] = config.name ;espera un parametro de config con el nombre     |
+|                              |                                     de la aplicación.                               |
++------------------------------+-------------------------------------------------------------------------------------+
+|**factory[method]**           | método estatico a llamar, el cual crea una instancia que es la que se guardará en   |
+|y **factory[argument]**       | el inyector de dependencias. por ejemplo::                                          |
+|(opcionales)                  |                                                                                     |
+|                              |     factory[method]   = factory      ;llama al método estático llamdo factory() de  |
+|                              |                                       la clase                                      |
+|                              |     factory[argument] = @app.context ;se le pasa el sercivio AppContext como        |
+|                              |                                       argumento al método factory()                 |
++------------------------------+-------------------------------------------------------------------------------------+
+|**listen[metodo]** (opcional) |  se especifica un método que escuchará un evento del framework. Ejemplos::          |
+|                              |                                                                                     |
+|                              |      listen[onRequest] = kumbia.request ;se llama al método onRequest() en el       |
+|                              |                                          evento kumbia.request                      |
+|                              |      listen[miMetodo] = kumbia.response ;ejecutado en el evento kumbia.response     |
+|                              |      listen[onError] = kumbia.exception ;ejecutado al ocurrir una excepcion         |
++------------------------------+-------------------------------------------------------------------------------------+
 Estableciendo Dependencias
 --------------------------
 
