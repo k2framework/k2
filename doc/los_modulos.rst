@@ -1,10 +1,10 @@
-Los Módulos
+Los Modulos
 ===========
 
 .. contents:: En esta nueva versión de KumbiaPHP, la aplicación está constituida por módulos ó paquetes.
 
 
-Que es un Módulo
+Que es un Modulo
 ----------------
 
 Un módulo ó paquete no es más que una carpeta que contiene clases, carpetas y archivos de configuración que cumplen un objetivo en particular dentro de la aplicación.
@@ -16,7 +16,7 @@ Y no solo cumplen funcionalidades de tipo petición respuesta, sino que tambien 
 Ejemplo de este tipo de módulos son, un servicio de correo, un ACL, un traductor, logger ( FirePHP por ejemplo ), etc. Donde cualquier otro módulo ó clase puede hacer uso de estos servicios.
 
 
-Creando un Módulo
+Creando un Modulo
 -----------------
 
 Generalmente los módulos de nuestra aplicación estarán contenidos en la carpeta "proyecto/app/modules/", sin embargo un módulo puede estar en cualquier parte del servidor, ya que en esta nueva versión los módulos deben ser registrados en el `AppKernel <app_kernel.rst>`_ para poder tener acceso a ellos.
@@ -60,9 +60,9 @@ Como podemos ver en el ejemplo tenemos un módulo llamado Ventas que contiene un
 
 Por ultimo tenemos la carpeta config, y puede tener dos archivos, config.ini y services.ini, en el primero podemos definir parametros de configuración para el módulo y en services.ini estarán definidos los servicios que ofrece nuestro módulo, que para el ejemplo son el servicio GestorVentas y el servicio ImpresorVentas.
 
-Instalando Módulos de Terceros
+Instalando Modulos de Terceros
 ------------------------------
 
-Donde debo colocar Los Módulos
+Donde debo colocar Los Modulos
 ------------------------------
 
