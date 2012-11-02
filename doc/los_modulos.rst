@@ -63,6 +63,12 @@ Por ultimo tenemos la carpeta config, y puede tener dos archivos, config.ini y s
 Instalando Modulos de Terceros
 ------------------------------
 
+En esta nueva versión es muy facil instalar y configurar módulos de otras personas, ya sea para agregar alguna funcionalidad a la aplicación, ó para usar algun tipo de libreria creada por la comunidad.
+
+Solo debemos descargar dicho módulo y colocarlo en la carpeta vendors de la aplicación si no vamos a editar el código del módulo, ó en la carpeta modules de la aplicación si vamos a editar dicho módulo.
+
+Luego de esto debemos registrar el módulo en el archivo `app/AppKernel.php <https://github.com/manuelj555/k2/blob/master/doc/app_kernel.rst>`_, **aquí hay un punto muy importante** y es que podemos registrar el módulo en el método registerNamespaces() ó en el método registerRoutes(), donde registrarlo dependerá de si el módulo es accesible desde la url del navegador ó no.
+
 Donde debo colocar Los Modulos
 ------------------------------
 
