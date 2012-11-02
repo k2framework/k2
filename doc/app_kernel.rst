@@ -1,9 +1,9 @@
 El AppKernel
 ============
 
-El AppKernel es una clase que se encuentra en "proyecto/app/AppKernel.php", que nos permite registrar módulos y namespaces en nuestra aplicación.
+.. contents:: El AppKernel es una clase que se encuentra en "proyecto/app/AppKernel.php", que nos permite registrar módulos y namespaces en nuestra aplicación.
 
-Código del AppKernel
+Codigo del AppKernel
 --------------------
 
 ::
@@ -45,7 +45,7 @@ Código del AppKernel
 Como podemos ver este es un ejemplo del código que se encuentra en nuestro AppKernel.php, dicha clase tiene dos métodos principales "registerNamespaces()" y "registerRoutes()", a traves de los cuales registraremos los namespaces de libs y módulos que vayamos necesitando en la aplicación.
 
 
-El Método registerNamespaces()
+El Metodo registerNamespaces()
 -----------------------------
 
 Este método permite registrar los direcotiros donde el autoload del framework buscará las clases que necesitemos usar en la aplicación, por defecto cargar el namespace KumbiaPHP en el dir dentro de vendor, y el directorio por defecto de los módulos de la aplicación.
@@ -53,12 +53,12 @@ Este método permite registrar los direcotiros donde el autoload del framework b
 Si deseamos incluir alguna libreria que cumpla con el estandar autoload PSR-0, solo debemos instalarla en la carpeta vendors y registrarla en este método, donde el indice será el nombre inicial del Namespace de la Lib y el valor, será la ruta hacia el direcotiro donde se encuentra la carpeta.
 
 
-El Método registerRoutes()
+El Metodo registerRoutes()
 -------------------------
 
 A traves de este método registraremos los módulos que tendrá la aplicación, donde el índice del arreglo indica el prefijo inicial de la ruta que debe tener la URL para cargar el módulo y el valor de dicho indice será la ruta en donde se encuentra nuestro módulo.
 
-Prefijo de un Módulo
+Prefijo de un Modulo
 ____________________
 
 El prefijo de un módulo es la porción inicial de la URL, despues del PublicPath, que debe tener tener la la misma para cargar un módulo especifico, veamoslo con algunos ejemplos:
