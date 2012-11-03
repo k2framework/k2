@@ -1,5 +1,4 @@
 <?php
-
 require_once '../../vendor/autoload.php';
 
 use KumbiaPHP\Kernel\Kernel;
@@ -12,29 +11,36 @@ use KumbiaPHP\Kernel\Kernel;
 class AppKernel extends Kernel
 {
 
-    protected function registerNamespaces()
+    protected function registerModules()
     {
-        return array(
-            'modules' => __DIR__ . '/modules/',
-            'KumbiaPHP' => __DIR__ . '/../../vendor/kumbiaphp/kumbiaphp/src/',
+        $modules = array(
+            'KumbiaPHP'   => __DIR__ . '/../../vendor/kumbiaphp/kumbiaphp/src/',
+            'Index'       => __DIR__ . '/modules/',
         );
+
+        if (!$this->production) {
+            $modules['Demos/Rest']              = __DIR__ . '/modules/';
+            $modules['Demos/Router']            = __DIR__ . '/modules/';
+            $modules['Demos/Vistas']            = __DIR__ . '/modules/';
+            $modules['Demos/Modelos']           = __DIR__ . '/modules/';
+            $modules['Demos/SubiendoArchivos']  = __DIR__ . '/modules/';
+            $modules['Demos/Seguridad']         = __DIR__ . '/modules/';
+        }
+
+        return $modules;
     }
 
     protected function registerRoutes()
     {
-        $routes = array(
-            '/' => __DIR__ . '/modules/Index/',
+        return array(
+            '/'                 => 'Index',
+            '/demo/rest'        => 'Demos/Rest',
+            '/demo/router'      => 'Demos/Router',
+            '/demo/vistas'      => 'Demos/Vistas',
+            '/demo/modelos'     => 'Demos/Modelos',
+            '/demo/upload'      => 'Demos/SubiendoArchivos',
+            '/admin'            => 'Demos/Seguridad',
         );
-
-        if (!$this->production) {
-            $routes['/demo/rest']     = __DIR__ . '/modules/Demos/Rest/';
-            $routes['/demo/router']   = __DIR__ . '/modules/Demos/Router/';
-            $routes['/demo/vistas']   = __DIR__ . '/modules/Demos/Vistas/';
-            $routes['/demo/modelos']  = __DIR__ . '/modules/Demos/Modelos/';
-            $routes['/demo/upload']   = __DIR__ . '/modules/Demos/SubiendoArchivos/';
-            $routes['/admin']   = __DIR__ . '/modules/Demos/Seguridad/';
-        }
-        return $routes;
     }
 
 }
