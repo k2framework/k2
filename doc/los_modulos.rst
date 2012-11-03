@@ -67,36 +67,61 @@ En esta nueva versión es muy facil instalar y configurar módulos de otras pers
 
 Solo debemos descargar dicho módulo y colocarlo en la carpeta vendors de la aplicación si no vamos a editar el código del módulo, ó en la carpeta modules de la aplicación si vamos a editar dicho módulo.
 
-Luego de esto debemos registrar el módulo en el archivo `app/AppKernel.php <https://github.com/manuelj555/k2/blob/master/doc/app_kernel.rst>`_, **aquí hay un punto muy importante** y es que podemos registrar el módulo en el método `registerNamespaces() <https://github.com/manuelj555/k2/blob/master/doc/app_kernel.rst#el-metodo-registernamespaces>`_ ó en el método `registerRoutes() <https://github.com/manuelj555/k2/blob/master/doc/app_kernel.rst#el-metodo-registerroutes>`,_ donde registrarlo dependerá de si el módulo es accesible desde la url del navegador ó no.
+Luego de esto debemos registrar el módulo en el archivo `app/AppKernel.php <https://github.com/manuelj555/k2/blob/master/doc/app_kernel.rst>`_, ** en el método `registerModules() <https://github.com/manuelj555/k2/blob/master/doc/app_kernel.rst#el-metodo-registermodules>`_.
 
-En el registerNamespaces()
+En el registerModules()
 _________________________
 
-Cuando queremos agregar un módulo a nuestra aplicación que no es accesible desde el navegador, es decir que no tiene ningun controlador al cual acceder, lo mejor es agregarlos en el método registerNamespaces().
+Cuando queremos agregar un módulo a nuestra aplicación debemos hacerlo en el método registerModules().
 
 Veamos un ejemplo de como lograr esto::
 
-	Queremos instalar el módulo (plugin) K2/Twitter, el cual nos ofrece un api de conexió con twitter.
-	Este módulo no cuenta con ningun controlador al cual acceder, ya que solo sirve para ser usado por otros módulos
-	de la aplicación.
+    Queremos instalar el módulo (plugin) K2/Twitter, el cual nos ofrece un api de conexión con twitter.
 
-	veamos como agregarlo al AppKernel, suponiendo que lo colocamos en vendor:
+    veamos como agregarlo al AppKernel, suponiendo que lo colocamos en vendor:
 
-	protected function registerNamespaces()
-	{
-		return array(
-			'modules' => __DIR__ . '/modules/',
-			'KumbiaPHP' => __DIR__ . '/../../vendor/kumbiaphp/kumbiaphp/src/',
-			...
-			'K2\\Twitter' => __DIR__ . '../../vendor/',
-		);
-	}
+    protected function registerModules()
+    {
+        $modules = array(
+            'KumbiaPHP'   => __DIR__ . '/../../vendor/kumbiaphp/kumbiaphp/src/',
+            'Index'       => __DIR__ . '/modules/',
+            ...
+            'K2/Twitter'   => __DIR__ . '/../../vendor/',
+        );
+        ...
+    }
 
 Con esto ya tenemos instalado el módulo en la aplicación.
 
 
 En el registerRoutes()
 _____________________
+
+Si el módulo que acabamos de registrar es accesible desde el navegador, debemos crear un prefijo de ruta para poder acceder a el, esto lo hacemos en el método registerRoutes()::
+
+    //archivo AppKernel.php
+    //estamos registrando el módulo K2/Backend, 
+    //ademas le asignamos el prefijo de ruta /admin
+    //por lo que toda ruta que comienze con /admin* cargará ese módulo.
+
+    protected function registerModules()
+    {
+        $modules = array(
+            'KumbiaPHP'   => __DIR__ . '/../../vendor/kumbiaphp/kumbiaphp/src/',
+            'Index'       => __DIR__ . '/modules/',
+            ...
+            'K2/Backend'   => __DIR__ . '/modules/',
+        );
+        ...
+    }
+    protected function registerRoutes()
+    {
+        return array(
+            '/'                 => 'Index',
+            ...
+            '/admin'                 => 'K2/Backend',
+        );
+    }
 
 Donde debo colocar Los Modulos
 ------------------------------

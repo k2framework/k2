@@ -1,7 +1,7 @@
 El AppKernel
 ============
 
-.. contents:: El AppKernel es una clase que se encuentra en "proyecto/app/AppKernel.php", que nos permite registrar módulos y namespaces en nuestra aplicación.
+.. contents:: El AppKernel es una clase que se encuentra en "proyecto/app/AppKernel.php", que nos permite registrar módulos y rutas en nuestra aplicación.
 
 Codigo del AppKernel
 --------------------
@@ -16,47 +16,55 @@ Codigo del AppKernel
     class AppKernel extends Kernel
     {
     
-        protected function registerNamespaces()
+        protected function registerModules()
         {
-            return array(
-                'modules' => __DIR__ . '/modules/',
-                'KumbiaPHP' => __DIR__ . '/../../vendor/kumbiaphp/kumbiaphp/src/',
+            $modules = array(
+                'KumbiaPHP'   => __DIR__ . '/../../vendor/kumbiaphp/kumbiaphp/src/',
+                'Index'       => __DIR__ . '/modules/',
             );
+
+            if (!$this->production) {
+                $modules['Demos/Rest']              = __DIR__ . '/modules/';
+                $modules['Demos/Router']            = __DIR__ . '/modules/';
+                $modules['Demos/Vistas']            = __DIR__ . '/modules/';
+                $modules['Demos/Modelos']           = __DIR__ . '/modules/';
+                $modules['Demos/SubiendoArchivos']  = __DIR__ . '/modules/';
+                $modules['Demos/Seguridad']         = __DIR__ . '/modules/';
+            }
+
+            return $modules;
         }
-    
+
         protected function registerRoutes()
         {
-            $routes = array(
-                '/' => __DIR__ . '/modules/Index/',
+            return array(
+                '/'                 => 'Index',
+                '/demo/rest'        => 'Demos/Rest',
+                '/demo/router'      => 'Demos/Router',
+                '/demo/vistas'      => 'Demos/Vistas',
+                '/demo/modelos'     => 'Demos/Modelos',
+                '/demo/upload'      => 'Demos/SubiendoArchivos',
+                '/admin'            => 'Demos/Seguridad',
             );
-    
-            if (!$this->production) {
-                $routes['/demo/rest']     = __DIR__ . '/modules/Demos/Rest/';
-                $routes['/demo/router']   = __DIR__ . '/modules/Demos/Router/';
-                $routes['/demo/vistas']   = __DIR__ . '/modules/Demos/Vistas/';
-                $routes['/demo/modelos']  = __DIR__ . '/modules/Demos/Modelos/';
-                $routes['/demo/upload']   = __DIR__ . '/modules/Demos/SubiendoArchivos/';
-            }
-            return $routes;
         }
     
     }
 
-Como podemos ver este es un ejemplo del código que se encuentra en nuestro AppKernel.php, dicha clase tiene dos métodos principales "registerNamespaces()" y "registerRoutes()", a traves de los cuales registraremos los namespaces de libs y módulos que vayamos necesitando en la aplicación.
+Como podemos ver este es un ejemplo del código que se encuentra en nuestro AppKernel.php, dicha clase tiene dos métodos principales "registerModules()" y "registerRoutes()", a traves de los cuales registraremos los módulos y libs que vayamos necesitando en la aplicación.
 
 
-El Metodo registerNamespaces()
+El Metodo registerModules()
 -----------------------------
 
-Este método permite registrar los direcotiros donde el autoload del framework buscará las clases que necesitemos usar en la aplicación, por defecto cargar el namespace KumbiaPHP en el dir dentro de vendor, y el directorio por defecto de los módulos de la aplicación.
+Este método permite registrar los direcotiros donde se encuentran los modulos de la aplicación. por defecto carga el modulo KumbiaPHP en el dir dentro de vendor.
 
-Si deseamos incluir alguna libreria que cumpla con el estandar autoload PSR-0, solo debemos instalarla en la carpeta vendors y registrarla en este método, donde el indice será el nombre inicial del Namespace de la Lib y el valor, será la ruta hacia el direcotiro donde se encuentra la carpeta.
+Si deseamos incluir alguna libreria que cumpla con el estandar autoload PSR-0, solo debemos instalarla en la carpeta vendors y registrarla en este método, donde el indice será el nombre de la libreria y el valor será la ruta hacia el direcotiro donde se encuentra la carpeta.
 
 
 El Metodo registerRoutes()
 -------------------------
 
-A traves de este método registraremos los módulos que tendrá la aplicación, donde el índice del arreglo indica el prefijo inicial de la ruta que debe tener la URL para cargar el módulo y el valor de dicho indice será la ruta en donde se encuentra nuestro módulo.
+A traves de este método registraremos los módulos que tendrá la aplicación, donde el índice del arreglo indica el prefijo inicial de la ruta que debe tener la URL para cargar el módulo y el valor de dicho indice será el nombre de nuestro módulo.
 
 Prefijo de un Modulo
 ____________________
