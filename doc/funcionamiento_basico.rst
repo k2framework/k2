@@ -11,7 +11,7 @@ Se incorporan los escuchas de eventos; debido a que no tenemos un AppController 
 
 Recorido de la Petición
 -----------------------
-
+::
 
     |>->-> Cliente Petición.  
     |              |
