@@ -11,3 +11,38 @@ Se incorporan los escuchas de eventos; debido a que no tenemos un AppController 
 
 Recorido de la Petición
 -----------------------
+
+
+    |>->-> Cliente Petición.  
+    |              |
+    |       Se Inicia Kernel  -<-<-<-<-<-<-<--<-<-<-<-<-<-<-<-<-<-<-<-<--<-<-<-<-<|-<--<-<-<|           
+    |       _______|________                                                      |         |          
+    |      | Evento request |                                                     |         |          
+    |       ----------------                                                      |         |          
+    |              |                                                              |   Redirect a la    
+    |      Firewall Activo? > Si -> Url protegida? > Si ->->->|                   |   Url original
+    |              | NO                    | NO               |                   |         |          
+    |              |                       |                  |                   |         |          
+    |              |                       |<-<-<-< Si < Está logueado?           |         |          
+    |              |                       |                  |NO                 |         |                  
+    |              |                       |                  |                   |         |          
+    |              |<-<-<-<-<-<-<-<-<-<-<-<|                  |               Redirect al   |
+    |              |                                          |               form Logueo   |
+    |              |                                          |                   |         |
+    |              |                                  Intentando Logueo? > NO ->->|         |
+    |              |                                          |Si                 |         |
+    |              |                                          |                   |         |
+    |              |                                     Logueo Válido? > NO ->->-|         |
+    |              |                                          |Si                           |
+    |              |                                          |                             |
+    |         Controlador                                     ->->->->->->->->->->->->->->->|                 
+    |       Devolvió Respuesta? > NO->->->-|
+    |              |Si                     |
+    |              |                 Servico @view
+    |              |                 crea respuesta.
+    |              |                       |
+    |              |<-<-<-<-<-<-<-<-<-<-<-<|
+    |              |
+    |        Evento Response
+    |              |
+    |<-<- Retornamos la Respuesta.
