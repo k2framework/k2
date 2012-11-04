@@ -1,5 +1,6 @@
-﻿Trabajando con KumbiaPHP 2
+Trabajando con KumbiaPHP 2
 ==========================
+.. contents:: Contenido:
 
 Realmente el principio básico del recorrido de las peticiones no cambia mucho con respecto a versiones anterirores del framework.
 
@@ -9,7 +10,7 @@ Los controladores en esta nueva versión ya no extienden de AppController ni Adm
 
 Se incorporan los escuchas de eventos; debido a que no tenemos un AppController en esta versión, no disponemos de un método que realize tareas para todas las peticiones de nuestra aplicación, sin embargo con la incorporación de los escuchas de eventos podemos facilmente realizar esas tareas y más, que anterirormente se hacian en el initialize del AppController.
 
-Recorido de la Petición
+Recorido de la Peticion
 -----------------------
 ::
 
