@@ -26,11 +26,7 @@
  */
  
 if(!isset($url)) {
-    extract(Router::get());
-    $url = "$controller/page";
-    if($module) {
-        $url = "$module/$url";
-    }
+    $url = rtrim(KumbiaPHP\View\View::app()->createUrl(), '/');
 }
  
 ?>
