@@ -37,7 +37,7 @@ Librerias
 
 Preguntas Frecuentes
 ====================
-
+  * `¿Cómo crear un Scaffold? <https://github.com/manuelj555/k2/blob/master/doc/ejemplos/scaffold.md>`_
   * `¿Cómo hacer una redirección en el controlador? <https://github.com/manuelj555/k2/blob/master/doc/servicios/router.rst#ejemplo-basico>`_
   * `¿Cómo enviar un mensaje FLASH? <https://github.com/manuelj555/k2/blob/master/doc/servicios/flash.rst#ejemplo-de-uso>`_
   * `¿Cómo seleccionar el template a usar en mi controlador? <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#settemplate>`_
@@ -52,4 +52,3 @@ Preguntas Frecuentes
   * `¿Cómo crear un módulo en mi aplicación? <https://github.com/manuelj555/k2/blob/master/doc/los_modulos.rst>`_
   * `¿Cómo obtengo un valor que viene por POST? <https://github.com/manuelj555/k2/blob/master/doc/request.rst#el-metodo-get>`_
   * `¿Cómo obtengo un valor que viene por GET? <https://github.com/manuelj555/k2/blob/master/doc/request.rst#el-metodo-get>`_
-  * ¿Cómo crear un Scaffold?
