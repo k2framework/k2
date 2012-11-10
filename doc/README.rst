@@ -38,7 +38,7 @@ Librerias
 Preguntas Frecuentes
 ====================
 
-  * ¿Cómo hacer una redirección en el controlador?
+  * `¿Cómo hacer una redirección en el controlador? <https://github.com/manuelj555/k2/blob/master/doc/servicios/router.rst#ejemplo-basico>`_
   * `¿Cómo enviar un mensaje FLASH? <https://github.com/manuelj555/k2/blob/master/doc/servicios/flash.rst#ejemplo-de-uso>`_
   * `¿Cómo seleccionar el template a usar en mi controlador? <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#settemplate>`_
   * `¿Cómo seleccionar la vista a usar en mi controlador? <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#setview>`_
