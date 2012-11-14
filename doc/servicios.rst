@@ -84,7 +84,7 @@ _________________________
 Ejemplos de Definiciones de Servicios:
 ______________________________________
 
-::
+.. code-block:: ini
 
    [session]
    class = KumbiaPHP\Kernel\Session\Session
@@ -126,14 +126,16 @@ Algunos servicios (clases) necesitan de otros servicios ( otras clases ) para re
 
 Podemos lograr que a un servicio le lleguen las instancias de los servicios que necesitan mediante métodos de la clase ó desde el mismo constructor. Pero para lograr esto debemos configurarlo en nuestro archivo services.ini, en donde hallamos colocado la definición del servicio. Esto se logra de la siguiente manera:
 
-::
+.. code-block:: ini
 
-   //codigo en services.ini
+   ;codigo en services.ini
    [api.twitter]
    class = K2\Twitter\Twitter
    construct[] = @request ;el servicio @apt.twitter usa el servicio @request y le llegará en el constructor
    call[establecerSession] = @session ;se le pasa el servicio @session por medio del método establecerSession()
    call[setFlash]          = @flash   ;se le pasa el servicio @flash por medio del método setFlash()
+
+.. code-block:: php
 
    //servicio @Twitter
 
@@ -165,12 +167,14 @@ Podemos lograr que a un servicio le lleguen las instancias de los servicios que 
       }
    }
 
-::
+.. code-block:: ini
 
-   //codigo en services.ini
+   ;codigo en services.ini
    [flash]
    class = KumbiaPHP\Flash\Flash
    construct[] = @session ;el servicio @flash usa el servicio @session y le llegará en el constructor
+
+.. code-block:: php
 
    //servicio @flash
 
@@ -188,13 +192,15 @@ Podemos lograr que a un servicio le lleguen las instancias de los servicios que 
       }
    }
 
-::
+.. code-block:: ini
 
-   //codigo en services.ini
+   ;codigo en services.ini
    [cache]
    class = KumbiaPHP\Cache\MiCache
    factory[method] = crearInstancia  ;se llamará a este método, el cual debe crear la instancia del servicio.
    factory[argument] = cache.driver  ;espera el valor contenido en el parametro de algun config.ini de la App.
+
+.. code-block:: php
 
    //servicio @MiCache
 
