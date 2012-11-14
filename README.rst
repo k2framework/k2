@@ -16,6 +16,21 @@ Tambien puedes descargar la versión de tu preferencia en la sección de desacar
 
 `Descargas <https://github.com/manuelj555/k2/downloads>`_
 
+Instalación mediante Composer
+_____________________________
+
+Ademas se puede realizar la instalación a traves de `composer <https://github.com/composer/composer>`_, se debe de descargar el `composer.phar <https://getcomposer.org/composer.phar>`_ ó ejecutar el siguente comando en la raiz del proyecto:
+::
+
+    curl -s https://getcomposer.org/installer | php
+
+Luego de tener descargado el archivo composer.phar, procedemos a ejecutarlo para instalar las dependencias:
+::
+
+     php composer.phar install
+
+Este comando instalará todas las dependencias necesarios del framework, ademas podemos agregar dependencias a librerias que necesitemos en proyectos especificos.
+
 Requerimientos
 --------------
 
