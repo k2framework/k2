@@ -1,7 +1,7 @@
 {
     "require":{
         "kumbiaphp/kumbiaphp": "dev-master",
-        "kumbiaphp/activerecord": "dev-php5.3"
+        "kumbiaphp/activerecord": "1.0.x-dev"
     },
     "autoload": {
         "psr-0":{ 
