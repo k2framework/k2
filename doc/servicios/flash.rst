@@ -8,7 +8,7 @@ Métodos del Servicio
 
 set()
 ____
-::
+.. code-block:: php
 
     /**
      * Establece un mensaje flash
@@ -20,7 +20,7 @@ ____
 
 has()
 ____
-::
+.. code-block:: php
 
     /**
      * Verifica la existencia de un mensaje en la clase, se debe pasar su tipo
@@ -31,7 +31,7 @@ ____
 
 get()
 ____
-::
+.. code-block:: php
 
     /**
      * Devuelve un mensaje que ha sido previamente guardado, si existe.
@@ -45,7 +45,7 @@ ____
 
 getAll()
 _______
-::
+.. code-block:: php
 
     /**
      * Devuelve todos los mensajes guardados previamente y los borra
@@ -58,7 +58,7 @@ _______
 
 success()
 ________
-::
+.. code-block:: php
 
     /**
      * Establece un mensaje de tipo success
@@ -68,7 +68,7 @@ ________
 
 info()
 _____
-::
+.. code-block:: php
 
     /**
      * Establece un mensaje de tipo info
@@ -78,7 +78,7 @@ _____
 
 warning()
 ________
-::
+.. code-block:: php
     
     /**
      * Establece un mensaje de tipo warning
@@ -88,7 +88,7 @@ ________
 
 error()
 ______
-::
+.. code-block:: php
 
     /**
      * Establece un mensaje de tipo error
@@ -100,7 +100,8 @@ Ejemplo de Uso
 --------------
 
 En el siguiente ejemplo enviaremos 1 mensaje de información desde un controlador.
-::
+.. code-block:: php
+
     <?php
 
     namespace MiModulo\Controller;

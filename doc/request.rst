@@ -10,10 +10,9 @@ Como obtengo la instancia del Request actual
 
 En realidad esto es muy sencillo, en cualquier controlador que extienda de Controller, podemos llamar al método "getRequest()" y este nos devolverá la instancia del request actual, ejemplo:
 
-::
+.. code-block:: php
 
     //archivo app/modules/MiModulo/Controller/UsuariosController.php
-    <?php
 
     namespace MiModulo\\Controller;
 
@@ -37,10 +36,9 @@ Generalmente una petición viene acompañada de valores que nos envia el cliente
 
 La clase Request ofrece una serie de métodos para devolvernos esos valores de manera orientada a objetos, supongamos que tenemos un formulario de registro, en el que pedimos el login de la persona y la edad, dicha persona envia el formulario por medió del método POST, nosotros podremos obtener esos datos de la siguiente manera:
 
-::
+.. code-block:: php
 
     //archivo app/modules/MiModulo/Controller/UsuariosController.php
-    <?php
 
     namespace MiModulo\\Controller;
 
@@ -83,10 +81,9 @@ Este método sirve para obtener un dato que esté en el atributo request, ó en 
 
 Ejemplo de uso:
 
-::
+.. code-block:: php
 
     //archivo app/modules/MiModulo/Controller/UsuariosController.php
-    <?php
 
     namespace MiModulo\\Controller;
 

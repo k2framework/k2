@@ -10,7 +10,7 @@ Metodos Disponibles
 
 redirect()
 _________
-::
+.. code-block:: php
 
     /**
      * Redirije la petición a otro modulo/controlador/accion de la aplicación.
@@ -21,7 +21,7 @@ _________
 
 toAction()
 _________
-::
+.. code-block:: php
 
     /**
      * Redirije la petición a otra acción del mismo controlador.
@@ -32,7 +32,7 @@ _________
 
 forward()
 ________
-::
+.. code-block:: php
 
     /**
      * Redirije la petición a otro modulo/controlador/accion de la aplicación internamente,
@@ -47,7 +47,7 @@ Ejemplo de Uso
 --------------
 Ejemplo Basico
 ______________
-::
+.. code-block:: php
 
     <?php
 
@@ -84,9 +84,9 @@ El return es OBLIGATORIO, ya que debemos retornar el objeto Response creado por 
 Ejemplo Avanzado
 ________________
 
-    Se enviará un correo a travez de un servicio ficticio llamado @mail, el correo es una vista/template de la aplicación, que da la bienvenida a un usuario recien registrado.
+Se enviará un correo a travez de un servicio ficticio llamado @mail, el correo es una vista/template de la aplicación, que da la bienvenida a un usuario recien registrado.
 
-::
+.. code-block:: php
 
     <?php
 

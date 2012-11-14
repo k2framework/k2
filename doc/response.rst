@@ -8,10 +8,9 @@ Esta clase es la encargada de mostrar el contenido que se devuelva en la petici√
 Ejemplo:
 -------
 
-::
+.. code-block:: php
 
     //archivo app/modules/MiModulo/Controller/UsuariosController.php
-    <?php
 
     namespace MiModulo\\Controller;
 
@@ -35,10 +34,9 @@ El constructor de la clase Response puede recibir tres parametros, el primero es
 
 Ejemplo:
 
-::
+.. code-block:: php
 
     //archivo app/modules/MiModulo/Controller/UsuariosController.php
-    <?php
 
     namespace MiModulo\\Controller;
 

@@ -13,10 +13,9 @@ En esta versión del framework, tanto los nombres de clases como nombres de arch
 Ejemplo de un Controlador
 _________________________
 
-::
+.. code-block:: php
 
     //archivo app/modules/MiModulo/Controller/UsuariosController.php
-    <?php
 
     namespace MiModulo\Controller;
 
@@ -112,7 +111,7 @@ Parametros de las Acciones
 
 Una acción de un controlador puede tener parametros ó argumentos que esperan ciertos datos de una petición, un ejemplo de esto es el ID de un registro que queremos editar en un CRUD. el framework obtiene los valores para estos argumentos a traves de la URL, donde cada valor pasado por la url despues del nombre de la acción es un parametro de la misma, estos valores deben ir separados por un / unos de otros, veamos unos ejemplos:
 
-::
+.. code-block:: php
 
     <?php  //controlador app/modules/Home/Controller/UsuariosController.php
 
@@ -164,10 +163,9 @@ ________
 
 Este método devuelve la instancia del servicio, para ser usado en las acciónes del controlador. por ejemplo:
 
-::
+.. code-block:: php
 
     //archivo app/modules/MiModulo/Controller/UsuariosController.php
-    <?php
 
     namespace MiModulo\Controller;
 
@@ -220,10 +218,9 @@ ________
 Este método permite establecer la vista que el servicio @view deberá renderizar. Ademas podemos establecer de 
 una vez el template a usar. Tambien es posible dejar de mostrar la vista y/ó el template pasando null en los parametros.
 
-::
+.. code-block:: php
 
     //archivo app/modules/MiModulo/Controller/UsuariosController.php
-    <?php
 
     namespace MiModulo\Controller;
 
@@ -265,10 +262,9 @@ Los templates se pueden clasificar en dos grupos:
     * Templates Publicos : Se encuentran en "proyecto/app/view/templates/"
     * Templates de Módulos: Se encuentran en la carpeta "view/_shared/templates/" de cada módulo de la app.
 
-::
+.. code-block:: php
 
     //archivo app/modules/MiModulo/Controller/UsuariosController.php
-    <?php
 
     namespace MiModulo\Controller;
 
@@ -301,10 +297,9 @@ ______
 
 Establece el tiempo de caché para una vista ó controlador completos, se debe pasar un `intervalo de tiempo válido <http://www.php.net/manual/es/datetime.formats.relative.php>`_, si se pasa false, no se cachea. Por ejemplo:
 
-::
+.. code-block:: php
 
     //archivo app/modules/MiModulo/Controller/UsuariosController.php
-    <?php
 
     namespace MiModulo\Controller;
 

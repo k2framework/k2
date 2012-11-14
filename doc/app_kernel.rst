@@ -6,7 +6,7 @@ El AppKernel
 Codigo del AppKernel
 --------------------
 
-::
+.. code-block:: php
 
     <?php
     require_once '../../vendor/autoload.php';

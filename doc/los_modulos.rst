@@ -80,16 +80,18 @@ Veamos un ejemplo de como lograr esto::
 
     veamos como agregarlo al AppKernel, suponiendo que lo colocamos en vendor:
 
-    protected function registerModules()
-    {
-        $modules = array(
-            'KumbiaPHP'   => __DIR__ . '/../../vendor/kumbiaphp/kumbiaphp/src/',
-            'Index'       => __DIR__ . '/modules/',
+    .. code-block:: php
+
+        protected function registerModules()
+        {
+            $modules = array(
+                'KumbiaPHP'   => __DIR__ . '/../../vendor/kumbiaphp/kumbiaphp/src/',
+                'Index'       => __DIR__ . '/modules/',
+                ...
+                'K2/Twitter'   => __DIR__ . '/../../vendor/',
+            );
             ...
-            'K2/Twitter'   => __DIR__ . '/../../vendor/',
-        );
-        ...
-    }
+        }
 
 Con esto ya tenemos instalado el módulo en la aplicación.
 
@@ -97,7 +99,8 @@ Con esto ya tenemos instalado el módulo en la aplicación.
 En el registerRoutes()
 _____________________
 
-Si el módulo que acabamos de registrar es accesible desde el navegador, debemos crear un prefijo de ruta para poder acceder a el, esto lo hacemos en el método registerRoutes()::
+Si el módulo que acabamos de registrar es accesible desde el navegador, debemos crear un prefijo de ruta para poder acceder a el, esto lo hacemos en el método registerRoutes()
+.. code-block:: php
 
     //archivo AppKernel.php
     //estamos registrando el módulo K2/Backend, 
