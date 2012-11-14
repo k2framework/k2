@@ -34,12 +34,12 @@ ____
 .. code-block:: php
 
     /**
-     * Devuelve un mensaje que ha sido previamente guardado, si existe.
+     * Devuelve los mensajes que han sido previamente guardados para un tipo especifico, si existen.
      * 
-     * antes de devolver el mensaje lo borra de la sesión.
+     * antes de devolverlos, son borrados de la sesión.
      * 
      * @param string $type
-     * @return string|NULL 
+     * @return array|NULL 
      */
     public function get($type)
 
@@ -100,6 +100,7 @@ Ejemplo de Uso
 --------------
 
 En el siguiente ejemplo enviaremos 1 mensaje de información desde un controlador.
+
 .. code-block:: php
 
     <?php
@@ -116,20 +117,26 @@ En el siguiente ejemplo enviaremos 1 mensaje de información desde un controlado
         }
     }
 
-    // en la vista leemos el flash
+.. code-block:: phtml
 
-    <?php if (View::flash()->has("info"))://se puede obviar el if, ya que si no existe se muestra vacio ?>
-        <?php echo View::flash()->get("info"); ?>
+    <!-- en la vista leemos el flash -->
+
+    <?php if (View::flash()->has("info")): //se puede obviar el if, ya que si no existe se muestra vacio ?>
+        <?php foreach(View::flash()->get("info") => $msj): ?>
+            <div class="info"><?php echo $msj ?></div>
+        <?php endforeach; ?>
     <?php endif; ?>
 
-    //tambien se pueden imprimir todos los mensajes:
+    <!-- tambien se pueden imprimir todos los mensajes: -->
 
-    <?php foreach(View::flash()->getAll() as $type => $msj): ?>
-        <div class="<?php echo $type ?>"><?php echo $msj ?></div>
+    <?php foreach(View::flash()->getAll() as $type => $msjs): ?>
+        <?php foreach($msjs => $msj): ?>
+            <div class="<?php echo $type ?>"><?php echo $msj ?></div>
+        <?php endforeach; ?>
     <?php endforeach; ?>
 
-    //Ó mas facil aun, podemos dejar que la libreria View imprima todos los mensajes por nosotros,
-    //solo debemos pasar un true al llamar al método View::content(true) de siempre.
+    <!-- Ó mas facil aun, podemos dejar que la libreria View imprima todos los mensajes por nosotros,
+    solo debemos pasar un true al llamar al método View::content(true) de siempre. -->
 
     <?php View::content(true); //pasando true como parametro se imprimiran todos los mensajes flash enviados. ?>
 
