@@ -17,10 +17,9 @@ __________________
 
 El nombre de la vista por defecto debe ser igual al nombre de la acción (método de la clase controladora) ejecutada en la petición. Sin embargo en el controlador se puede cambiar la vista a mostrar con `setView() <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#setview>`_.
 
-::
+.. code-block:: php
 
     //archivo app/modules/MiModulo/Controller/UsuariosController.php
-    <?php
 
     namespace MiModulo\Controller;
 
@@ -85,7 +84,7 @@ Las Funciones h() y eh()
 
 Estas dos funciones ofrecen alias para escapar cadenas de texto y mostrarlas, ejemplos:
 
-::
+.. code-block:: php
 
 	<?php
 
