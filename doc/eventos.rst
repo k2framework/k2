@@ -15,7 +15,30 @@ El evento kumbia.request es ejecutado por el `kernel <https://github.com/manuelj
 Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\Kernel\Event\RequestEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Event/RequestEvent.php>`_ mediante el cual podemos obtener el objeto Request, establecer el response, detener la ejecucion de los siguientes llamados a los escuchas, etc.
 
 Estableciendo una Respuesta
-- - - - - - - - - - - - - -
+...........................
+
+Este evento ofrece la posibilidad de establecer una respuesta en el objeto RequestEvent, de hacerlo el kernel no creará la instancia del controlador, pasando directamente a ejecutar el evento kumbia.response ( saltandose el evento kumbia.controller ), para continuar con la ejecución de los procesos restantes, esto es util para evitar la ejecución del controlador en casos especiales como páginas seguras, etc. Ejemplo:
+
+.. code-block:: php
+
+    //servicio @k2_seguridad
+
+    namespace K2\Seguridad;
+
+    use KumbiaPHP\Kernel\Response;
+
+    class Seguridad
+    {
+        public function verificarAcceso(RequestEvent $event)
+        {
+            if ( !$this->sesionIniciada() ){
+                $event->setResponse(new Response("Acceso Denegado", 403));
+                $event->stopPropagation();
+            }
+        }
+    }
+
+Al establecer una respuesta en el objeto $event, no se ejecutará el controlador ni el evento kumbia.controller
 
 Evento kumbia.controller
 ________________________
@@ -38,6 +61,7 @@ _______________________
 El evento kumbia.exception es ejecutado por el `kernel <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Kernel.php>`_ cuando ocurre una excepción en la aplicación y está no es capturada, ofrece la instancia del request y la instancia de la excepcion que se lanzó.
 
 Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\Kernel\Event\ExceptionEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Event/ExceptionEvent.php>`_ mediante el cual podemos obtener el objeto Request, obtener la instancia de la excepcion, establecer una respuesta a mostrar, etc...
+
 Evento activerecord.beforequery
 _______________________________
 Evento activerecord.afterquery
