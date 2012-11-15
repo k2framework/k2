@@ -37,7 +37,7 @@ El nombre del servicio puede ser cualquier cadena válida, no debe llevar espaci
     * [view]
     * [PHPExcel]
 
-Propiedades de la Sección
+Propiedades de la Sesión
 _________________________
 
 +------------------------------+-------------------------------------------------------------------------------------+
