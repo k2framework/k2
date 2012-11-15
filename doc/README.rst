@@ -43,12 +43,13 @@ Preguntas Frecuentes
   * `¿Cómo seleccionar el template a usar en mi controlador? <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#settemplate>`_
   * `¿Cómo seleccionar la vista a usar en mi controlador? <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#setview>`_
   * `¿Cómo crear un servicio? <https://github.com/manuelj555/k2/blob/master/doc/servicios.rst#definiendo-un-servicio>`_
-  * ¿Cómo crear un formulario?
-  * ¿Cómo incluir un partial?
-  * ¿Cómo Crear un Modelo?
+  * `¿Cómo crear Ecuchar un Evento? <https://github.com/manuelj555/k2/blob/master/doc/servicios.rst#como-escuchar-un-evento>`_
+  * `¿Cómo Crear un Modelo? <https://github.com/manuelj555/k2/blob/master/doc/ejemplos/creando_un_modelo.rst>`_
   * `¿Cómo obtener un servicio desde el controlador? <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#get>`_
-  * ¿Cómo obtener un servicio desde la Vista?
   * `¿Cómo retornar una respuesta JSON? <https://github.com/manuelj555/k2/blob/master/doc/response.rst#parametros-de-la-respuesta>`_
   * `¿Cómo crear un módulo en mi aplicación? <https://github.com/manuelj555/k2/blob/master/doc/los_modulos.rst>`_
   * `¿Cómo obtengo un valor que viene por POST? <https://github.com/manuelj555/k2/blob/master/doc/request.rst#el-metodo-get>`_
   * `¿Cómo obtengo un valor que viene por GET? <https://github.com/manuelj555/k2/blob/master/doc/request.rst#el-metodo-get>`_
+  * ¿Cómo obtener un servicio desde la Vista?
+  * ¿Cómo crear un formulario?
+  * ¿Cómo incluir un partial?
