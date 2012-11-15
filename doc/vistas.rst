@@ -59,14 +59,43 @@ Las vistas para ese controlador deben ir en:
 Los Templates
 -------------
 
+Los templates son archivos con extensión .phtml que contienen la parte comun de la vista en muchas acciones, es decir, son aquellas partes de la representación de la vista que se mantiene igual, independientemente de contenido mostrado por una acción particular, por ejemplo:
+
+    * La cabecera de una Página
+    * El pié
+    * El menú
+    * la inclusión de los css y javascritps
+    * Etc.
+
+Todas estas son partes comunes dentro de una vista ( En este caso un Html ).
+
 Nombre del Template
 ___________________
+
+El nombre del template por defecto es **default** y se encuentra dentro de **app/view/templates/default.phtml**, ademas podemos tener tantos templates como queramos en nuestra aplicacion, para cambiar de template solo debemos llamar al método `setTemplate() <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#settemplate>`_ en nuestro controlador.
 
 Donde debe ir el Template
 _________________________
 
-Templates Publicos y de Módulos
+Los templates pueden ir en dos partes dentro de nuestra aplicación, una es en la parte publica de la app, y el otro sitio es en la carpeta templates de los módulos usados en el proyecto.
+    
+    * templates publicos: **/proyecto/app/view/templates/**
+    * templates privados: **/Carpeta_del_Modulo/View/_shared/templates/**
+
+Como se puede apreciar, esos son los 2 lugares donde se pueden almacenar los templates en los proyectos.
+
+Templates Publicos y de Modulos
 _______________________________
+
+En nuestras aplicaciones podemos tener tanto templates genarales (que no pertenecen a un módulo en particular), como templates que se encuentran dentro de la carpeta de vistas de un módulo en especifico.
+
+Realmente si en nuestro proyecto no vamos a realizar módulos que puedan ser usados por otros, podemos tranquilamente colocar nuestros templates en la carpeta app/view/templates/ de nuestro proyecto, ya que la utilidad de los templates de módulo es que las vistas de un módulo lo usen en distintas aplicaciones, es decir, si instalamos el módulo en otros proyectos, el template acompañara al módulo y todo funcioará correctamente.
+
+Patials o Vistas Parciales
+--------------------------
+
+Donde debe ir el Partial
+________________________
 
 Helpers
 -------
