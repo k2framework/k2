@@ -13,6 +13,7 @@ Lo Básico
    * `El Objeto Response ( la Respuesta ) <https://github.com/manuelj555/k2/blob/master/doc/response.rst>`_
    * `Las Vistas <./vistas.rst>`_
    * `Creando y Usando Servicios <https://github.com/manuelj555/k2/blob/master/doc/servicios.rst>`_
+   * `Eventos del Framewok <https://github.com/manuelj555/k2/blob/master/doc/eventos.rst>`_
 
 Servicios
 ---------
