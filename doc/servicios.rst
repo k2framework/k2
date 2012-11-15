@@ -224,3 +224,121 @@ Podemos lograr que a un servicio le lleguen las instancias de los servicios que 
 
 Escuchando Eventos
 ------------------
+Los servicios aparte de ofrecer una serie de métodos para la realización de las tareas que ofrece el mismo, pueden escuchar eventos despachados por el framework, es decir, pueden tener métodos que van a ser llamados por el kernel durante la ejecucion de eventos especificos en el recodido de la patición ( evento request, eventos response, evento controller, evento exception, etc... ).
+
+Esta posibilidad de que los servicios escuchen eventos, ofrece grandes oportunidades para la creación de funcionalidades adicionales a las que ofrece el framework por defecto, por Ejemplo:
+
+    * Crear un servicio para enrutar las url.
+    * Un servicio para manejo de seguridad.
+    * Agregar contenido adicional a una respuesta.
+    * Capturar las excepciones y generar una vista correspondiente.
+    * LLevar una auditoria de las modificaciones de los datos en una BD.
+    * Etc...
+
+Como se puede apreciar son muchas las posibilidades que brinda el podes escuchar eventos en las aplicaciones.
+
+Como escuchar un Evento
+_______________________
+
+Para que un servicio escuche eventos solo debemos agregar la instruccion **listen[nombreMetodo] = nombreEvento** , con esto ya nuestro servicio está esperando a que en el evento **nombreEvento** sea ejecutado el método nombreMetodo() del mismo, ejemplo:
+
+.. code-block: ini
+
+    [k2_seguridad]
+    class = K2/Seguridad/Seguridad ;la clase es K2/Seguridad/Seguridad.php
+    construct[] = @router ;usa el servicio router para redirigir la petición en caso de estár protegida y no haber iniciado sesión.
+    listen[verificarAcceso] = kumbia.request ;estamos escuchando el evento kumbia.request
+
+En el ejemplo anterior, se creó un servicio llamado **k2_seguridad**, el cual está escuchando el evento **kumbia.request**, entonces al iniciar la petición, se creará la instancia de la clase K2/Seguridad/Seguridad.php y se llamará al método verificarAcceso() de la misma, pasandole el objeto con la información de evento correspondiente, ejemplo del código de la clase:
+
+.. code-block:: php
+
+    //servicio @k2_seguridad
+
+    namespace K2\Seguridad;
+
+    use KumbiaPHP\Kernel\Event\RequestEvent;
+    use KumbiaPHP\Kernel\Router\RouterInterface;
+
+    class Seguridad
+    {
+        protected $router;
+
+        public function __construct(RouterInterface $router){
+            $this->router = $router; //establecemos la instancia del router
+            
+        }
+
+        /**
+         * Este método será llamado en la ejecución del evento kumbia.request.
+         *
+         * Es importante resaltar que el evento recibirá una instancia del objeto RequestEvent, el cual ofrece una serie de métodos
+         * que nos permiten obtener data de relevancia para el evento en cuestion.
+         * 
+         * @param RequestEvent $event
+         *
+         */
+        public function verificarAcceso(RequestEvent $event)
+        {
+            //verificamos si la ruta es segura llamando al método ficticio del ejemplo esRutaProtegida(), el cual
+            //recibe la url actual de la petición.
+            if ( $this->esRutaProtegida($event->getRequest()->getRequestUrl()) ){
+                
+                //si la ruta es segura verificamos si no ha iniciado session:
+                if ( !$this->sesionIniciada() ){
+                    //si aun no ha inicado sesion lo redirigimos al formulario
+                    //establecemos una respuesta en el evento, para que no se ejecute el controlador.
+                    $event->setResponse($this->router->redirect("login_url"));//lo enviamos a la página de login
+                    $event->stopPropagation(); //ademas detenemos la ejecucion de eventos kumbia.request posteriores
+                }
+            }
+        }
+    }
+
+El ejemplo aunque un poco complejo, ofrece una visión de lo que se puede lograr escuchando eventos en nuestras aplicaciones.
+
+Escuchando varios Eventos
+_________________________
+
+Tambien es posible escuchar varios eventos en un mismo servicios, solo debemos añadir varias instruccines **listen** en la definicion del servicio:
+
+.. code-block: ini
+
+    [k2_seguridad]
+    class = K2/Seguridad/Seguridad 
+    construct[] = @router ;usa el servicio router para redirigir la petición en caso de estár protegida y no haber iniciado sesión.
+    listen[verificarAcceso] = kumbia.request ;estamos escuchando el evento kumbia.request
+    listen[ocurrioExcepcion] = kumbia.exception ;se llamará al ocurrir una excepcion
+    listen[onResponse] = kumbia.response ;se llamará al generar la respuesta.
+
+Ahora nuestro servicio k2_seguridad está escuchando varios eventos, veamos como sería el código de la clase:
+
+.. code-block:: php
+
+    //servicio @k2_seguridad
+
+    namespace K2\Seguridad;
+
+    use KumbiaPHP\Kernel\Event\RequestEvent;
+    use KumbiaPHP\Kernel\Event\ResponseEvent;
+    use KumbiaPHP\Kernel\Event\ExceptionEvent;
+
+    class Seguridad
+    {
+        public function verificarAcceso(RequestEvent $event)
+        {
+            //codigo correspondiente
+        }
+
+        public function ocurrioExcepcion(ExceptionEvent $event)
+        {
+            //codigo correspondiente
+        }
+
+        public function onResponse(ResponseEvent $event)
+        {
+            //codigo correspondiente
+        }
+    }
+
+La clase Seguridad tiene tres métodos que están escuchando por diferentes eventos, y cada uno de ellos espera un tipo de objeto diferente que ofree métodos de utilidad para el tipo de evento.
