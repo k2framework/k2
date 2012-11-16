@@ -36,11 +36,9 @@ class IndexController extends Controller
                 ->add('username')->setLabel('Nombre de Usuario: ');
 
         $this->form->add('password', 'password')->setLabel('Contraseña: ');
-        
-        if ( $this->get('flash')->has('LOGIN_ERROR') ){
-            $this->form->setErrors(array(
-                $this->get('flash')->get('LOGIN_ERROR')
-            ));
+
+        if ($this->get('flash')->has('LOGIN_ERROR')) {
+            $this->form->setErrors($this->get('flash')->get('LOGIN_ERROR'));
         }
     }
 
