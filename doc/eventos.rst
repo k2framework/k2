@@ -21,7 +21,7 @@ Este evento ofrece la posibilidad de establecer una respuesta en el objeto Reque
 
 .. code-block:: php
 
-    //servicio @k2_seguridad
+    <?php
 
     namespace K2\Seguridad;
 
@@ -29,6 +29,9 @@ Este evento ofrece la posibilidad de establecer una respuesta en el objeto Reque
 
     class Seguridad
     {
+        /**
+         * Este método escucha el evento kumbia.request
+         */
         public function verificarAcceso(RequestEvent $event)
         {
             if ( !$this->sesionIniciada() ){
@@ -56,13 +59,174 @@ Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\Kernel\Event\Resp
 
 Generalmente es usado para cambiar el contenido de la respuesta ( agregar ó quitar partes, para agregar un debug, algun menú, etc... ).
 
+Ejemplo de Uso
+..............
+.. code-block:: php
+
+    <?php
+
+    namespace K2\Debug\Service;
+
+    class Debug
+    {
+        /**
+         * Este método escucha el evento kumbia.response
+         */
+        public function onResponse(ResponseEvent $event)
+        {
+            if (!$this->request->isAjax()) {
+                if (function_exists('mb_stripos')) {
+                    $posrFunction = 'mb_strripos';
+                    $substrFunction = 'mb_substr';
+                } else {
+                    $posrFunction = 'strripos';
+                    $substrFunction = 'substr';
+                }
+
+                $response = $event->getResponse();
+                $content = $response->getContent();
+
+                if (false !== $pos = $posrFunction($content, '</body>')) {
+
+                    $html = $this->view->render('K2/Debug:banner', null, array(
+                                'queries' => $this->session->all('k2_debug_queries'),
+                                'dumps' => $this->dumps,
+                            ))->getContent();
+
+                    $this->session->delete(null, 'k2_debug_queries');
+
+                    $content = $substrFunction($content, 0, $pos) . $html . $substrFunction($content, $pos);
+                    $response->setContent($content);
+                }
+            }
+        }
+    }
+
+Esta clase lo que hace es insertar un banner al final de la página con información de la petición.
+
 Evento kumbia.exception
 _______________________
 El evento kumbia.exception es ejecutado por el `kernel <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Kernel.php>`_ cuando ocurre una excepción en la aplicación y está no es capturada, ofrece la instancia del request y la instancia de la excepcion que se lanzó.
 
 Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\Kernel\Event\ExceptionEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Event/ExceptionEvent.php>`_ mediante el cual podemos obtener el objeto Request, obtener la instancia de la excepcion, establecer una respuesta a mostrar, etc...
 
+Ejemplo de Uso
+..............
+
+.. code-block:: php
+
+    <?php
+
+    namespace K2\Backend\Service;
+
+    use KumbiaPHP\Kernel\Event\ExceptionEvent;
+    use KumbiaPHP\Di\Container\ContainerInterface;
+    use KumbiaPHP\Security\Exception\UserNotAuthorizedException;
+
+    class Excepcion
+    {
+
+        protected $container;
+
+        public function __construct(ContainerInterface $container)
+        {
+            $this->container = $container;
+        }
+
+        /**
+        * Método que captura las excepciones del Backend.
+        * @param ExceptionEvent $event 
+        */
+        public function onException(ExceptionEvent $event)
+        {
+            if ($event->getException() instanceof UserNotAuthorizedException) {
+                $url = $event->getRequest()->getRequestUrl();
+                $response = $this->container->get('view')
+                        ->render('K2/Backend:exception', null, compact('url'));
+                $event->setResponse($response);
+            }
+        }
+
+    }
+
+Este escucha del evento exception lo que hace es mostrar una página indicando que el usuario no tiene acceso a una parte de la aplicación.
+
 Evento activerecord.beforequery
 _______________________________
+El evento activerecord.beforequery es ejecutado por el `ActiveRecord <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/PDOStatement.php#L33>`_ antes de ejecutar una consuta SQL, y contiene la cadena sql y los parametros de la misma (ya que son consultas preparadas).
+
+Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\ActiveRecord\Event\BeforeQueryEvent https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/Event/BeforeQueryEvent.php>`_ mediante el cual podemos obtener el SQL que se va a ejecutar, obtener/editar los parametros que se enviaran en la consulta y el tipo de consulta a ejecutar (SELECT, INSERT, UPDATE, DELETE).
+
 Evento activerecord.afterquery
 ______________________________
+El evento activerecord.afterquery es ejecutado por el `ActiveRecord <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/PDOStatement.php#L41>`_ despues de ejecutar una consuta SQL, y contiene la cadena sql, los parametros de la misma (ya que son consultas preparadas), el objeto PDOStatement y el resultado del llamado al método `execute de la clase PDOStatement <http://php.net/manual/es/pdostatement.execute.php>`_.
+
+Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\ActiveRecord\Event\AfterQueryEvent https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/Event/AfterQueryEvent.php>`_ mediante el cual podemos obtener el SQL que se ejecutó, obtener los parametros que se enviaron en la consulta, el tipo de consulta ejecutada (SELECT, INSERT, UPDATE, DELETE), el objeto PDOStatement y el resultado.
+
+Ejemplo de Uso Before y After Query
+...................................
+
+.. code-block:: php
+
+    <?php
+
+    namespace K2\Debug\Service;
+
+    use KumbiaPHP\Kernel\Request;
+    use KumbiaPHP\Kernel\Event\ResponseEvent;
+    use KumbiaPHP\Kernel\Session\SessionInterface;
+    use KumbiaPHP\Di\Container\ContainerInterface;
+    use KumbiaPHP\ActiveRecord\Event\AfterQueryEvent;
+    use KumbiaPHP\ActiveRecord\Event\BeforeQueryEvent;
+
+    class Debug
+    {
+
+        protected $queryTimeInit;
+
+        protected $session;
+
+        protected $request;
+
+        protected $dumps;
+
+        function __construct(ContainerInterface $container)
+        {
+            $this->view = $container->get('view');
+            $this->session = $container->get('session');
+            $this->request = $container->get('request');
+        }
+        
+        /**
+         * Este método escucha el evento activerecord.beforequery
+         */
+        public function onBeforeQuery(BeforeQueryEvent $event)
+        {
+            $this->queryTimeInit = microtime();
+        }
+
+        /**
+         * Este método escucha el evento activerecord.afterquery
+         */
+        public function onAfterQuery(AfterQueryEvent $event)
+        {
+            if (!$this->request->isAjax()) {
+                $this->addQuery($event, microtime() - $this->queryTimeInit);
+            }
+        }
+
+        protected function addQuery(AfterQueryEvent $event, $runtime)
+        {
+            $data = array(
+                'runtime' => $runtime,
+                'query' => $event->getQuery(),
+                'parameters' => $event->getParameters(),
+                'type' => $event->getQueryType(),
+                'result' => $event->getResult(),
+            );
+            $this->session->set(md5(microtime()), $data, 'k2_debug_queries');
+        }
+
+    }
+
+El ejemplo anterior es un servicio que captura y va almaceando en un arreglo las consultas ejecutadas en la aplicaión, para luego mostrar los sql en la pantalla.
