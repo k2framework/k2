@@ -12,7 +12,7 @@ _____________________
 
 El evento kumbia.request es ejecutado por el `kernel <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Kernel.php>`_ al inicio de la petición, despues de iniciar los parametros y objetos básicos que necesita la aplicación para funcionar.
 
-Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\Kernel\Event\RequestEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Event/RequestEvent.php>`_ mediante el cual podemos obtener el objeto Request, establecer el response, detener la ejecucion de los siguientes llamados a los escuchas, etc.
+Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\\Kernel\\Event\\RequestEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Event/RequestEvent.php>`_ mediante el cual podemos obtener el objeto Request, establecer el response, detener la ejecucion de los siguientes llamados a los escuchas, etc.
 
 Estableciendo una Respuesta
 ...........................
@@ -47,7 +47,7 @@ Evento kumbia.controller
 ________________________
 El evento kumbia.controller es ejecutado por el `kernel <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Kernel.php>`_ despues de iniciar la instancia del controlador, y contiene el objeto request y la instancia del controlador.
 
-Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\Kernel\Event\ControllerEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Event/ControllerEvent.php>`_ mediante el cual podemos obtener el objeto Request, obtener/establecer la instancia del controlador, obtener/establecer el nombre de la acción a ejecutar en el controlador, obtener/establecer los parametros que serán pasados a la acción., detener la ejecucion de los siguientes llamados a los escuchas, etc.
+Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\\Kernel\\Event\\ControllerEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Event/ControllerEvent.php>`_ mediante el cual podemos obtener el objeto Request, obtener/establecer la instancia del controlador, obtener/establecer el nombre de la acción a ejecutar en el controlador, obtener/establecer los parametros que serán pasados a la acción., detener la ejecucion de los siguientes llamados a los escuchas, etc.
 
 Su principal función es cambiar el controlador, la accion, ó los parametros que se usarán para invocar al método del Controlador.
 
@@ -55,7 +55,7 @@ Evento kumbia.response
 ______________________
 El evento kumbia.response es ejecutado por el `kernel <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Kernel.php>`_ despues de ejecutar el controlador, y contiene el objeto request y el objeto response con el contenido de la respuesta ya establecido.
 
-Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\Kernel\Event\ResponseEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Event/ResponseEvent.php>`_ mediante el cual podemos obtener el objeto Request, obtener la instancia de la respuesta, etc...
+Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\\Kernel\\Event\\ResponseEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Event/ResponseEvent.php>`_ mediante el cual podemos obtener el objeto Request, obtener la instancia de la respuesta, etc...
 
 Generalmente es usado para cambiar el contenido de la respuesta ( agregar ó quitar partes, para agregar un debug, algun menú, etc... ).
 
@@ -108,7 +108,7 @@ Evento kumbia.exception
 _______________________
 El evento kumbia.exception es ejecutado por el `kernel <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Kernel.php>`_ cuando ocurre una excepción en la aplicación y está no es capturada, ofrece la instancia del request y la instancia de la excepcion que se lanzó.
 
-Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\Kernel\Event\ExceptionEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Event/ExceptionEvent.php>`_ mediante el cual podemos obtener el objeto Request, obtener la instancia de la excepcion, establecer una respuesta a mostrar, etc...
+Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\\Kernel\\Event\\ExceptionEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Event/ExceptionEvent.php>`_ mediante el cual podemos obtener el objeto Request, obtener la instancia de la excepcion, establecer una respuesta a mostrar, etc...
 
 Ejemplo de Uso
 ..............
@@ -155,13 +155,13 @@ Evento activerecord.beforequery
 _______________________________
 El evento activerecord.beforequery es ejecutado por el `ActiveRecord <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/PDOStatement.php#L33>`_ antes de ejecutar una consuta SQL, y contiene la cadena sql y los parametros de la misma (ya que son consultas preparadas).
 
-Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\ActiveRecord\Event\BeforeQueryEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/Event/BeforeQueryEvent.php>`_ mediante el cual podemos obtener el SQL que se va a ejecutar, obtener/editar los parametros que se enviaran en la consulta y el tipo de consulta a ejecutar (SELECT, INSERT, UPDATE, DELETE).
+Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\\ActiveRecord\\Event\\BeforeQueryEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/Event/BeforeQueryEvent.php>`_ mediante el cual podemos obtener el SQL que se va a ejecutar, obtener/editar los parametros que se enviaran en la consulta y el tipo de consulta a ejecutar (SELECT, INSERT, UPDATE, DELETE).
 
 Evento activerecord.afterquery
 ______________________________
 El evento activerecord.afterquery es ejecutado por el `ActiveRecord <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/PDOStatement.php#L41>`_ despues de ejecutar una consuta SQL, y contiene la cadena sql, los parametros de la misma (ya que son consultas preparadas), el objeto PDOStatement y el resultado del llamado al método `execute de la clase PDOStatement <http://php.net/manual/es/pdostatement.execute.php>`_.
 
-Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\ActiveRecord\Event\AfterQueryEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/Event/AfterQueryEvent.php>`_ mediante el cual podemos obtener el SQL que se ejecutó, obtener los parametros que se enviaron en la consulta, el tipo de consulta ejecutada (SELECT, INSERT, UPDATE, DELETE), el objeto PDOStatement y el resultado.
+Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\\ActiveRecord\\Event\\AfterQueryEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/Event/AfterQueryEvent.php>`_ mediante el cual podemos obtener el SQL que se ejecutó, obtener los parametros que se enviaron en la consulta, el tipo de consulta ejecutada (SELECT, INSERT, UPDATE, DELETE), el objeto PDOStatement y el resultado.
 
 Ejemplo de Uso Before y After Query
 ...................................
