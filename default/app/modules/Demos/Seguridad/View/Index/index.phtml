@@ -1,6 +1,3 @@
-<h3>Vista</h3>
-<p>este es el contenido de la vista</p>
-<p>Url actual: <?php echo \KumbiaPHP\View\View::get('app.context')->getCurrentUrl() ?></p>
-<p>Controlador ejecutado: <?php echo \KumbiaPHP\View\View::get('app.context')->getCurrentController() ?>Controller</p>
-<p>Ip del Cliente: <?php echo \KumbiaPHP\View\View::get('request')->getClientIp() ?></p>
-<p><?php echo Html::link('logout', 'Cerrar Sesión') ?></p>
+<h3>Parte Segura de la Aplicación</h3>
+<?php \KumbiaPHP\View\View::content(true) ?>
+<p>Información del Usuario<?php var_dump($usuario) ?></p>

@@ -3,7 +3,7 @@
 namespace Demos\Rest\Controller;
 
 use KumbiaPHP\Kernel\Controller\Controller;
-use KumbiaPHP\Kernel\Response;
+use KumbiaPHP\Kernel\JsonResponse;
 
 /**
  * Ejemplo de un controlador REST FULL
@@ -26,7 +26,7 @@ class IndexController extends Controller
     protected function beforeFilter()
     {
         //aqui le decimos que ejecute la accion que tenga el nombre
-        //del metodo de petición.
+        //del método de petición.
         return strtolower($this->getRequest()->getMethod()) . '_action';
     }
 
@@ -47,7 +47,7 @@ class IndexController extends Controller
          * retornamos un objeto RESPONSE donde su contenido es un json del areglo
          * el status es 200 y el content type será application/json
          */
-        return new Response(json_encode($data), 200, array('Content-Type' => 'application/json'));
+        return new JsonResponse($data, 200, array('Content-Type' => 'application/json'));
     }
 
     /**
@@ -61,7 +61,7 @@ class IndexController extends Controller
             'variable' => "Hola Mundo REST",
             'metodo' => "POST",
         );
-        return new Response(json_encode($data), 200, array('Content-Type' => 'application/json'));
+        return new JsonResponse($data, 200, array('Content-Type' => 'application/json'));
     }
 
     /**
@@ -75,7 +75,7 @@ class IndexController extends Controller
             'variable' => "Hola Mundo REST",
             'metodo' => "PUT",
         );
-        return new Response(json_encode($data), 200, array('Content-Type' => 'application/json'));
+        return new JsonResponse($data, 200, array('Content-Type' => 'application/json'));
     }
 
     /**
@@ -89,7 +89,7 @@ class IndexController extends Controller
             'variable' => "Hola Mundo REST",
             'metodo' => "DELETE",
         );
-        return new Response(json_encode($data), 200, array('Content-Type' => 'application/json'));
+        return new JsonResponse($data, 200, array('Content-Type' => 'application/json'));
     }
 
 }

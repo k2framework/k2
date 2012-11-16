@@ -50,7 +50,6 @@ class IndexController extends Controller
 
     public function accion3()
     {
-
         return $this->getRespuesta(__METHOD__);
     }
 
@@ -67,8 +66,8 @@ class IndexController extends Controller
      */
     protected function getRespuesta($accion)
     {
-
-        return new Response("<h2>Hola desde: $accion</h2>");
+        $this->setView('index');
+        return $this->render(array('accionEjecutada' => $accion));
     }
 
 }

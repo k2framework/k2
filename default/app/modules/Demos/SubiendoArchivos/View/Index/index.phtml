@@ -1,11 +1,6 @@
-<br/>
 <h3>Ejemplo de subida de Imagenes</h3>
 <p>
-<ul>
-    <?php foreach(\KumbiaPHP\View\View::flash()->getAll() as $mensaje): ?>
-    <li><?php echo $mensaje ?></li>
-    <?php endforeach; ?>
-</ul>
+    <?php \KumbiaPHP\View\View::content(true) ?>    
 </p>
 <?php echo Form::openMultipart() ?>
 <ul>

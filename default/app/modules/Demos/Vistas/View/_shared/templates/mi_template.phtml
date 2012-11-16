@@ -3,15 +3,15 @@
     <head>
         <meta http-equiv='Content-type' content='text/html; charset=UTF-8' />
         <title>KumbiaPHP web &amp; App Framework</title>
-        <?php Tag::css('style') ?>
+        <?php Tag::css('structure') ?>
         <?php echo Html::includeCss() ?>
     </head>
     <body>
-        <header>Cabecera de la Página</header>
-        <section>
+        <header class="container-top"><h1>Cabecera de la Página</h1></header>
+        <section class="row">
             <?php \KumbiaPHP\View\View::content() ?>
         </section>
-        <footer>Pié de la página</footer>
+        <footer><div class="row">Pié de la página</div></footer>
         <?php Tag::js('jquery/jquery.min', -100) ?>
         <?php echo Html::includeJs() ?>
     </body>

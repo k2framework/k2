@@ -23,7 +23,7 @@ class IndexController extends Controller
                 if ($file->save(uniqid())) {
                     $this->get('flash')->success("El archivo se subió con exito...!!!");
                 } else {
-                    $this->get('flash')->error(current($file->getErrors()));
+                    $this->get('flash')->error($file->getErrors());
                 }
             }
         }

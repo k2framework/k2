@@ -17,15 +17,7 @@ class IndexController extends Controller
 
     public function index()
     {
-        if ($this->get('security')->isLogged()) {
-            var_dump("Logueado", $this->get('security')->getToken()->getUser());
-        }
-
-        if ($this->get('security')->isLogged('usuario_comun')) {
-            echo "SI";
-        } else {
-            echo "NO";
-        }
+        $this->usuario = $this->get('security')->getToken()->getUser();
     }
 
     public function login()
