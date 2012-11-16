@@ -1,7 +1,7 @@
 Eventos
 =======
 
-En esta nueva versión de KumbiaPHP existe la posibilidad de escuchar y disparar eventos, lo que brinda la oportunidad de extender y/ó cambiar las funcionalidades ofrecidas por el framework, ya que podemos ejecutar tareas en determinados puntos de la aplicación y controlar el flujo de la misma, ya sea deteniendo la ejecución de la patición, cambiando el rumbo de esta ultima, cambiando el controlador, la acción ó la respuesta a mostrar, entre otras muchas posibilidades más.
+En esta nueva versión de KumbiaPHP existe la posibilidad de escuchar y disparar eventos, lo que brinda la oportunidad de extender y/ó cambiar las funcionalidades ofrecidas por el framework, ya que podemos ejecutar tareas en determinados puntos de la aplicación y controlar el flujo de la misma, ya sea deteniendo la ejecución de la petición, cambiando el rumbo de esta ultima, cambiando el controlador, la acción ó la respuesta a mostrar, entre otras muchas posibilidades más.
 
 .. contents:: Índice:
 
@@ -10,7 +10,7 @@ Eventos del Framework
 Evento kumbia.request
 _____________________
 
-El evento kumbia.request es ejecutado por el `kernel <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Kernel.php>`_ al inicio de la patición, despues de iniciar los parametros y objetos básicos que necesita la aplicación para funcionar.
+El evento kumbia.request es ejecutado por el `kernel <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Kernel.php>`_ al inicio de la petición, despues de iniciar los parametros y objetos básicos que necesita la aplicación para funcionar.
 
 Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\Kernel\Event\RequestEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/Event/RequestEvent.php>`_ mediante el cual podemos obtener el objeto Request, establecer el response, detener la ejecucion de los siguientes llamados a los escuchas, etc.
 
@@ -155,13 +155,13 @@ Evento activerecord.beforequery
 _______________________________
 El evento activerecord.beforequery es ejecutado por el `ActiveRecord <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/PDOStatement.php#L33>`_ antes de ejecutar una consuta SQL, y contiene la cadena sql y los parametros de la misma (ya que son consultas preparadas).
 
-Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\ActiveRecord\Event\BeforeQueryEvent https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/Event/BeforeQueryEvent.php>`_ mediante el cual podemos obtener el SQL que se va a ejecutar, obtener/editar los parametros que se enviaran en la consulta y el tipo de consulta a ejecutar (SELECT, INSERT, UPDATE, DELETE).
+Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\ActiveRecord\Event\BeforeQueryEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/Event/BeforeQueryEvent.php>`_ mediante el cual podemos obtener el SQL que se va a ejecutar, obtener/editar los parametros que se enviaran en la consulta y el tipo de consulta a ejecutar (SELECT, INSERT, UPDATE, DELETE).
 
 Evento activerecord.afterquery
 ______________________________
 El evento activerecord.afterquery es ejecutado por el `ActiveRecord <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/PDOStatement.php#L41>`_ despues de ejecutar una consuta SQL, y contiene la cadena sql, los parametros de la misma (ya que son consultas preparadas), el objeto PDOStatement y el resultado del llamado al método `execute de la clase PDOStatement <http://php.net/manual/es/pdostatement.execute.php>`_.
 
-Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\ActiveRecord\Event\AfterQueryEvent https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/Event/AfterQueryEvent.php>`_ mediante el cual podemos obtener el SQL que se ejecutó, obtener los parametros que se enviaron en la consulta, el tipo de consulta ejecutada (SELECT, INSERT, UPDATE, DELETE), el objeto PDOStatement y el resultado.
+Este evento ofrece a los escuchas un objeto de tipo `KumbiaPHP\ActiveRecord\Event\AfterQueryEvent <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/ActiveRecord/Event/AfterQueryEvent.php>`_ mediante el cual podemos obtener el SQL que se ejecutó, obtener los parametros que se enviaron en la consulta, el tipo de consulta ejecutada (SELECT, INSERT, UPDATE, DELETE), el objeto PDOStatement y el resultado.
 
 Ejemplo de Uso Before y After Query
 ...................................
