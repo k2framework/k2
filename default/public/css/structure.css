@@ -230,7 +230,7 @@ background-image: linear-gradient(to bottom, #F95E0C 0%,#CD2A02 100%);
 	background-image: url('../img/default/info.png');
 }
 
-.valid {
+.success {
 	color: #4F8A10;
 	background-color: #DFF2BF;
 	background-image:url('../img/default/valid.png');
