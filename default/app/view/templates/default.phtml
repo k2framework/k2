@@ -9,14 +9,16 @@
     <body>
         <header class="container-top">
             <div class="row">
-                <h1><?php echo Html::link('','KumbiaPHP') ?>
+                <h1><?php echo Html::link('', 'KumbiaPHP') ?>
                     <small>web & app Framework versión K2
                         <?php echo Html::link('pages/show/kumbia/status', 'Config', 'class="btn pull-right"') ?>
                     </small>
                 </h1>             
             </div>
         </header>
-        <?php KumbiaPHP\View\View::content() ?>            
+        <div class="row">
+            <?php KumbiaPHP\View\View::content() ?>                        
+        </div>
         <?php KumbiaPHP\View\View::partial('footer') ?>
         <?php Tag::js('jquery/jquery.min', -100) ?>
         <?php echo Html::includeJs() ?>
