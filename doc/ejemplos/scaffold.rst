@@ -21,7 +21,7 @@ extenderá del ActiveRecord y será nuestro modelo para el Scaffold.
 Creando el Controlador
 ----------------------
 
-El controlador es igual a cualquier controlador de esta nueva versión, `Ejemplo de un Controlador <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#ejemplo-de-un-controlador>`_, la diferencia está en que debemos extender nuestro controlador de la clase **Scaffold\Controller\ScaffoldController**, y debemos implementar el método beforeFiler():
+El controlador es igual a cualquier controlador de esta nueva versión, `Ejemplo de un Controlador <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#ejemplo-de-un-controlador>`_, la diferencia está en que debemos extender nuestro controlador de la clase **Scaffold\\Controller\\ScaffoldController**, y debemos implementar el método beforeFilter():
 
 .. code-block:: php
 
