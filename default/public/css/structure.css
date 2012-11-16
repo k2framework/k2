@@ -134,11 +134,13 @@ background-image: linear-gradient(to bottom, #F95E0C 0%,#CD2A02 100%);
 .container-top {
     color: #fff;
     margin-bottom: 1em;
-    padding-top:.5em
+    padding: 4px 0
 }
 
+.container-top a{color: #FA0;text-decoration: none}
 .container-top h1, .container-top h2 {
     color: #FA0;    
+    margin: 6px
 }
 
 .container-bottom {
