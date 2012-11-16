@@ -19,7 +19,7 @@ Codigo del AppKernel
         protected function registerModules()
         {
             $modules = array(
-                'KumbiaPHP'   => __DIR__ . '/../../vendor/kumbiaphp/kumbiaphp/src/',
+                'KumbiaPHP'   => __DIR__ . '/../../vendor/kumbiaphp/core/src/',
                 'Index'       => __DIR__ . '/modules/',
             );
 

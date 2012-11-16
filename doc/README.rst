@@ -49,6 +49,7 @@ Preguntas Frecuentes
   * `¿Cómo obtener un servicio desde el controlador? <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#get>`_
   * `¿Cómo retornar una respuesta JSON? <https://github.com/manuelj555/k2/blob/master/doc/response.rst#parametros-de-la-respuesta>`_
   * `¿Cómo crear un módulo en mi aplicación? <https://github.com/manuelj555/k2/blob/master/doc/los_modulos.rst>`_
+  * `¿Cómo instalar un módulo de terceros? <https://github.com/manuelj555/k2/blob/master/doc/los_modulos.rst#instalando-modulos-de-terceros>`_
   * `¿Cómo obtengo un valor que viene por POST? <https://github.com/manuelj555/k2/blob/master/doc/request.rst#el-metodo-get>`_
   * `¿Cómo obtengo un valor que viene por GET? <https://github.com/manuelj555/k2/blob/master/doc/request.rst#el-metodo-get>`_
   * ¿Cómo obtener un servicio desde la Vista?

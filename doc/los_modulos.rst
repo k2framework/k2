@@ -85,7 +85,7 @@ Veamos un ejemplo de como lograr esto::
     protected function registerModules()
     {
         $modules = array(
-            'KumbiaPHP'   => __DIR__ . '/../../vendor/kumbiaphp/kumbiaphp/src/',
+            'KumbiaPHP'   => __DIR__ . '/../../vendor/kumbiaphp/core/src/',
             'Index'       => __DIR__ . '/modules/',
             ...
             'K2/Twitter'   => __DIR__ . '/../../vendor/',
@@ -111,7 +111,7 @@ Si el módulo que acabamos de registrar es accesible desde el navegador, debemos
     protected function registerModules()
     {
         $modules = array(
-            'KumbiaPHP'   => __DIR__ . '/../../vendor/kumbiaphp/kumbiaphp/src/',
+            'KumbiaPHP'   => __DIR__ . '/../../vendor/kumbiaphp/core/src/',
             'Index'       => __DIR__ . '/modules/',
             ...
             'K2/Backend'   => __DIR__ . '/modules/',
