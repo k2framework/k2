@@ -67,7 +67,9 @@ class IndexController extends Controller
     protected function getRespuesta($accion)
     {
         $this->setView('index');
-        return $this->render(array('accionEjecutada' => $accion));
+        return $this->render(array(
+                    'accionEjecutada' => $accion,
+                ));
     }
 
 }
