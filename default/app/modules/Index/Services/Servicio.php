@@ -4,6 +4,8 @@ namespace Index\Services;
 
 use KumbiaPHP\Kernel\Event\RequestEvent;
 use KumbiaPHP\Validation\ValidationBuilder;
+use KumbiaPHP\Security\Event\SecurityEvent;
+use KumbiaPHP\Di\Container\ContainerInterface;
 
 /**
  * Description of Servicio
@@ -13,23 +15,37 @@ use KumbiaPHP\Validation\ValidationBuilder;
 class Servicio
 {
 
-    public function __construct(\KumbiaPHP\Kernel\AppContext $app)
+    /**
+     *
+     * @var ContainerInterface 
+     */
+    protected $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        //$this->show("dir App: " . $app->getAppPath());
-    }
-    
-    public function setSession(\KumbiaPHP\Kernel\Session\SessionInterface $sesion){
-        //var_dump($sesion);
+        $this->container = $container;
     }
 
-    public function show($string)
+    public function setSession(\KumbiaPHP\Kernel\Session\SessionInterface $sesion)
     {
-        echo '<p>', $string, '</p>';
+        
     }
 
     public function onRequest(RequestEvent $event)
     {
-        //$this->show("Metodo Peticion: " . $event->getRequest()->getMethod());
+        
+    }
+
+    public function onLogin(SecurityEvent $event)
+    {
+        $this->container->get('flash')->success("Bienvenido al sistema <b>{$event->getSecutiry()->getToken()->getUsername()}</b>");
+    }
+
+    public function cerrandoSesion(SecurityEvent $event)
+    {
+        $horas = date('H:i:s');
+        $fecha = date('d-m-Y');
+        $this->container->get('flash')->success("Sesión cerrada a las <b>{$horas}</b> Horas del Día <b>{$fecha}</b>");
     }
 
 }
