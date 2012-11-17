@@ -209,32 +209,13 @@ background-image: linear-gradient(to bottom, #F95E0C 0%,#CD2A02 100%);
 
 
 /* Formatea los mensajes Flash::xxx() de KumbiaPHP */
-.flash {
-	border: 1px solid;
-	margin: 1px 0;
-	min-height: 32px;
-	padding:3px 10px 3px 50px;
-	background-repeat: no-repeat;
-	background-position: 10px center;
-}
+.flash {padding:8px 10px 8px 50px;margin-bottom:20px;color:#c09853;text-shadow:0 1px 0 rgba(255,255,255,0.5);background-color:#fcf8e3;border:1px solid #fbeed5;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;background-repeat: no-repeat;background-position: 10px center}
 
-.error {
-	color: #D8000C;
-	background-color: #FFBABA;
-	background-image: url('../img/default/error.png');
-}
+.error {color:#b94a48;background-image: url('../img/default/error.png');background-color:#f2dede;border-color:#eed3d7}
 
-.info {
-	color: #00529B;
-	background-color: #BDE5F8;
-	background-image: url('../img/default/info.png');
-}
+.info {color:#3a87ad;background-color:#d9edf7;border-color:#bce8f1}
 
-.success {
-	color: #4F8A10;
-	background-color: #DFF2BF;
-	background-image:url('../img/default/valid.png');
-}
+.success {color:#468847;background-image: url('../img/default/valid.png');background-color:#dff0d8;border-color:#d6e9c6}
 .warning {
 	color: #9F6000;
 	background-color: #FEEFB3;
