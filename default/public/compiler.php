@@ -15,7 +15,7 @@ use KumbiaPHP\Compiler\Compiler;
 
 $compiler = new Compiler(__DIR__ . '/../app/kernel.min.php', TRUE);
 $compiler->registerDirectories(array(
-    'KumbiaPHP' => __DIR__ . '/../../vendor/kumbiaphp/kumbiaphp/src/',
+    'KumbiaPHP' => __DIR__ . '/../../vendor/kumbiaphp/core/src/',
 ));
 
 $app = new AppKernel(false);
