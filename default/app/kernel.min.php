@@ -169,12 +169,6 @@ class Response implements \Serializable
         return $this->cache;
     }
 
-    public function setNotModified()
-    {
-//        $this->setStatusCode(304);
-//        $this->setContent(NULL);
-    }
-
     
     protected function sendContent()
     {
@@ -328,97 +322,16 @@ class Controller
         $this->cache = $time;
     }
 
+    protected function getCache()
+    {
+        return $this->cache;
+    }
+
     
     protected function render(array $params = array(), $time = NULL)
     {
-        return $this->get('view')->render($this->template, $this->view, $params, $time);
+        return $this->get('view')->render($this->getTemplate(), $this->getView(), $params, $time);
     }
-
-}
-
-
-namespace KumbiaPHP\EventDispatcher;
-
-
-class Event
-{
-
-    
-    protected $propagationStopped = FALSE;
-
-    
-    public function stopPropagation()
-    {
-        $this->propagationStopped = TRUE;
-    }
-
-    
-    public function isPropagationStopped()
-    {
-        return $this->propagationStopped;
-    }
-
-}
-
-
-namespace KumbiaPHP\Kernel\Event;
-
-use KumbiaPHP\Kernel\Request;
-use KumbiaPHP\Kernel\Response;
-use KumbiaPHP\EventDispatcher\Event;
-
-
-class RequestEvent extends Event
-{
-
-    
-    protected $request;
-
-    
-    protected $response;
-
-    function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
-    
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    
-    public function hasResponse()
-    {
-        return $this->response instanceof Response;
-    }
-
-    
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    
-    public function setResponse(Response $response)
-    {
-        $this->response = $response;
-    }
-
-}
-
-
-namespace KumbiaPHP\Kernel\Event;
-
-
-final class KumbiaEvents
-{
-
-    const REQUEST = 'kumbia.request';
-    const CONTROLLER = 'kumbia.controller';
-    const RESPONSE = 'kumbia.response';
-    const EXCEPTION = 'kumbia.exception';
 
 }
 
@@ -447,95 +360,13 @@ class ControllerResolver
     public function __construct(ContainerInterface $con)
     {
         $this->container = $con;
-        $this->parseUrl();
-    }
 
-    public function parseUrl()
-    {
-        $controller = 'Index'; //controlador por defecto si no se especifica.
-        $contSmall = 'index';
-        $action = 'index'; //accion por defecto si no se especifica.
-        $actionSmall = 'index';
-        $moduleUrl = '/';
-        $params = array(); //parametros de la url, de existir.
-        //obtenemos la url actual de la petición.
-        $currentUrl = '/' . trim($this->container->get('app.context')->getCurrentUrl(), '/');
+        $app = $con->get('app.context');
 
-        list($moduleUrl, $module) = $this->getModule($currentUrl);
-
-        if (!$moduleUrl) {
-            throw new NotFoundException(sprintf("La ruta \"%s\" no concuerda con ningún módulo ni controlador en la App", $currentUrl), 404);
-        }
-
-        if ($url = explode('/', trim(substr($currentUrl, strlen($moduleUrl)), '/'))) {
-
-            //ahora obtengo el controlador
-            if (current($url)) {
-                //si no es un controlador lanzo la excepcion
-                $controller = $this->camelcase($contSmall = current($url));
-                next($url);
-            }
-            //luego obtenemos la acción
-            if (current($url)) {
-                $action = $this->camelcase($actionSmall = current($url), TRUE);
-                next($url);
-            }
-            //por ultimo los parametros
-            if (current($url)) {
-                $params = array_slice($url, key($url));
-            }
-        }
-
-        $this->module = $module;
-        $this->contShortName = $controller;
-        $this->action = $action;
-        $this->parameters = $params;
-
-        $app = $this->container->get('app.context');
-
-        $app->setCurrentModule($module);
-        $app->setCurrentModuleUrl($moduleUrl);
-        $app->setCurrentController($contSmall);
-        $app->setCurrentAction($actionSmall);
-    }
-
-    
-    protected function camelcase($string, $firstLower = FALSE)
-    {
-        $string = str_replace(' ', '', ucwords(preg_replace('@(.+)_(\w)@', '$1 $2', strtolower($string))));
-
-        if ($firstLower) {
-            // Notacion lowerCamelCase
-            $string[0] = strtolower($string[0]);
-            return $string;
-        } else {
-            return $string;
-        }
-    }
-
-    protected function getModule($url)
-    {
-        if (0 === strpos($url, '/logout') && 7 === strlen($url)) {
-            return '/logout';
-        }
-
-        $routes = array_keys($this->container->get('app.context')->getRoutes());
-
-        usort($routes, function($a, $b) {
-                    return strlen($a) > strlen($b) ? -1 : 1;
-                }
-        );
-
-        foreach ($routes as $route) {
-            if (0 === strpos($url, $route)) {
-                if ('/' === $route) {
-                    return array($route, $this->container->get('app.context')->getRoutes('/'));
-                } elseif ('/' === substr($url, strlen($route), 1) || strlen($url) === strlen($route)) {
-                    return array($route, $this->container->get('app.context')->getRoutes($route));
-                }
-            }
-        }
-        return FALSE;
+        $this->module = $app->getCurrentModule();
+        $this->contShortName = $this->camelcase($app->getCurrentController());
+        $this->action = $this->camelcase($app->getCurrentAction(), true);
+        $this->parameters = $app->getCurrentParameters();
     }
 
     public function getController()
@@ -543,7 +374,6 @@ class ControllerResolver
         if ('/logout' === $this->module) {
             throw new NotFoundException(sprintf("La ruta \"%s\" no concuerda con ningún módulo ni controlador en la App", $this->module), 404);
         }
-        $modulePath = $this->container->get('app.context')->getPath($this->module);
         //creo el nombre del controlador con el sufijo Controller
         $controllerName = $this->contShortName . 'Controller';
         //uno el namespace y el nombre del controlador.
@@ -552,6 +382,7 @@ class ControllerResolver
         try {
             $reflectionClass = new ReflectionClass($controllerClass);
         } catch (\Exception $e) {
+            $modulePath = $this->container->get('app.context')->getPath($this->module);
             throw new NotFoundException(sprintf("No existe el controlador \"%s\" en la ruta \"%sController/%s.php\"", $controllerName, $modulePath, $controllerName), 404);
         }
 
@@ -684,20 +515,20 @@ class ControllerResolver
         }
     }
 
-    public function getParamValue($propertie)
+    public function callMethod($method)
     {
         $reflection = new \ReflectionClass($this->controller);
 
-        if ($reflection->hasProperty($propertie)) {
+        if ($reflection->hasMethod($method)) {
 
             //obtengo el parametro del controlador.
-            $propertie = $reflection->getProperty($propertie);
+            $method = $reflection->getMethod($method);
 
             //lo hago accesible para poderlo leer
-            $propertie->setAccessible(true);
+            $method->setAccessible(true);
 
             //y retorno su valor
-            return $propertie->getValue($this->controller);
+            return $method->invoke($this->controller);
         } else {
             return NULL;
         }
@@ -714,6 +545,106 @@ class ControllerResolver
         $propertie->setAccessible(true);
         $propertie->setValue($this->controller, $action);
     }
+
+    
+    protected function camelcase($string, $firstLower = false)
+    {
+        $string = str_replace(' ', '', ucwords(preg_replace('@(.+)_(\w)@', '$1 $2', strtolower($string))));
+
+        if ($firstLower) {
+            // Notacion lowerCamelCase
+            $string[0] = strtolower($string[0]);
+            return $string;
+        } else {
+            return $string;
+        }
+    }
+
+}
+
+
+namespace KumbiaPHP\EventDispatcher;
+
+
+class Event
+{
+
+    
+    protected $propagationStopped = FALSE;
+
+    
+    public function stopPropagation()
+    {
+        $this->propagationStopped = TRUE;
+    }
+
+    
+    public function isPropagationStopped()
+    {
+        return $this->propagationStopped;
+    }
+
+}
+
+
+namespace KumbiaPHP\Kernel\Event;
+
+use KumbiaPHP\Kernel\Request;
+use KumbiaPHP\Kernel\Response;
+use KumbiaPHP\EventDispatcher\Event;
+
+
+class RequestEvent extends Event
+{
+
+    
+    protected $request;
+
+    
+    protected $response;
+
+    function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
+    
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    
+    public function hasResponse()
+    {
+        return $this->response instanceof Response;
+    }
+
+    
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
+    }
+
+}
+
+
+namespace KumbiaPHP\Kernel\Event;
+
+
+final class KumbiaEvents
+{
+
+    const REQUEST = 'kumbia.request';
+    const CONTROLLER = 'kumbia.controller';
+    const RESPONSE = 'kumbia.response';
+    const EXCEPTION = 'kumbia.exception';
 
 }
 
@@ -769,7 +700,7 @@ class EventDispatcher implements EventDispatcherInterface
         if (is_array($this->listeners[$eventName]) && count($this->listeners[$eventName])) {
             foreach ($this->listeners[$eventName] as $listener) {
                 $service = $this->container->get($listener[0]);
-                call_user_func(array($service, $listener[1]), $event);
+                $service->{$listener[1]}($event);
                 if ($event->isPropagationStopped()) {
                     return;
                 }
@@ -826,6 +757,9 @@ interface ContainerInterface
 
     
     public function hasParameter($id);
+
+    
+    public function setParameter($id, $value);
 }
 
 
@@ -859,7 +793,7 @@ class Container implements ContainerInterface
         $di->setContainer($this);
 
         //agregamos al container como servicio.
-        $this->set('container', $this);
+        $this->setInstance('container', $this);
     }
 
     public function get($id)
@@ -886,7 +820,8 @@ class Container implements ContainerInterface
         return isset($this->services[$id]);
     }
 
-    public function set($id, $object)
+    
+    public function setInstance($id, $object)
     {
         $this->services[$id] = $object;
         //y lo agregamos a las definiciones. (solo será a gregado si no existe)
@@ -912,9 +847,24 @@ class Container implements ContainerInterface
         return array_key_exists($id, $this->definitions['parameters']);
     }
 
+    
     public function getDefinitions()
     {
         return $this->definitions;
+    }
+
+    public function setParameter($id, $value)
+    {
+        $this->definitions['parameters'][$id] = $value;
+        return $this;
+    }
+
+    
+    public function set($id, $className, array $config = array())
+    {
+        $config['class'] = $className;
+        $this->definitions['services'][$id] = $config;
+        return $this;
     }
 
 }
@@ -997,7 +947,7 @@ class DependencyInjection implements DependencyInjectionInterface
             $instance = $reflection->newInstanceArgs($arguments);
         }
         //agregamos la instancia del objeto al contenedor.
-        $this->container->set($id, $instance);
+        $this->container->setInstance($id, $instance);
 
         $this->injectObjectIntoServicesQueue();
 
@@ -1216,6 +1166,7 @@ class ConfigReader
 namespace KumbiaPHP\Kernel;
 
 use KumbiaPHP\Kernel\Request;
+use KumbiaPHP\Kernel\Exception\NotFoundException;
 
 
 class AppContext
@@ -1231,7 +1182,7 @@ class AppContext
     protected $modulesPath;
 
     
-    protected $currentUrl;
+    protected $requestUrl;
 
     
     protected $modules;
@@ -1252,24 +1203,45 @@ class AppContext
     protected $currentAction;
 
     
+    protected $currentParameters;
+
+    
     protected $inProduction;
+
+    
+    protected $requestType;
 
     
     public function __construct(Request $request, $inProduction, $appPath, $modules, $routes)
     {
-        $this->baseUrl = $request->getBaseUrl();
         $this->inProduction = $inProduction;
         $this->appPath = $appPath;
-        $this->currentUrl = $request->getRequestUrl();
-        $this->modulesPath = $appPath . 'modules/';
+        $this->modulesPath = rtrim($appPath, '/') . '/modules/';
         $this->modules = $modules;
         $this->routes = $routes;
+        $this->setRequest($request);
     }
 
     
     public function setRequest(Request $request)
     {
-        $this->currentUrl = $request->getRequestUrl();
+        $this->requestUrl = $request->getRequestUrl();
+        $this->baseUrl = $request->getBaseUrl();
+        $this->parseUrl();
+        return $this;
+    }
+
+    
+    public function setRequestType($type)
+    {
+        $this->requestType = $type;
+        return $this;
+    }
+
+    
+    public function getRequestType()
+    {
+        return $this->requestType;
     }
 
     
@@ -1285,15 +1257,9 @@ class AppContext
     }
 
     
-    public function getCurrentUrl()
+    public function getRequestUrl()
     {
-        return $this->currentUrl;
-    }
-
-    
-    public function getModulesPath()
-    {
-        return $this->modulesPath;
+        return $this->requestUrl;
     }
 
     
@@ -1320,7 +1286,11 @@ class AppContext
     public function getRoutes($route = NULL)
     {
         if ($route) {
-            return isset($this->routes[$route]) ? $this->routes[$route] : NULL;
+            if (isset($this->routes[$route])) {
+                return isset($this->modules[$this->routes[$route]]) ? $this->routes[$route] : NULL;
+            } else {
+                return NULL;
+            }
         } else {
             return $this->routes;
         }
@@ -1336,6 +1306,7 @@ class AppContext
     public function setCurrentModule($currentModule)
     {
         $this->currentModule = $currentModule;
+        return $this;
     }
 
     
@@ -1348,6 +1319,7 @@ class AppContext
     public function setCurrentController($currentController)
     {
         $this->currentController = $currentController;
+        return $this;
     }
 
     
@@ -1360,9 +1332,24 @@ class AppContext
     public function setCurrentAction($currentAction)
     {
         $this->currentAction = $currentAction;
+        return $this;
     }
 
-    public function createUrl($parameters = FALSE)
+    
+    public function getCurrentParameters()
+    {
+        return $this->currentParameters;
+    }
+
+    
+    public function setCurrentParameters(array $currentParameters = array())
+    {
+        $this->currentParameters = $currentParameters;
+        return $this;
+    }
+
+    
+    public function getCurrentUrl($parameters = FALSE)
     {
         if ('/' !== $this->currentModuleUrl) {
             $url = $this->currentModuleUrl . '/' . $this->currentController .
@@ -1372,7 +1359,7 @@ class AppContext
         }
 
         if ($parameters) {
-            $url .= substr($this->currentUrl, strlen($url) + 1);
+            $url .= substr($this->requestUrl, strlen($url));
         }
 
         return trim($url, '/') . '/';
@@ -1384,19 +1371,112 @@ class AppContext
         return $this->inProduction;
     }
 
+    
     public function getControllerUrl()
     {
         return $this->getBaseUrl() . trim($this->currentModuleUrl, '/') . '/' . $this->currentController;
     }
 
+    
     public function getCurrentModuleUrl()
     {
         return $this->currentModuleUrl;
     }
 
+    
     public function setCurrentModuleUrl($currentModuleUrl)
     {
         $this->currentModuleUrl = $currentModuleUrl;
+        return $this;
+    }
+
+    
+    public function createUrl($url, $baseUrl = true)
+    {
+        $url = explode(':', $url);
+        if (count($url) > 1) {
+            if (!$route = array_search($url[0], $this->routes)) {
+                throw new NotFoundException("No Existe el módulo {$url[0]}, no se pudo crear la url");
+            }
+            $url = trim($route, '/') . '/' . $url[1];
+        } else {
+            $url = ltrim($url[0], '/');
+        }
+        return $baseUrl ? $this->getBaseUrl() . $url : $url;
+    }
+
+    
+    protected function parseUrl()
+    {
+        $controller = 'index'; //controlador por defecto si no se especifica.
+        $action = 'index'; //accion por defecto si no se especifica.
+        $moduleUrl = '/';
+        $params = array(); //parametros de la url, de existir.
+        //obtenemos la url actual de la petición.
+        $currentUrl = '/' . trim($this->getRequestUrl(), '/');
+
+        list($moduleUrl, $module) = $this->getModule($currentUrl);
+
+        if (!$moduleUrl || !$module) {
+            throw new NotFoundException(sprintf("La ruta \"%s\" no concuerda con ningún módulo ni controlador en la App", $currentUrl), 404);
+        }
+
+        if ($url = explode('/', trim(substr($currentUrl, strlen($moduleUrl)), '/'))) {
+
+            //ahora obtengo el controlador
+            if (current($url)) {
+                //si no es un controlador lanzo la excepcion
+                $controller = current($url);
+                next($url);
+            }
+            //luego obtenemos la acción
+            if (current($url)) {
+                $action = current($url);
+                next($url);
+            }
+            //por ultimo los parametros
+            if (current($url)) {
+                $params = array_slice($url, key($url));
+            }
+        }
+
+        $this->setCurrentModule($module)
+                ->setCurrentModuleUrl($moduleUrl)
+                ->setCurrentController($controller)
+                ->setCurrentAction($action)
+                ->setCurrentParameters($params);
+    }
+
+    
+    private function camelcase($string)
+    {
+        return str_replace(' ', '', ucwords(preg_replace('@(.+)_(\w)@', '$1 $2', strtolower($string))));
+    }
+
+    
+    protected function getModule($url)
+    {
+        if ('/logout' === $url) {
+            return array($url, $url);
+        }
+
+        $routes = array_keys($this->getRoutes());
+
+        usort($routes, function($a, $b) {
+                    return strlen($a) > strlen($b) ? -1 : 1;
+                }
+        );
+
+        foreach ($routes as $route) {
+            if (0 === strpos($url, $route)) {
+                if ('/' === $route) {
+                    return array($route, $this->getRoutes('/'));
+                } elseif ('/' === substr($url, strlen($route), 1) || strlen($url) === strlen($route)) {
+                    return array($route, $this->getRoutes($route));
+                }
+            }
+        }
+        return FALSE;
     }
 
 }
@@ -1484,7 +1564,7 @@ class Collection implements \Serializable
     
     public function getInt($key, $default = 0)
     {
-        return (int) $this->get($key, $default, $deep);
+        return (int) $this->get($key, $default);
     }
 
     
@@ -1635,12 +1715,19 @@ class Request
         return $this->content;
     }
 
+    public function __clone()
+    {
+        $this->__construct($this->getBaseUrl());
+    }
+
     
     private function createBaseUrl()
     {
         $uri = $this->server->get('REQUEST_URI');
         if ($qString = $this->server->get('QUERY_STRING')) {
-            return substr(urldecode($uri), 0, - strlen($qString) + 6);
+            parse_str($qString, $get);
+            $get = array_merge($get, array_keys($get), array('?', '='));
+            return rtrim(str_replace($get, '', urldecode($uri)), '/') . '/';
         } else {
             return $uri;
         }
