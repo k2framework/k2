@@ -374,7 +374,6 @@ class ControllerResolver
         if ('/logout' === $this->module) {
             throw new NotFoundException(sprintf("La ruta \"%s\" no concuerda con ningún módulo ni controlador en la App", $this->module), 404);
         }
-        $modulePath = $this->container->get('app.context')->getPath($this->module);
         //creo el nombre del controlador con el sufijo Controller
         $controllerName = $this->contShortName . 'Controller';
         //uno el namespace y el nombre del controlador.
@@ -383,6 +382,7 @@ class ControllerResolver
         try {
             $reflectionClass = new ReflectionClass($controllerClass);
         } catch (\Exception $e) {
+            $modulePath = $this->container->get('app.context')->getPath($this->module);
             throw new NotFoundException(sprintf("No existe el controlador \"%s\" en la ruta \"%sController/%s.php\"", $controllerName, $modulePath, $controllerName), 404);
         }
 
@@ -793,7 +793,7 @@ class Container implements ContainerInterface
         $di->setContainer($this);
 
         //agregamos al container como servicio.
-        $this->set('container', $this);
+        $this->setInstance('container', $this);
     }
 
     public function get($id)
@@ -820,7 +820,8 @@ class Container implements ContainerInterface
         return isset($this->services[$id]);
     }
 
-    public function set($id, $object)
+    
+    public function setInstance($id, $object)
     {
         $this->services[$id] = $object;
         //y lo agregamos a las definiciones. (solo será a gregado si no existe)
@@ -846,6 +847,7 @@ class Container implements ContainerInterface
         return array_key_exists($id, $this->definitions['parameters']);
     }
 
+    
     public function getDefinitions()
     {
         return $this->definitions;
@@ -854,6 +856,15 @@ class Container implements ContainerInterface
     public function setParameter($id, $value)
     {
         $this->definitions['parameters'][$id] = $value;
+        return $this;
+    }
+
+    
+    public function set($id, $className, array $config = array())
+    {
+        $config['class'] = $className;
+        $this->definitions['services'][$id] = $config;
+        return $this;
     }
 
 }
@@ -936,7 +947,7 @@ class DependencyInjection implements DependencyInjectionInterface
             $instance = $reflection->newInstanceArgs($arguments);
         }
         //agregamos la instancia del objeto al contenedor.
-        $this->container->set($id, $instance);
+        $this->container->setInstance($id, $instance);
 
         $this->injectObjectIntoServicesQueue();
 
@@ -1380,17 +1391,18 @@ class AppContext
     }
 
     
-    public function createUrl($url)
+    public function createUrl($url, $baseUrl = true)
     {
         $url = explode(':', $url);
         if (count($url) > 1) {
             if (!$route = array_search($url[0], $this->routes)) {
                 throw new NotFoundException("No Existe el módulo {$url[0]}, no se pudo crear la url");
             }
-            return $this->getBaseUrl() . trim($route, '/') . '/' . $url[1];
+            $url = trim($route, '/') . '/' . $url[1];
         } else {
-            return $this->getBaseUrl() . ltrim($url[0], '/');
+            $url = ltrim($url[0], '/');
         }
+        return $baseUrl ? $this->getBaseUrl() . $url : $url;
     }
 
     
