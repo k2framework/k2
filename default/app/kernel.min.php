@@ -1351,18 +1351,11 @@ class AppContext
     
     public function getCurrentUrl($parameters = FALSE)
     {
-        if ('/' !== $this->currentModuleUrl) {
-            $url = $this->currentModuleUrl . '/' . $this->currentController .
-                    '/' . $this->currentAction;
-        } else {
-            $url = $this->currentController . '/' . $this->currentAction;
+        $url = $this->createUrl("{$this->currentModule}:{$this->currentController}/{$this->currentAction}");
+        if ($parameters && count($this->currentParameters)) {
+            $url .= '/' . join('/', $this->currentParameters);
         }
-
-        if ($parameters) {
-            $url .= substr($this->requestUrl, strlen($url));
-        }
-
-        return trim($url, '/') . '/';
+        return $url;
     }
 
     
@@ -1372,9 +1365,9 @@ class AppContext
     }
 
     
-    public function getControllerUrl()
+    public function getControllerUrl($action = null)
     {
-        return $this->getBaseUrl() . trim($this->currentModuleUrl, '/') . '/' . $this->currentController;
+        return rtrim($this->createUrl("{$this->currentModule}:{$this->currentController}/{$action}"), '/');
     }
 
     
@@ -1482,6 +1475,34 @@ class AppContext
 }
 
 
+
+
+namespace KumbiaPHP\Kernel;
+
+use KumbiaPHP\Kernel\File;
+use KumbiaPHP\Kernel\Collection;
+
+class FilesCollection extends Collection
+{
+
+    public function __construct(array $params = array())
+    {
+        foreach ($params as $name => $data) {
+            $this->set($name, new File($data));
+        }
+    }
+
+}
+
+
+namespace KumbiaPHP\Kernel;
+
+use KumbiaPHP\Kernel\Collection;
+
+class CookiesCollection extends Collection
+{
+    
+}
 
 
 namespace KumbiaPHP\Kernel;
@@ -1590,9 +1611,12 @@ class Collection implements \Serializable
 
 namespace KumbiaPHP\Kernel;
 
-use KumbiaPHP\Kernel\Session\SessionInterface;
-use KumbiaPHP\Kernel\AppContext;
 use KumbiaPHP\Kernel\Collection;
+use KumbiaPHP\Kernel\AppContext;
+use KumbiaPHP\Kernel\FilesCollection;
+use KumbiaPHP\Kernel\CookiesCollection;
+use KumbiaPHP\Kernel\Session\SessionInterface;
+
 
 
 class Request
@@ -1629,8 +1653,8 @@ class Request
         $this->server = new Collection($_SERVER);
         $this->request = new Collection($_POST);
         $this->query = new Collection($_GET);
-        $this->cookies = new Collection($_COOKIE);
-        $this->files = new Collection($_FILES);
+        $this->cookies = new CookiesCollection($_COOKIE);
+        $this->files = new FilesCollection($_FILES);
 
         //este fix es para permitir tener en el request los valores para peticiones
         //PUT y DELETE, ya que php no ofrece una forma facil de obtenerlos
