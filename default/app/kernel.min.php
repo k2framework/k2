@@ -397,7 +397,6 @@ class AppContext
         $this->modulesPath = rtrim($appPath, '/') . '/modules/';
         $this->modules = $modules;
         $this->routes = $routes;
-        $this->useLocale = false;
     }
 
     
@@ -579,6 +578,8 @@ class AppContext
         } else {
             $url = ltrim($url[0], '/');
         }
+        //si se usa locale, lo añadimos a la url.
+        $this->request->getLocale() && $url = $this->request->getLocale() . '/' . $url;
         return $baseUrl ? $this->request->getBaseUrl() . $url : $url;
     }
 
@@ -2092,8 +2093,6 @@ abstract class Kernel implements KernelInterface
     
     protected function initContainer(array $config = array())
     {
-
-        //$definitions = new DefinitionManager();
         $definitions = array(
             'services' => $config['services'],
             'parameters' => $config['parameters'],
@@ -2104,6 +2103,13 @@ abstract class Kernel implements KernelInterface
         $this->di = new DependencyInjection();
 
         self::$container = new Container($this->di, $definitions);
+
+        //si se estan usando locales y ningun módulo a establecido una definición para
+        //el servicio translator, lo hacemos por acá.
+        if (isset($definitions['parameters']['config.locales'])
+                && !self::$container->has('translator')) {
+            self::$container->set('translator', 'KumbiaPHP\\Translation\\Translator');
+        }
     }
 
     
