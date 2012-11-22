@@ -212,6 +212,8 @@ class Request
 
     
     protected $content = FALSE;
+    
+    protected $locale;
 
     
     public function __construct($baseUrl = NULL)
@@ -310,7 +312,20 @@ class Request
     {
         $this->__construct($this->getBaseUrl());
     }
+    
+    
+    public function getLocale()
+    {
+        return $this->locale;
+    }
 
+    
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    
     
     private function createBaseUrl()
     {
@@ -336,16 +351,10 @@ class AppContext
 {
 
     
-    protected $baseUrl;
-
-    
     protected $appPath;
 
     
     protected $modulesPath;
-
-    
-    protected $requestUrl;
 
     
     protected $modules;
@@ -375,6 +384,12 @@ class AppContext
     protected $requestType;
 
     
+    protected $locales;
+
+    
+    protected $request;
+
+    
     public function __construct($inProduction, $appPath, $modules, $routes)
     {
         $this->inProduction = $inProduction;
@@ -382,15 +397,21 @@ class AppContext
         $this->modulesPath = rtrim($appPath, '/') . '/modules/';
         $this->modules = $modules;
         $this->routes = $routes;
+        $this->useLocale = false;
     }
 
     
     public function setRequest(Request $request)
     {
         $request->setAppContext($this);
-        $this->requestUrl = $request->getRequestUrl();
-        $this->baseUrl = $request->getBaseUrl();
+        $this->request = $request;
         $this->parseUrl();
+        return $this;
+    }
+
+    public function setLocales($locales = null)
+    {
+        $this->locales = explode(',', $locales);
         return $this;
     }
 
@@ -410,7 +431,7 @@ class AppContext
     
     public function getBaseUrl()
     {
-        return $this->baseUrl;
+        return $this->request->getBaseUrl();
     }
 
     
@@ -422,7 +443,7 @@ class AppContext
     
     public function getRequestUrl()
     {
-        return $this->requestUrl;
+        return $this->request->getRequestUrl();
     }
 
     
@@ -558,7 +579,7 @@ class AppContext
         } else {
             $url = ltrim($url[0], '/');
         }
-        return $baseUrl ? $this->getBaseUrl() . $url : $url;
+        return $baseUrl ? $this->request->getBaseUrl() . $url : $url;
     }
 
     
@@ -569,9 +590,9 @@ class AppContext
         $moduleUrl = '/';
         $params = array(); //parametros de la url, de existir.
         //obtenemos la url actual de la petición.
-        $currentUrl = '/' . trim($this->getRequestUrl(), '/');
+        $currentUrl = '/' . trim($this->request->getRequestUrl(), '/');
 
-        list($moduleUrl, $module) = $this->getModule($currentUrl);
+        list($moduleUrl, $module, $currentUrl) = $this->getModule($currentUrl);
 
         if (!$moduleUrl || !$module) {
             throw new NotFoundException(sprintf("La ruta \"%s\" no concuerda con ningún módulo ni controlador en la App", $currentUrl), 404);
@@ -610,10 +631,21 @@ class AppContext
     }
 
     
-    protected function getModule($url)
+    protected function getModule($url, $recursive = true)
     {
+        if (count($this->locales) && $recursive) {
+            $_url = explode('/', trim($url, '/'));
+            $locale = array_shift($_url);
+            if (in_array($locale, $this->locales)) {
+                $this->request->setLocale($locale);
+                return $this->getModule('/' . join('/', $_url), false);
+            } else {
+                $this->request->setLocale($this->locales[0]);
+            }
+        }
+
         if ('/logout' === $url) {
-            return array($url, $url);
+            return array($url, $url, $url);
         }
 
         $routes = array_keys($this->getRoutes());
@@ -626,13 +658,13 @@ class AppContext
         foreach ($routes as $route) {
             if (0 === strpos($url, $route)) {
                 if ('/' === $route) {
-                    return array($route, $this->getRoutes('/'));
+                    return array($route, $this->getRoutes('/'), $url);
                 } elseif ('/' === substr($url, strlen($route), 1) || strlen($url) === strlen($route)) {
-                    return array($route, $this->getRoutes($route));
+                    return array($route, $this->getRoutes($route), $url);
                 }
             }
         }
-        return FALSE;
+        return false;
     }
 
 }
@@ -979,7 +1011,7 @@ class Container implements ContainerInterface
     {
         $this->services = array();
         $this->di = $di;
-        $this->definitions = $definitions + array('parameters', 'services');
+        $this->definitions = $definitions + array('parameters' => array(), 'services' => array());
 
         $di->setContainer($this);
 
@@ -996,7 +1028,7 @@ class Container implements ContainerInterface
         }
         //si existe el servicio y está creado lo devolvemos
         if ($this->hasInstance($id)) {
-            return $this->services[$id];            
+            return $this->services[$id];
         }
         //si existe pero no se ha creado, creamos la instancia
         $config = $this->definitions['services'][$id];
@@ -1881,8 +1913,8 @@ abstract class Kernel implements KernelInterface
         ExceptionHandler::handle($this);
 
         if ($production) {
-//            error_reporting(0);
-//            ini_set('display_errors', 'Off');
+            error_reporting(0);
+            ini_set('display_errors', 'Off');
         } else {
             error_reporting(-1);
             ini_set('display_errors', 'On');
@@ -1892,7 +1924,7 @@ abstract class Kernel implements KernelInterface
     }
 
     
-    public function init()
+    public function init(Request $request)
     {
         //creamos la instancia del AppContext
         $context = new AppContext($this->production, $this->getAppPath(), $this->modules, $this->routes);
@@ -1907,7 +1939,8 @@ abstract class Kernel implements KernelInterface
         //seteamos el contexto de la aplicación como servicio
         self::$container->setInstance('app.context', $context);
         //establecemos el Request en el AppContext
-        $context->setRequest($this->request);
+        $context->setLocales(self::$container->getParameter('config.locales'));
+        $context->setRequest($request);
     }
 
     public function execute(Request $request, $type = Kernel::MASTER_REQUEST)
@@ -1949,9 +1982,9 @@ abstract class Kernel implements KernelInterface
         $this->request = $request;
 
         if (!self::$container) { //si no se ha creado el container lo creamos.
-            $this->init();
+            $this->init($request);
             self::$container->get('app.context')->setRequestType($type);
-            $this->validateModules();
+            $this->production || $this->validateModules();
         }
         //agregamos el request al container
         self::$container->setInstance('request', $this->request);
