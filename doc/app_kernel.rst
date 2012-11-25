@@ -71,16 +71,16 @@ ____________________
 
 El prefijo de un módulo es la porción inicial de la URL, despues del PublicPath, que debe tener tener la la misma para cargar un módulo especifico, veamoslo con algunos ejemplos:
 
-Para llamar al "IndexController" del módulo "Demos/Rest" nuestra URL de petición deberá comenzar por "/demo/rest", algunos patrones de URl que coincidiran con el prefijo son:
+Para llamar al "indexController" del módulo "Demos/Rest" nuestra URL de petición deberá comenzar por "/demo/rest", algunos patrones de URl que coincidiran con el prefijo son:
 
 ::
 
-  /demo/rest                        // carga el controlador IndexController y la acción index
+  /demo/rest                        // carga el controlador indexController y la acción index
   /demo/rest/                       // hace lo mismo que la ruta anterior
   /demo/rest/index                  // hace lo mismo que la ruta anterior
   /demo/rest/index/index            // hace lo mismo que la ruta anterior
-  /demo/rest/index/otra_acción      // carga el controlador IndexController y la acción otraAccion
-  /demo/rest/ventas/crear           // carga el controlador VentasController y la acción crear
+  /demo/rest/index/otra_acción      // carga el controlador indexController y la acción otraAccion
+  /demo/rest/ventas/crear           // carga el controlador ventasController y la acción crear
   
 Ahora tenemos unos ejemplos de rutas que no concordarán con el prefijo /demo/rest
 
@@ -97,9 +97,9 @@ En realidad un prefijo puede ser cualquier patrón de url válido, y no necesari
   
 ::
 
-    "/usuarios"        =>  __DIR__ . "/modules/Admin/Usuarios/"
-    "/clientes"        =>  __DIR__ . "/modules/MisClientes/"
-    "/rest/carrito"    =>  __DIR__ . "/CarritoCompras/"
-    "/"                =>  __DIR__ . "/modules/Home"
+    "/usuarios"        =>  "KumbiaPHP/Usuarios"
+    "/clientes"        =>  "Index/Clientes"
+    "/rest/carrito"    =>  "CarritoCompras"
+    "/"                =>  "K2/Calendar"
 
 Estos son ejemplos validos de prefijos asignados a módulos, se puede apreciar que no existe ninguna restricción en cuanto al nombre del prefijo y el nombre del módulo, estos pueden ser muy distintos unos de otros.

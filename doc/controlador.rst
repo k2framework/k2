@@ -8,35 +8,33 @@ Los controladores en KumbiaPHP 2 son muy parecidos a los controladores de la ver
 Nombre de la Clase
 ------------------
 
-En esta versión del framework, tanto los nombres de clases como nombres de archivos se escriben exactamente igual. Preferiblemente en notación CamelCase ( Al menos para los controladores el CamelCase es Obligatorio ).
+En esta versión del framework, tanto los nombres de clases como nombres de archivos se escriben exactamente igual. El nombre del controlador preferiblemente en **small_case**, y debe ir seguido del Sufijo **Controller** obligatoriamente.
 
 Ejemplo de un Controlador
 _________________________
 
 .. code-block:: php
 
-    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    //archivo app/modules/MiModulo/Controller/usuariosController.php
 
     namespace MiModulo\Controller;
 
     use KumbiaPHP\Kernel\Controller\Controller;
 
-    class UsuariosController extends Controller //ahora se extiende de una clase base Controller.
+    class usuariosController extends Controller //ahora se extiende de una clase base Controller.
     {
-        public function index()
+        public function index_action()
         {
             $this->mensaje = "Hola Mundo...!!!";
         }
     }
 
-Este es un ejemplo de un controlador llamado UsuariosController, el cual extiende de la clase base Controller, y tiene un método llamado index() que crea una variable "mensaje" con el valor "Hola Mundo...!!!".
+Este es un ejemplo de un controlador llamado usuariosController, el cual extiende de la clase base Controller, y tiene un método llamado index_action() que crea una variable "mensaje" con el valor "Hola Mundo...!!!".
 
 Como debe ser la Ruta para acceder a un Controlador
 ___________________________________________________
 
-Debido a que los nombres de los archivos y clases de controladores son en CamelCase, debe haber alguna manera de que sin usar esta notación en la url, el kernel pueda encontrar y ejecutar al controlador solicitado. 
-
-Esto se logra haciendo una conversión de la ruta, que debe estár en small_case, a CamelCase, veamos algunos ejemplos
+La ruta que identifica a un controlador debe ser el nombre exacto del controlador pero sin el sufijo Controller, veamos algunos ejemplos:
 
 ::
 
@@ -44,14 +42,14 @@ Esto se logra haciendo una conversión de la ruta, que debe estár en small_case
 
     Modulo   / controlador / acción             =>      Controlador a ejecutar:
 
-    /usuarios                                   =>        IndexController
-    /usuarios/index                             =>        IndexController
-    /usuarios/index/index                       =>        IndexController
-    /usuarios/admin/index                       =>        AdminController
-    /usuarios/nuevos_ingresos/                  =>        NuevosIngresosController
-    /usuarios/nuevos_ingresos/index             =>        NuevosIngresosController
+    /usuarios                                   =>        indexController
+    /usuarios/index                             =>        indexController
+    /usuarios/index/index                       =>        indexController
+    /usuarios/admin/index                       =>        adminController
+    /usuarios/nuevos_ingresos/                  =>        nuevos_ingresosController
+    /usuarios/nuevos_ingresos/index             =>        nuevos_ingresosController
 
-Como se puede apreciar las rutas siempre estan en minuscula, y en notación small_case, mientras que los controladores están en CamelCase, entonces el kernel, al estudiar la url convertirá el patrón de ruta del controlador en CamelCase, para encontrar y llamar al mismo de existir.
+Como se puede apreciar las rutas son exactamente iguales a los nombres de los controladores, pero sin el sufijo Controller.
 
 Las Acciónes
 ------------
@@ -63,27 +61,33 @@ Cabe destacar que las acciónes para poder ser accedidas desde la Url, deben ser
 Nombres para las acciones
 _________________________
 
-En esta versión los nombres de las acciónes son camelCase ( la primera letra en minuscula ), esto para seguir con el estandar de codificación usado en la mayoría de frameworks y librerias de PHP.
+Los nombres de las acciones puede ser cualquier nombre seguido del sufijo _action, ejemplos:
+
+    * index_action()
+    * crear_action()
+    * Hola_action()
+    * validar_url_action()
+    * ...
 
 Como debe ser la Ruta para acceder a una Acción
 ___________________________________________________
 
-Al igual que con los controladores, el kernel del framework hace una conversión de la ruta para convertirla en un nombre de acción válido en camelCase, veamos algunos ejemplos
+La ruta que identifica a una acción debe ser el nombre exacto de la acción pero sin el sufijo _action, veamos algunos ejemplos:
 
 ::
 
-    Supongamos que estamos en el Módulo Usuarios, controlador IndexController:
+    Supongamos que estamos en el Módulo Usuarios, controlador indexController:
 
     Modulo   / controlador / acción             =>      Controlador a ejecutar:   =>    Acción a ejecutar
 
-    /usuarios                                   =>        IndexController         =>         index()
-    /usuarios/index                             =>        IndexController         =>         index()
-    /usuarios/index/index                       =>        IndexController         =>         index()
-    /usuarios/index/crear                       =>        IndexController         =>         crear()
-    /usuarios/index/nuevo_ingreso               =>        IndexController         =>         nuevoIngreso()
-    /usuarios/index/modificar_perfil            =>        IndexController         =>         modificarPerfil()
+    /usuarios                                   =>        indexController         =>         index_action()
+    /usuarios/index                             =>        indexController         =>         index_action()
+    /usuarios/index/index                       =>        indexController         =>         index_action()
+    /usuarios/index/crear                       =>        indexController         =>         crear_action()
+    /usuarios/index/nuevo_ingreso               =>        indexController         =>         nuevo_ingreso_action()
+    /usuarios/index/modificar_perfil            =>        indexController         =>         modificar_perfil_action()
 
-Como se puede apreciar las rutas siempre estan en minuscula, y en notación small_case, mientras que las acciones están en camelCase, entonces el kernel, al estudiar la url convertirá el patrón de ruta de la acción en camelCase, para encontrar y llamar a la misma de existir.
+Como se puede apreciar las rutas son exactamente iguales a los nombres de las acciones, pero sin el sufijo _action.
 
 Los Filtros
 -----------
@@ -97,14 +101,16 @@ ____________
 
 El método beforeFilter() es una función que puede tener una clase controladora y que, de existir, el framework llamará y ejecutará justo antes de realizar el llamado y ejecución de la acción solicitada en la petición.
 
-Este método ofrece la posibilidad de cambiar ó evitar la ejecución de una acción, esto se logra devolviendo una cadena con el nombre de la nueva acción a ejecutar ( en el caso de que queramos cambiar la ejecución de la acción actual por otra ), ó devolviendo FALSE si no queremos que se ejecute la acción del controlador.
+Este método ofrece la posibilidad de cambiar ó evitar la ejecución de una acción, esto se logra devolviendo una cadena con el nombre de la nueva acción a ejecutar ( en el caso de que queramos cambiar la ejecución de la acción actual por otra ), ó devolviendo **false** si no queremos que se ejecute la acción del controlador.
+
+Tambien es posible devolver una instancia de Response, con lo que no se ejecutarán ni la acción ni el afterFilter, sino que se usará esa respuesta para devolverla en la petición.
 
 afterFilter
 ___________
 
 El método afterFilter() es una función que puede tener una clase controladora y que, de existir, el framework llamará y ejecutará justo despues de realizar el llamado y ejecución de la acción solicitada en la petición.
 
-NOTA: si el método beforeFilter() devuelve FALSE, este filtró no será ejecutado por el kernel del framework.
+NOTA: si el método beforeFilter() devuelve false ó una instancia de Response, este filtró no será ejecutado por el kernel del framework.
 
 Parametros de las Acciones
 --------------------------
@@ -113,19 +119,19 @@ Una acción de un controlador puede tener parametros ó argumentos que esperan c
 
 .. code-block:: php
 
-    <?php  //controlador app/modules/Home/Controller/UsuariosController.php
+    <?php  //controlador app/modules/Home/Controller/usuariosController.php
 
     namespaces Home\Controller;
 
     use KumbiaPHP\Kernel\Controller\Controller;
 
-    class UsuariosController extends Controller
+    class usuariosController extends Controller
     {
         //   Ejemplos de url:
         //  /home/usuarios/editar/5   válida
         //  /home/usuarios/editar/10  válida
         //  /home/usuarios/editar/    invalida, el método espera el parametro id, por lo que se lanzará una excepcion
-        public function editar($id){ //nuestra acción editar recibira en el parametro $id el valor 5
+        public function editar_action($id){ //nuestra acción editar recibira en el parametro $id el valor 5
             ...
         }
 
@@ -133,7 +139,7 @@ Una acción de un controlador puede tener parametros ó argumentos que esperan c
         //  /home/usuarios/fecha/10-10-2012   válida
         //  /home/usuarios/fecha/20-10-2012   válida
         //  /home/usuarios/fecha/             válida, si no se pasa el parametro, el mismo toma el valor por defecto.
-        public function fecha($fecha = 'now'){ //nuestra acción espera el parametro fecha, si no lo recibe toma "now"
+        public function fecha_action($fecha = 'now'){ //nuestra acción espera el parametro fecha, si no lo recibe toma "now"
             $filtro = new DateTime($fecha); 
             ...
         }
@@ -142,7 +148,7 @@ Una acción de un controlador puede tener parametros ó argumentos que esperan c
         //  /home/usuarios/filtrar_entre/03-05-2012/20-12-2012   válida
         //  /home/usuarios/filtrar_entre/20-10-2012/10-08-2012   válida
         //  /home/usuarios/filtrar_entre/                        invalida
-        public function filtrarEntre($fechaInico, $fechaFinal){
+        public function filtrar_entre_action($fechaInico, $fechaFinal){
             ...
         }
     }
@@ -165,15 +171,15 @@ Este método devuelve la instancia del servicio, para ser usado en las acciónes
 
 .. code-block:: php
 
-    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    //archivo app/modules/MiModulo/Controller/usuariosController.php
 
     namespace MiModulo\Controller;
 
     use KumbiaPHP\Kernel\Controller\Controller;
 
-    class UsuariosController extends Controller //ahora se extiende de una clase base Controller.
+    class usuariosController extends Controller //ahora se extiende de una clase base Controller.
     {
-        public function index()
+        public function index_action()
         {
             echo "Método de la petición: " $this->get("request")->getMethod();
         }
@@ -220,15 +226,15 @@ una vez el template a usar. Tambien es posible dejar de mostrar la vista y/ó el
 
 .. code-block:: php
 
-    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    //archivo app/modules/MiModulo/Controller/usuariosController.php
 
     namespace MiModulo\Controller;
 
     use KumbiaPHP\Kernel\Controller\Controller;
 
-    class UsuariosController extends Controller //ahora se extiende de una clase base Controller.
+    class usuariosController extends Controller //ahora se extiende de una clase base Controller.
     {
-        public function index()
+        public function index_action()
         {
             $this->setView("listado"); //va a renderizar la vista listado.phtml
             $this->setView(null); //no se va a renderizar ninguna vista solo el template.
@@ -264,15 +270,15 @@ Los templates se pueden clasificar en dos grupos:
 
 .. code-block:: php
 
-    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    //archivo app/modules/MiModulo/Controller/usuariosController.php
 
     namespace MiModulo\Controller;
 
     use KumbiaPHP\Kernel\Controller\Controller;
 
-    class UsuariosController extends Controller //ahora se extiende de una clase base Controller.
+    class usuariosController extends Controller //ahora se extiende de una clase base Controller.
     {
-        public function index()
+        public function index_action()
         {
             $this->setTemplate("admin"); //va a renderizar el template publico admin.phtml
             $this->setTemplate("MiModulo:admin"); //va a renderizar el template admin.phtml del módulo "MiModulo"
@@ -299,20 +305,20 @@ Establece el tiempo de caché para una vista ó controlador completos, se debe p
 
 .. code-block:: php
 
-    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    //archivo app/modules/MiModulo/Controller/usuariosController.php
 
     namespace MiModulo\Controller;
 
     use KumbiaPHP\Kernel\Controller\Controller;
 
-    class UsuariosController extends Controller //ahora se extiende de una clase base Controller.
+    class usuariosController extends Controller //ahora se extiende de una clase base Controller.
     {
         protected function beforeFilter()
         {
             $this->cache('+10 min'); //se cachean todas las respuestas del controlador por 10 minutos.
         }
 
-        public function index()
+        public function index_action()
         {
             $this->cache('+1 min'); //se cachea la respuesta por 1 minuto
             $this->cache('+10 hour'); //se cachea la respuesta por 10 horas

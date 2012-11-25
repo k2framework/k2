@@ -109,9 +109,9 @@ En el siguiente ejemplo enviaremos 1 mensaje de información desde un controlado
 
     use KumbiaPHP\Kernel\Controller\Controller;
 
-    class UsuariosController extends Controller
+    class usuariosController extends Controller
     {
-        public function index()
+        public function index_action()
         {
             $this->get("flash")->info("Lista de Usuarios Vacía...!!!");
         }

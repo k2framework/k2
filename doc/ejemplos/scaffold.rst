@@ -25,14 +25,14 @@ El controlador es igual a cualquier controlador de esta nueva versión, `Ejemplo
 
 .. code-block:: php
 
-    <?php //archivo app/modules/Demos/Modelos/Controller/IndexController.php
+    <?php //archivo app/modules/Demos/Modelos/Controller/indexController.php
 
     namespace Demos\Modelos\Controller;
 
     use Demos\Modelos\Model\Usuarios;
     use Scaffold\Controller\ScaffoldController;
 
-    class IndexController extends ScaffoldController
+    class indexController extends ScaffoldController
     {
 
         protected function beforeFilter()

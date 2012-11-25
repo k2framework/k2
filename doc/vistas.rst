@@ -19,25 +19,25 @@ El nombre de la vista por defecto debe ser igual al nombre de la acción (métod
 
 .. code-block:: php
 
-    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    //archivo app/modules/MiModulo/Controller/usuariosController.php
 
     namespace MiModulo\Controller;
 
     use KumbiaPHP\Kernel\Controller\Controller;
 
-    class UsuariosController extends Controller
+    class usuariosController extends Controller
     {
-		public function index()
+		public function index_action()
 		{
 			//se mostrará la vista app/modules/MiModulo/View/Usuarios/index.phtml
 		}
 		
-		public function crear()
+		public function crear_action()
 		{
 			//se mostrará la vista app/modules/MiModulo/View/Usuarios/crear.phtml
 		}
 		
-		public function editar()
+		public function editar_action()
 		{
 			$this->setView("crear"); //se cambia la vista a renderizar.
 		
@@ -48,13 +48,13 @@ El nombre de la vista por defecto debe ser igual al nombre de la acción (métod
 Donde debe ir la vista
 ______________________
 
-Supongamos que tenemos un módulo llamado Compras, y tenemos un controlador llamado ArticulosController en "Compras/Controller/ArticulosController.php", ademas dicho controlador tiene tres métodos, index(), ver(), agregar().
+Supongamos que tenemos un módulo llamado Compras, y tenemos un controlador llamado articulosController en "Compras/Controller/articulosController.php", ademas dicho controlador tiene tres métodos, index(), ver(), agregar().
 
 Las vistas para ese controlador deben ir en:
 
-	* **Compras/View/Articulos/index.phtml**
-	* **Compras/View/Articulos/ver.phtml**
-	* **Compras/View/Articulos/agregar.phtml**
+	* **Compras/View/articulos/index.phtml**
+	* **Compras/View/articulos/ver.phtml**
+	* **Compras/View/articulos/agregar.phtml**
 
 Los Templates
 -------------

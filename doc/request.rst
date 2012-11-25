@@ -12,15 +12,15 @@ En realidad esto es muy sencillo, en cualquier controlador que extienda de Contr
 
 .. code-block:: php
 
-    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    //archivo app/modules/MiModulo/Controller/usuariosController.php
 
     namespace MiModulo\\Controller;
 
     use KumbiaPHP\\Kernel\\Controller\\Controller;
 
-    class UsuariosController extends Controller
+    class usuariosController extends Controller
     {
-        public function index()
+        public function index_action()
         {
             $request = $this->getRequest(); //este método nos devuelve la instancia del request actual.
             if ( $request->isAjax() ){
@@ -38,13 +38,13 @@ La clase Request ofrece una serie de métodos para devolvernos esos valores de m
 
 .. code-block:: php
 
-    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    //archivo app/modules/MiModulo/Controller/usuariosController.php
 
     namespace MiModulo\\Controller;
 
     use KumbiaPHP\\Kernel\\Controller\\Controller;
 
-    class UsuariosController extends Controller
+    class usuariosController extends Controller
     {
         public function registrar()
         {
@@ -83,15 +83,15 @@ Ejemplo de uso:
 
 .. code-block:: php
 
-    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    //archivo app/modules/MiModulo/Controller/usuariosController.php
 
     namespace MiModulo\\Controller;
 
     use KumbiaPHP\\Kernel\\Controller\\Controller;
 
-    class UsuariosController extends Controller
+    class usuariosController extends Controller
     {
-        public function registrar()
+        public function registrar_action()
         {
             $busqueda = $this->getRequest()->get("q", "todos");
             //el método get, buscará en $request y si no existe, buscará en $query, 

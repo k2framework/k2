@@ -55,17 +55,17 @@ ______________
 
     use KumbiaPHP\Kernel\Controller\Controller;
 
-    class UsuariosController extends Controller
+    class usuariosController extends Controller
     {
-        public function index()
+        public function index_action()
         {
             
         }
 
-        public function listado()
+        public function listado_action()
         {
-            return $this->getRouter()->redirect("nombre_modulo/usuarios/index");//redirije a la accion index()
-            return $this->getRouter()->redirect("nombre_modulo/usuarios");//redirije a la accion index()
+            return $this->getRouter()->redirect("NombreModulo:usuarios/index");//redirije a la accion index()
+            return $this->getRouter()->redirect("NombreModulo:usuarios");//redirije a la accion index()
             return $this->getRouter()->toAction();//redirije a la accion index()
             return $this->getRouter()->toAction("index");//redirije a la accion index()
         }
@@ -73,9 +73,9 @@ ______________
         public function todos()
         {
             //tambien podemos llamar al servicio usado el método get() del controlador
-            return $this->get("router")->forward("nombre_modulo/usuarios/index");redireccion interna hacia index()
-            return $this->get("router")->forward("otro_modulo/compras");redireccion interna hacia index()
-            return $this->getRouter()->forward("otro_modulo/compras");redireccion interna hacia index()
+            return $this->get("router")->forward("NombreModulo:usuarios/index");redireccion interna hacia index()
+            return $this->get("router")->forward("OtroModulo:compras");redireccion interna hacia index()
+            return $this->getRouter()->forward("OtroModulo:compras");redireccion interna hacia index()
         }
     }
 
@@ -94,14 +94,14 @@ Se enviará un correo a travez de un servicio ficticio llamado @mail, el correo 
 
     use KumbiaPHP\Kernel\Controller\Controller;
 
-    class RegistroController extends Controller
+    class registroController extends Controller
     {
-        public function enviarCorreo($usuarioId)
+        public function enviar_correo_action($usuarioId)
         {
             //obtenemos el contenido de la url email_templates/usuarios/registro/{id}
             //el cual es el html que se enviará por correo.
 
-            $response = $this->getRouter()->forward("email_templates/usuarios/registro/$usuarioId");
+            $response = $this->getRouter()->forward("K2/EmailTemplates:/usuarios/registro/$usuarioId");
 
             if ( 200 === $response->getStatus() ){ //si la respuesta es exitosa.
                 $email = $this->get("mail")

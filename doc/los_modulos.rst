@@ -27,8 +27,8 @@ Un ejemplo básico de la estructura de un módulo es:
 	
 	Ventas
 	   |---Controller
-	   |	   |-------IndexController.php
-	   |	   |-------ReportesController.php
+	   |	   |-------indexController.php
+	   |	   |-------reportesController.php
 	   |
 	   |-----Model
 	   |	   |-------Ventas.php

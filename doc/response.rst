@@ -10,22 +10,22 @@ Ejemplo:
 
 .. code-block:: php
 
-    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    //archivo app/modules/MiModulo/Controller/usuariosController.php
 
     namespace MiModulo\\Controller;
 
     use KumbiaPHP\\Kernel\\Controller\\Controller;
     use KumbiaPHP\\Kernel\\Response;
 
-    class UsuariosController extends Controller
+    class usuariosController extends Controller
     {
-        public function index()
+        public function index_action()
         {
             return new Response("<html><body>Hola, Esta es la Respuesta en HTML</body></html>");
         }
     }
 
-En este ejemplo, el método index del controlador UsuariosController, devuelve un objeto response con un contenido html (la respuesta puede ser de cualquier tipo, html, json, xml, csv, pdf, xls, etc.), que el fw usará para devolverla al cliente. Realmente no es obligatorio retornar una respuesta en cada acción de un controlador, ya que el kernel verifica si hemos ó no devuelto una instancia de Response, y si no lo hicimos crea la respuesta a traves del servicio @view, que es quien se encargará de buscar la vista y el template para cada petición.
+En este ejemplo, el método index del controlador usuariosController, devuelve un objeto response con un contenido html (la respuesta puede ser de cualquier tipo, html, json, xml, csv, pdf, xls, etc.), que el fw usará para devolverla al cliente. Realmente no es obligatorio retornar una respuesta en cada acción de un controlador, ya que el kernel verifica si hemos ó no devuelto una instancia de Response, y si no lo hicimos crea la respuesta a traves del servicio @view, que es quien se encargará de buscar la vista y el template para cada petición.
 
 Parametros de la Respuesta
 --------------------------
@@ -36,7 +36,7 @@ Ejemplo:
 
 .. code-block:: php
 
-    //archivo app/modules/MiModulo/Controller/UsuariosController.php
+    //archivo app/modules/MiModulo/Controller/usuariosController.php
 
     namespace MiModulo\\Controller;
 
@@ -44,21 +44,21 @@ Ejemplo:
     use KumbiaPHP\\Kernel\\Response;
     use KumbiaPHP\\Kernel\\JsonResponse;
 
-    class UsuariosController extends Controller
+    class usuariosController extends Controller
     {
-        public function index()
+        public function index_action()
         {
             $content = "<html><body>Hola, Esta es la Respuesta en HTML</body></html>";
             return new Response($content, 200, array( "Content-Type" => "text/html" ));
         }
 
-        public function json()
+        public function json_action()
         {
             $data = array("nombres" => "Manuel José", "edad" => "23");
             return new JsonResponse($data);//esta clase crear el json y los headers automaticamente.
         }
 
-        public function redirect()
+        public function redirect_action()
         {
             return new Response(NULL, 203, array( "Location" => "www.google.com" ));
         }
