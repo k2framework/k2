@@ -1,9 +1,13 @@
 KumbiaPHP 2
 ===========
 
-..  image:: https://secure.travis-ci.org/manuelj555/Core.png?branch=master
-
 Esta es una base para una nueva versión de KumbiaPHP framework, trabaja con php 5.3 ó superior.
+
+    * Estado del Core: |buildcore|
+    * Estado del ActiveRecord: |buildar|
+
+.. |buildcore| image:: https://secure.travis-ci.org/manuelj555/Core.png?branch=master
+.. |buildar| image:: https://secure.travis-ci.org/manuelj555/activerecord.png?branch=php5.3
 
 `Documentación <https://github.com/manuelj555/k2/tree/master/doc/README.rst>`_
 
