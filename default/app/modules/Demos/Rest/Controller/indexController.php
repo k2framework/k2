@@ -27,7 +27,7 @@ class indexController extends Controller
     {
         //aqui le decimos que ejecute la accion que tenga el nombre
         //del método de petición.
-        return strtolower($this->getRequest()->getMethod()) . 'Action';
+        return strtolower($this->getRequest()->getMethod()) . '_action';
     }
 
     /**
