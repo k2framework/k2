@@ -1,6 +1,8 @@
 KumbiaPHP 2
 ===========
 
+..  image:: https://secure.travis-ci.org/manuelj555/Core.png?branch=master
+
 Esta es una base para una nueva versión de KumbiaPHP framework, trabaja con php 5.3 ó superior.
 
 `Documentación <https://github.com/manuelj555/k2/tree/master/doc/README.rst>`_
