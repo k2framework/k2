@@ -9,7 +9,7 @@ use KumbiaPHP\Kernel\Controller\Controller;
  *
  * @author manuel
  */
-class IndexController extends Controller
+class indexController extends Controller
 {
 
     protected function beforeFilter()
@@ -19,12 +19,12 @@ class IndexController extends Controller
         }
     }
 
-    public function index()
+    public function index_action()
     {
         //$this->cache('+10 sec');
     }
 
-    public function otro()
+    public function otroAction()
     {
         return new \KumbiaPHP\Kernel\Response("<html><body>Mi Respuesta...!!!</body></html>");
     }

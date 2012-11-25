@@ -12,15 +12,15 @@ use KumbiaPHP\Kernel\Response;
  *
  * @author maguirre
  */
-class IndexController extends Controller
+class indexController extends Controller
 {
 
-    public function index()
+    public function index_action()
     {
         $this->usuario = $this->get('security')->getToken()->getUser();
     }
 
-    public function login()
+    public function login_action()
     {
         $this->form = new \KumbiaPHP\Form\Form('form_login');
 

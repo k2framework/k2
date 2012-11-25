@@ -18,10 +18,6 @@ $compiler->registerDirectories(array(
     'KumbiaPHP' => __DIR__ . '/../../vendor/kumbiaphp/core/src/',
 ));
 
-$app = new AppKernel(false);
-
-$app->execute(new Request());
-
 $compiler->compile();
 
 die("Se ha compilado el core del Framework");

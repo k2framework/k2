@@ -9,10 +9,10 @@ use KumbiaPHP\Kernel\Controller\Controller;
  *
  * @author manuel
  */
-class IndexController extends Controller
+class indexController extends Controller
 {
 
-    public function index()
+    public function index_action()
     {
         /* 
          * Aqui le decimos al fw que queremos usar el template de nuestro
@@ -21,7 +21,7 @@ class IndexController extends Controller
         $this->setTemplate('Demos/Vistas:mi_template');
     }
 
-    public function saludo($nombre)
+    public function saludo_action($nombre)
     {
         $this->tuNombre = $nombre;
         

@@ -9,12 +9,12 @@ use KumbiaPHP\Kernel\Controller\Controller;
  *
  * @author manuel
  */
-class PagesController extends Controller
+class pagesController extends Controller
 {
 
     protected $limitParams = FALSE;
 
-    public function show()
+    public function show_action()
     {
         $this->setView(implode('/', $this->parameters));
     }

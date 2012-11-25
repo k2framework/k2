@@ -185,7 +185,6 @@ use KumbiaPHP\Kernel\CookiesCollection;
 use KumbiaPHP\Kernel\Session\SessionInterface;
 
 
-
 class Request
 {
 
@@ -212,7 +211,6 @@ class Request
 
     
     protected $content = FALSE;
-    
     protected $locale;
 
     
@@ -312,7 +310,7 @@ class Request
     {
         $this->__construct($this->getBaseUrl());
     }
-    
+
     
     public function getLocale()
     {
@@ -326,14 +324,14 @@ class Request
     }
 
     
-    
     private function createBaseUrl()
     {
         $uri = $this->server->get('REQUEST_URI');
         if ($qString = $this->server->get('QUERY_STRING')) {
-            parse_str($qString, $get);
-            $get = array_merge($get, array_keys($get), array('?', '='));
-            return rtrim(str_replace($get, '', urldecode($uri)), '/') . '/';
+            if (false !== $pos = strpos($uri, '?')) {
+                $uri = substr($uri, 0, $pos);
+            }
+            return str_replace($this->query->get('_url'), '/', urldecode($uri));
         } else {
             return $uri;
         }
@@ -574,7 +572,7 @@ class AppContext
             if (!$route = array_search($url[0], $this->routes)) {
                 throw new NotFoundException("No Existe el módulo {$url[0]}, no se pudo crear la url");
             }
-            $url = trim($route, '/') . '/' . $url[1];
+            $url = ltrim(trim($route, '/') . '/' . $url[1], '/');
         } else {
             $url = ltrim($url[0], '/');
         }
@@ -965,7 +963,7 @@ class DependencyInjection implements DependencyInjectionInterface
 namespace KumbiaPHP\Di\Container;
 
 
-interface ContainerInterface
+interface ContainerInterface extends \ArrayAccess
 {
 
     
@@ -1093,6 +1091,34 @@ class Container implements ContainerInterface
         $config['class'] = $className;
         $this->definitions['services'][$id] = $config;
         return $this;
+    }
+
+    
+    public function offsetExists($offset)
+    {
+        return $this->has($offset) || $this->hasParameter($offset);
+    }
+
+    
+    public function offsetGet($offset)
+    {
+        if ($this->has($offset)) {
+            return $this->get($offset);
+        } elseif ($this->hasParameter($offset)) {
+            return $this->getParameter($offset);
+        } else {
+            return null;
+        }
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        //nada por ahora
+    }
+
+    public function offsetUnset($offset)
+    {
+        //nada por ahora
     }
 
 }
@@ -1284,10 +1310,20 @@ class ControllerResolver
 
     
     protected $container;
+
+    
     protected $module;
+
+    
     protected $controller;
-    protected $contShortName;
+
+    
+    protected $controllerName;
+
+    
     protected $action;
+
+    
     protected $parameters;
 
     public function __construct(ContainerInterface $con)
@@ -1297,34 +1333,49 @@ class ControllerResolver
         $app = $con->get('app.context');
 
         $this->module = $app->getCurrentModule();
-        $this->contShortName = $this->camelcase($app->getCurrentController());
-        $this->action = $this->camelcase($app->getCurrentAction(), true);
+        $this->controllerUrl = $app->getCurrentController();
+        $this->action = $app->getCurrentAction() . '_action';
         $this->parameters = $app->getCurrentParameters();
     }
 
+    
     public function getController()
     {
         if ('/logout' === $this->module) {
             throw new NotFoundException(sprintf("La ruta \"%s\" no concuerda con ningún módulo ni controlador en la App", $this->module), 404);
         }
-        //creo el nombre del controlador con el sufijo Controller
-        $controllerName = $this->contShortName . 'Controller';
+
+        $app = $this->container->get('app.context');
+        $this->controllerName = $app->getCurrentController() . 'Controller';
         //uno el namespace y el nombre del controlador.
-        $controllerClass = str_replace('/', '\\', $this->module) . "\\Controller\\$controllerName";
+        $controllerClass = str_replace('/', '\\', $this->module) . "\\Controller\\{$this->controllerName}";
 
         try {
+
+            $controllerFile = "{$app->getModules($this->module)}{$controllerClass}.php";
+
+            if (!file_exists($controllerFile)) {
+                throw new NotFoundException();
+            }
+
+            require_once $controllerFile;
+
             $reflectionClass = new ReflectionClass($controllerClass);
+            if ($reflectionClass->getShortName() !== $this->controllerName) {
+                throw new NotFoundException();
+            }
         } catch (\Exception $e) {
-            $modulePath = $this->container->get('app.context')->getPath($this->module);
-            throw new NotFoundException(sprintf("No existe el controlador \"%s\" en la ruta \"%sController/%s.php\"", $controllerName, $modulePath, $controllerName), 404);
+            $modulePath = $app->getPath($this->module);
+            throw new NotFoundException(sprintf("No existe el controlador \"%s\" en la ruta \"%sController/%s.php\"", $this->controllerName, $modulePath, $this->controllerName), 404);
         }
 
         $this->controller = $reflectionClass->newInstanceArgs(array($this->container));
-        $this->setViewDefault($this->action);
+        $this->setViewDefault($app->getCurrentAction());
 
         return array($this->controller, $this->action, $this->parameters);
     }
 
+    
     public function executeAction(ControllerEvent $controllerEvent)
     {
         $this->controller = $controllerEvent->getController();
@@ -1336,8 +1387,8 @@ class ControllerResolver
             return $response;
         }
 
-        if (FALSE === $this->action) {
-            return NULL; //si el before devuelve false, es porque no queremos que se ejecute nuestra acción.
+        if (false === $this->action) {
+            return; //si el before devuelve false, es porque no queremos que se ejecute nuestra acción.
         }
         $this->validateAction($controller, $controllerEvent->getParameters());
 
@@ -1348,17 +1399,13 @@ class ControllerResolver
         return $response;
     }
 
+    
     public function getPublicProperties()
     {
         return get_object_vars($this->controller);
     }
 
-    public function getModulePath()
-    {
-        $namespaces = $this->container->get('app.context')->getRoutes();
-        return rtrim($namespaces[$this->module] . '/') . '/' . $this->module;
-    }
-
+    
     protected function validateAction(\ReflectionObject $controller, array $params)
     {
         if ($controller->hasProperty('limitParams')) {
@@ -1366,7 +1413,7 @@ class ControllerResolver
             $limitParams->setAccessible(true);
             $limitParams = $limitParams->getValue($this->controller);
         } else {
-            $limitParams = TRUE; //por defeto siempre limita los parametro
+            $limitParams = true; //por defeto siempre limita los parametro
         }
 
         if ($controller->hasProperty('parameters')) {
@@ -1376,60 +1423,52 @@ class ControllerResolver
         }
         //verificamos la existencia del metodo.
         if (!$controller->hasMethod($this->action)) {
-            throw new NotFoundException(sprintf("No existe el metodo \"%s\" en el controlador \"%sController\"", $this->action, $this->contShortName), 404);
+            throw new NotFoundException(sprintf("No existe el metodo \"%s\" en el controlador \"%s\"", $this->action, $this->controllerName), 404);
         }
 
         $reflectionMethod = $controller->getMethod($this->action);
 
-        //verificamos que no sea el constructor a quien se llama
-        if ($reflectionMethod->isConstructor()) {
-            throw new NotFoundException(sprintf("Se está intentando ejecutar el constructor del controlador como una acción, en el controlador \"%sController\"", $this->contShortName), 404);
-        }
-
-        if (in_array($this->action, array('beforeFilter', 'afterFilter'))) {
-            throw new NotFoundException(sprintf("Se está intentando ejecutar el filtro \"%s\" del controlador \"%sController\"", $this->action, $this->contShortName), 404);
-        }
-
         //el nombre del metodo debe ser exactamente igual al camelCase
         //de la porcion de url
         if ($reflectionMethod->getName() !== $this->action) {
-            throw new NotFoundException(sprintf("No existe el metodo <b>%s</b> en el controlador \"%sController\"", $this->action, $this->contShortName), 404);
+            throw new NotFoundException(sprintf("No existe el metodo <b>%s</b> en el controlador \"%s\"", $this->action, $this->controllerName), 404);
         }
 
         //se verifica que el metodo sea public
         if (!$reflectionMethod->isPublic()) {
-            throw new NotFoundException(sprintf("Éstas Tratando de acceder a un metodo no publico \"%s\" en el controlador \"%sController\"", $this->action, $this->contShortName), 404);
+            throw new NotFoundException(sprintf("Éstas Tratando de acceder a un metodo no publico \"%s\" en el controlador \"%s\"", $this->action, $this->controllerName), 404);
         }
 
         
         if ($limitParams && (count($params) < $reflectionMethod->getNumberOfRequiredParameters() ||
                 count($params) > $reflectionMethod->getNumberOfParameters())) {
 
-            throw new NotFoundException(sprintf("Número de parámetros erróneo para ejecutar la acción \"%s\" en el controlador \"%sController\"", $this->action, $this->contShortName), 404);
+            throw new NotFoundException(sprintf("Número de parámetros erróneo para ejecutar la acción \"%s\" en el controlador \"%sr\"", $this->action, $this->controllerName), 404);
         }
     }
 
+    
     protected function executeBeforeFilter(ReflectionObject $controller)
     {
         if ($controller->hasMethod('beforeFilter')) {
             $method = $controller->getMethod('beforeFilter');
-            $method->setAccessible(TRUE);
+            $method->setAccessible(true);
 
-            if (NULL !== $result = $method->invoke($this->controller)) {
-                if (FALSE === $result) {
+            if (null !== $result = $method->invoke($this->controller)) {
+                if (false === $result) {
                     //si el resultado es false, es porque no queremos que se ejecute la acción
-                    $this->action = FALSE;
-                    $this->container->get('app.context')->setCurrentAction(FALSE);
+                    $this->action = false;
+                    $this->container->get('app.context')->setCurrentAction(false);
                     return;
                 }
                 if ($result instanceof Response) {
                     return $result; //devolvemos el objeto Response.
                 }
                 if (!is_string($result)) {
-                    throw new NotFoundException(sprintf("El método \"beforeFilter\" solo puede devolver un <b>FALSE, una cadena, ó un objeto Response<b> en el Controlador \"%sController\"", $this->contShortName));
+                    throw new NotFoundException(sprintf("El método \"beforeFilter\" solo puede devolver un <b>false, una cadena, ó un objeto Response<b> en el Controlador \"%s\"", $this->controllerName));
                 }
                 if (!$controller->hasMethod($result)) {
-                    throw new NotFoundException(sprintf("El método \"beforeFilter\" está devolviendo el nombre de una acción inexistente \"%s\" en el Controlador \"%sController\"", $result, $this->contShortName));
+                    throw new NotFoundException(sprintf("El método \"beforeFilter\" está devolviendo el nombre de una acción inexistente \"%s\" en el Controlador \"%s\"", $result, $this->controllerName));
                 }
                 //si el beforeFilter del controlador devuelve un valor, el mismo será
                 //usado como el nuevo nombre de la acción a ejecutar.
@@ -1439,15 +1478,17 @@ class ControllerResolver
         }
     }
 
+    
     protected function executeAfterFilter(ReflectionObject $controller)
     {
         if ($controller->hasMethod('afterFilter')) {
             $method = $controller->getMethod('afterFilter');
-            $method->setAccessible(TRUE);
+            $method->setAccessible(true);
             $method->invoke($this->controller);
         }
     }
 
+    
     public function callMethod($method)
     {
         $reflection = new \ReflectionClass($this->controller);
@@ -1463,10 +1504,11 @@ class ControllerResolver
             //y retorno su valor
             return $method->invoke($this->controller);
         } else {
-            return NULL;
+            return null;
         }
     }
 
+    
     protected function setViewDefault($action)
     {
         $reflection = new \ReflectionClass($this->controller);
@@ -1477,20 +1519,6 @@ class ControllerResolver
         //lo hago accesible para poderlo leer
         $propertie->setAccessible(true);
         $propertie->setValue($this->controller, $action);
-    }
-
-    
-    protected function camelcase($string, $firstLower = false)
-    {
-        $string = str_replace(' ', '', ucwords(preg_replace('@(.+)_(\w)@', '$1 $2', strtolower($string))));
-
-        if ($firstLower) {
-            // Notacion lowerCamelCase
-            $string[0] = strtolower($string[0]);
-            return $string;
-        } else {
-            return $string;
-        }
     }
 
 }
@@ -1993,16 +2021,14 @@ abstract class Kernel implements KernelInterface
         //ejecutamos el evento request
         $this->dispatcher->dispatch(KumbiaEvents::REQUEST, $event = new RequestEvent($request));
 
-
         if (!$event->hasResponse()) {
 
             //creamos el resolver.
             $resolver = new ControllerResolver(self::$container);
             //obtenemos la instancia del controlador, el nombre de la accion
-            //a ejecutar, y los parametros que recibirá dicha acción
-            list($controller, $action, $params) = $resolver->getController($request);
-
-            $event = new ControllerEvent($request, array($controller, $action, $params));
+            //a ejecutar, y los parametros que recibirá dicha acción a traves del método
+            //getController del $resolver y lo pasamos al ControllerEvent
+            $event = new ControllerEvent($request, $resolver->getController($request));
             //ejecutamos el evento controller.
             $this->dispatcher->dispatch(KumbiaEvents::CONTROLLER, $event);
 

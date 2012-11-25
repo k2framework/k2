@@ -23,21 +23,21 @@ abstract class ScaffoldController extends Controller
 
     abstract protected function beforeFilter();
 
-    public function index($page = 1)
+    public function index_action($page = 1)
     {
         $this->checkModel();
 
         $this->paginator = $this->model->paginate($page);
     }
 
-    public function ver($id)
+    public function ver_action($id)
     {
         $this->checkModel();
 
         $this->model = $this->model->findByPK((int) $id);
     }
 
-    public function crear()
+    public function crear_action()
     {
         $this->checkModel();
 
@@ -53,7 +53,7 @@ abstract class ScaffoldController extends Controller
         }
     }
 
-    public function editar($id)
+    public function editar_action($id)
     {
         $this->checkModel();
         $this->setView('crear');
@@ -74,7 +74,7 @@ abstract class ScaffoldController extends Controller
         }
     }
 
-    public function borrar($id)
+    public function borrar_action($id)
     {
         $this->checkModel();
 

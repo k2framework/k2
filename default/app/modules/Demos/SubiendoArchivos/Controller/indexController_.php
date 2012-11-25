@@ -11,10 +11,10 @@ use KumbiaPHP\Upload\Upload;
  *
  * @author manuel
  */
-class IndexController extends Controller
+class indexController extends Controller
 {
 
-    public function index()
+    public function index_action()
     {
         if ($this->getRequest()->isMethod('POST')) {
 

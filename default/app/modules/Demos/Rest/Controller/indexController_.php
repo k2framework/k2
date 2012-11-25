@@ -12,7 +12,7 @@ use KumbiaPHP\Kernel\JsonResponse;
  *
  * @author maguirre
  */
-class IndexController extends Controller
+class indexController extends Controller
 {
 
     /**
@@ -27,7 +27,7 @@ class IndexController extends Controller
     {
         //aqui le decimos que ejecute la accion que tenga el nombre
         //del método de petición.
-        return strtolower($this->getRequest()->getMethod()) . '_action';
+        return strtolower($this->getRequest()->getMethod()) . 'Action';
     }
 
     /**
