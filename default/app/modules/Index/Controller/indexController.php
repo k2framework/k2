@@ -24,7 +24,7 @@ class indexController extends Controller
         //$this->cache('+10 sec');
     }
 
-    public function otroAction()
+    public function otro_action()
     {
         return new \KumbiaPHP\Kernel\Response("<html><body>Mi Respuesta...!!!</body></html>");
     }
