@@ -12,8 +12,6 @@ Estos son los tres requermientos básicos para poder Trabajar con KumbiaPHP 2.
 Instalación
 ==========
 
-Para instalar KumbiaPHP 2 en tu máquina solo debes descargar el archivo `current.zip <https://github.com/downloads/manuelj555/k2/current.zip>`_ y descomprimirlo en el directorio publico de tu servidor web, Con esto ya puedes comenzar a usar KumbiaPHP 2.
-
-Tambien puedes descargar la versión de tu preferencia en la sección de desacargas:
+KumbiaPHP 2 es muy facil de instalar, solo debes ir a la sección de descargas y bajar la ultima versión del proyecto desde aquí (Descargar el .zip con la fecha mas reciente):
 
 `Descargas <https://github.com/manuelj555/k2/downloads>`_
