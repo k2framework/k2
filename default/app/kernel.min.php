@@ -1588,7 +1588,10 @@ class Controller
     protected $template = 'default';
 
     
-    protected $cache = NULL;
+    protected $response;
+
+    
+    protected $cache = null;
 
     
     protected $limitParams = TRUE;
@@ -1626,10 +1629,19 @@ class Controller
     }
 
     
-    protected function setView($view, $template = FALSE)
+    protected function setView($view, $template = false)
     {
         $this->view = $view;
-        if ($template !== FALSE) {
+        if ($template !== false) {
+            $this->setTemplate($template);
+        }
+    }
+
+    
+    protected function setResponse($response, $template = false)
+    {
+        $this->response = $response;
+        if ($template !== false) {
             $this->setTemplate($template);
         }
     }
@@ -1647,13 +1659,19 @@ class Controller
     }
 
     
+    protected function getResponse()
+    {
+        return $this->response;
+    }
+
+    
     protected function getTemplate()
     {
         return $this->template;
     }
 
     
-    protected function cache($time = FALSE)
+    protected function cache($time = false)
     {
         $this->cache = $time;
     }
@@ -1664,9 +1682,15 @@ class Controller
     }
 
     
-    protected function render(array $params = array(), $time = NULL)
+    protected function render(array $params = array(), $time = null)
     {
-        return $this->get('view')->render($this->getTemplate(), $this->getView(), $params, $time);
+        return $this->get('view')->render(array(
+                    'template' => $this->getTemplate(),
+                    'view' => $this->getView(),
+                    'response' => $this->getResponse(),
+                    'params' => $params,
+                    'time' => $time,
+                ));
     }
 
 }
@@ -2093,13 +2117,15 @@ abstract class Kernel implements KernelInterface
         //como la acción no devolvió respuesta, debemos
         //obtener la vista y el template establecidos en el controlador
         //para pasarlos al servicio view, y este construya la respuesta
-        $view = $resolver->callMethod('getView');
-        $template = $resolver->callMethod('getTemplate');
-        $cache = $resolver->callMethod('getCache');
-        $properties = $resolver->getPublicProperties(); //nos devuelve las propiedades publicas del controlador
         //llamamos al render del servicio "view" y esté nos devolverá
         //una instancia de response con la respuesta creada
-        return self::$container->get('view')->render($template, $view, $properties, $cache);
+        return self::$container->get('view')->render(array(
+                    'template' => $resolver->callMethod('getTemplate'),
+                    'view' => $resolver->callMethod('getView'),
+                    'response' => $resolver->callMethod('getResponse'),
+                    'time' => $resolver->callMethod('getCache'),
+                    'params' => $resolver->getPublicProperties(), //nos devuelve las propiedades publicas del controlador
+                ));
     }
 
     private function exception(\Exception $e)
