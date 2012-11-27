@@ -88,9 +88,12 @@ Ejemplo de Uso
 
                 if (false !== $pos = $posrFunction($content, '</body>')) {
 
-                    $html = $this->view->render('K2/Debug:banner', null, array(
-                                'queries' => $this->session->all('k2_debug_queries'),
-                                'dumps' => $this->dumps,
+                    $html = $this->view->render(array(
+                                        'template' => 'K2/Debug:banner',
+                                        'params' => array(
+                                            'queries' => $this->session->all('k2_debug_queries'),
+                                            'dumps' => $this->dumps,
+                                        ),
                             ))->getContent();
 
                     $this->session->delete(null, 'k2_debug_queries');
@@ -142,7 +145,10 @@ Ejemplo de Uso
             if ($event->getException() instanceof UserNotAuthorizedException) {
                 $url = $event->getRequest()->getRequestUrl();
                 $response = $this->container->get('view')
-                        ->render('K2/Backend:exception', null, compact('url'));
+                        ->render(array(
+                                'template' => 'K2/Backend:exception',
+                                'params' => compact('url')
+                        ));
                 $event->setResponse($response);
             }
         }
