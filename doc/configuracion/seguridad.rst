@@ -123,10 +123,12 @@ ______________
 
 Acá especificamos los prefijos de ruta que requieren de autenticación, y los roles que pueden acceder a dichas urls.
 
+Por defecto todos los usuarios podrán acceder a las rutas con el rol default.
+
 Ejemplos:
 
 .. code-block:: ini
     
     /admin* = usuario_admin,usuario_comun ;toda url que comienze por /admin requiere autenticación, y los roles que tienen acceso son usuario_admin,usuario_comun
-    /reportes* = TRUE ;toda url que comienze por/reportes requiere autenticación, no importa el rol del usuario que acceda.
+    /reportes* = default ;toda url que comienze por/reportes requiere autenticación, no importa el rol del usuario que acceda.
     /admin/auditorias* = usuario_admin ;solo los usuarios de rol "usuario_admin" pueden entrar a las rutas que comienzen con /admin/auditorias
