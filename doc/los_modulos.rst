@@ -129,3 +129,7 @@ Si el módulo que acabamos de registrar es accesible desde el navegador, debemos
 
 Donde debo colocar Los Modulos
 ------------------------------
+
+Dependiendo de la finalidad del módulo, existen dos lugares principales en los que alojar al mismo. Si nuestro módulo va a poder ser reutilizable en diferentes aplicaciones, y no está enfocado en una funcionalidad de una aplicación en especifico, lo mejor es que se encuentre en la carpeta **vendors** de los proyectos, ya que esto permite que varias aplicaciones puedan utilizar el mismo módulo conjuntamente.
+
+Si el módulo ofrece una funcionalidad especifica dentro de la aplicación, por ejemplo los reportes de ventas de una empresa, lo mejor es que se encuentre alojado dentro de la carpeta **app/modules**, ya que el módulo es propio del proyecto, y los demas proyectos no lo reuzarán.
