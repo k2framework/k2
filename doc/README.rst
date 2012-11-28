@@ -11,7 +11,7 @@ Lo Básico
    * `El Controlador <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst>`_
    * `El Objeto Request ( Petición ) <https://github.com/manuelj555/k2/blob/master/doc/request.rst>`_
    * `El Objeto Response ( la Respuesta ) <https://github.com/manuelj555/k2/blob/master/doc/response.rst>`_
-   * `Las Vistas <./vistas.rst>`_
+   * `Las Vistas <https://github.com/manuelj555/k2/blob/master/doc/vistas.rst>`_
    * `Creando y Usando Servicios <https://github.com/manuelj555/k2/blob/master/doc/servicios.rst>`_
    * `Eventos del Framewok <https://github.com/manuelj555/k2/blob/master/doc/eventos.rst>`_
 
