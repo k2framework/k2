@@ -15,6 +15,27 @@ Y no solo cumplen funcionalidades de tipo petición respuesta, sino que tambien 
 
 Ejemplo de este tipo de módulos son, un servicio de correo, un ACL, un traductor, logger ( FirePHP por ejemplo ), etc. Donde cualquier otro módulo ó clase puede hacer uso de estos servicios.
 
+Nombre del Modulo
+-----------------
+
+Un módulo puede contener cualquier nombre válido como el que le damos a nuestras carpetas en el sistema (Ya que el nonmbre del módulo va de la mano con el nombre de las carpetas que lo contienen), El nombre del módulo es muy importante debido a que debe concondar con el namespace de las clases contenidas en el mismo.
+
+Veamos algunos Ejemplos
+_______________________
+
+	+----------------------------+---------------------------------------------------------------------+
+	|                            |  K2\Backend\Controller\indexController                              |
+    |                            |  K2\Backend\Controller\usuariosController                           |
+    |         K2/Backend         |  K2\Backend\Model\Usuarios                                          |
+    |                            |  K2\Backend\Model\RolesRecursos                                     |
+    |                            |  K2\Backend\Form\UsuarioForm                                        |
+	+----------------------------+---------------------------------------------------------------------+
+    |                            |  K2\Calendar\Controller\indexController                             |
+    |        K2/Calendar         |  K2\Calendar\Controller\eventController                             |
+    |                            |  K2\Calendar\Model\Event                                            |
+	+----------------------------+---------------------------------------------------------------------+
+    |        K2/Debug            |  K2\Debug\Service\Debug                                             | 
+	+----------------------------+---------------------------------------------------------------------+                                                                                                         
 
 Creando un Modulo
 -----------------
