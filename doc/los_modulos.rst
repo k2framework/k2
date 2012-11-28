@@ -23,19 +23,36 @@ Un módulo puede contener cualquier nombre válido como el que le damos a nuestr
 Veamos algunos Ejemplos
 _______________________
 
-+----------------------------+---------------------------------------------------------------------+
-|                            |  K2\Backend\Controller\indexController                              |
-|                            |  K2\Backend\Controller\usuariosController                           |
-|         K2/Backend         |  K2\Backend\Model\Usuarios                                          |
-|                            |  K2\Backend\Model\RolesRecursos                                     |
-|                            |  K2\Backend\Form\UsuarioForm                                        |
-+----------------------------+---------------------------------------------------------------------+
-|                            |  K2\Calendar\Controller\indexController                             |
-|        K2/Calendar         |  K2\Calendar\Controller\eventController                             |
-|                            |  K2\Calendar\Model\Event                                            |
-+----------------------------+---------------------------------------------------------------------+
-|        K2/Debug            |  K2\Debug\Service\Debug                                             | 
-+----------------------------+---------------------------------------------------------------------+                                                                                                         
+Acá tenemos un ejemplo de la asociación entre el nombre del módulo y el espacio de nombre al que está asociado:
+
++----------------------------+-------------------------------------------------+
+|     Nombre del Módulo      |  Ejemplos de espacios de nombres de la clases   |
++----------------------------+-------------------------------------------------+
+|                            |  * K2\Backend\Controller\indexController        |
+|                            |  * K2\Backend\Controller\usuariosController     |
+|         K2/Backend         |  * K2\Backend\Model\Usuarios                    |
+|                            |  * K2\Backend\Model\RolesRecursos               |
+|                            |  * K2\Backend\Form\UsuarioForm                  |
++----------------------------+-------------------------------------------------+
+|                            |  * K2\Calendar\Controller\indexController       |
+|        K2/Calendar         |  * K2\Calendar\Controller\eventController       |
+|                            |  * K2\Calendar\Model\Event                      |
++----------------------------+-------------------------------------------------+
+|        K2/Debug            |  * K2\Debug\Service\Debug                       | 
++----------------------------+-------------------------------------------------+
+
+Como se puede aprecier el nombre del módulo es tambien el inicio de los namespace en las clases. Esto es así para que
+el autoload del framework busque las clases dentro de las carpetas llamadas K2/Backend, K2/Calendar, K2/Debug según sea el caso.
+
+Es importante destacar que tambien podriamos haber llamado al módulo simplemente **K2** e igual funcionara el autoload, pero el framework busca los archivos **config/config.ini** y **config/services.ini** en la raiz de la carpeta del nombre del módulo, es decir, si mo módulo se llama K2/Backend, el framework buscará los archivos .ini en **K2/Backend/config/config.ini** y **K2/Backend/config/services.ini**.
+
+Ahora, porque llamar al módulo **K2/Backend** y no simplemente **Backend**? Esto es así para asegurar que si otra persona ó empresa crea un módulo con el mismo nombre, no existan conflictos, es decir, si el módulo se llamara solo Backend y otra persona crea un módulo llamado Backend tambien, al intentar usar los 2 módulos en la aplicación se generarán conflictos de nombres en los namespaces, ademas no se podrán registrar los 2 módulos al mismo tiempo en el AppKernel.
+
+Lo mejor siempre será entonces llamara al módulo con un identificador del usuario, grupo ó empresa delante del nombre del módulo, ejemplos:
+
+	* **K2/Backend**: el módulo es un backend del grupo K2
+	* **Manuel/Backend**: el módulo es un backend de manuel
+	* **KumbiaPHP/Backend**: el módulo es un backend de KumbiaPHP
 
 Creando un Modulo
 -----------------
