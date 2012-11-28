@@ -23,19 +23,19 @@ Un módulo puede contener cualquier nombre válido como el que le damos a nuestr
 Veamos algunos Ejemplos
 _______________________
 
-	+----------------------------+---------------------------------------------------------------------+
-	|                            |  K2\Backend\Controller\indexController                              |
-    |                            |  K2\Backend\Controller\usuariosController                           |
-    |         K2/Backend         |  K2\Backend\Model\Usuarios                                          |
-    |                            |  K2\Backend\Model\RolesRecursos                                     |
-    |                            |  K2\Backend\Form\UsuarioForm                                        |
-	+----------------------------+---------------------------------------------------------------------+
-    |                            |  K2\Calendar\Controller\indexController                             |
-    |        K2/Calendar         |  K2\Calendar\Controller\eventController                             |
-    |                            |  K2\Calendar\Model\Event                                            |
-	+----------------------------+---------------------------------------------------------------------+
-    |        K2/Debug            |  K2\Debug\Service\Debug                                             | 
-	+----------------------------+---------------------------------------------------------------------+                                                                                                         
++----------------------------+---------------------------------------------------------------------+
+|                            |  K2\Backend\Controller\indexController                              |
+|                            |  K2\Backend\Controller\usuariosController                           |
+|         K2/Backend         |  K2\Backend\Model\Usuarios                                          |
+|                            |  K2\Backend\Model\RolesRecursos                                     |
+|                            |  K2\Backend\Form\UsuarioForm                                        |
++----------------------------+---------------------------------------------------------------------+
+|                            |  K2\Calendar\Controller\indexController                             |
+|        K2/Calendar         |  K2\Calendar\Controller\eventController                             |
+|                            |  K2\Calendar\Model\Event                                            |
++----------------------------+---------------------------------------------------------------------+
+|        K2/Debug            |  K2\Debug\Service\Debug                                             | 
++----------------------------+---------------------------------------------------------------------+                                                                                                         
 
 Creando un Modulo
 -----------------
