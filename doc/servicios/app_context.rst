@@ -3,8 +3,72 @@ Servicio AppContext
 
 El servicio `app.context <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/AppContext.php>`_ nos ofrece una serie de métodos que nos permitiran obtener información de relevancia con respecto al contexto de la aplicación y la petición, ejemplo de ello es que podemos obtener el módulo actual en ejecución, el controlador, la acción, los parametros, la ruta hacia el módulo actual y hacia cualquier otro módulo, la ruta hacia la carpeta app del proyecto. Ademas nos permite crear urls para manejarnos dentro de la aplicación, entre otras cosas.
 
+.. contents:: Contenido:
+
 Metodos de la clase
 -------------------
+
+createUrl
+__________
+
+.. code-block:: php
+
+    /**
+     * Crea una url válida. todos las libs y helpers la usan.
+     * 
+     * Ejemplos:
+     * 
+     * $this->createUrl('admin/usuarios/perfil');
+     * $this->createUrl('admin/roles');
+     * $this->createUrl('admin/recursos/editar/2');
+     * $this->createUrl('K2/Backend:usuarios'); módulo:controlador/accion/params
+     * 
+     * El ultimo ejemplo es una forma especial de crear rutas
+     * donde especificamos el nombre del módulo en vez del prefijo.
+     * ya que el prefijo lo podemos cambiar a nuestro antojo.
+     * 
+     * @param string $url
+     * @param boolean $baseUrl indica si se devuelve con el baseUrl delante ó no
+     * @return string
+     * @throws NotFoundException si no existe el módulo
+     */
+    public function createUrl($url, $baseUrl = true)
+
+getCurrentUrl
+__________
+
+.. code-block:: php
+
+    /**
+     * Devuelve la Url actual, completa, con módulo/controlador/acción
+     * así estos no hayan sido especificados en la URL.
+     * @param boolean $parameters si es true, agrega los parametros de la patición.
+     * @return string 
+     */
+    public function getCurrentUrl($parameters = FALSE)
+
+getControllerUrl
+__________
+
+.. code-block:: php
+
+    /**
+     * Devuelve la ruta hasta el controlador actual ejecutandose.
+     * @param string $action si se especifica se añade al final de la URL
+     * @return string 
+     */
+    public function getControllerUrl($action = null)
+
+getCurrentModuleUrl
+__________
+
+.. code-block:: php
+
+    /**
+     * Devuulve el prefijo de la ruta que apunta al modulo actual.
+     * @return string 
+     */
+    public function getCurrentModuleUrl()
 
 setLocales
 __________
@@ -197,19 +261,6 @@ __________
      */
     public function setCurrentParameters(array $currentParameters = array())
 
-getControllerUrl
-__________
-
-.. code-block:: php
-
-    /**
-     * Devuelve la Url actual, completa, con módulo/controlador/acción
-     * así estos no hayan sido especificados en la URL.
-     * @param boolean $parameters si es true, agrega los parametros de la patición.
-     * @return string 
-     */
-    public function getCurrentUrl($parameters = FALSE)
-
 inProduction
 __________
 
@@ -220,29 +271,6 @@ __________
      * @return boolean 
      */
     public function InProduction()
-
-getControllerUrl
-__________
-
-.. code-block:: php
-
-    /**
-     * Devuelve la ruta hasta el controlador actual ejecutandose.
-     * @param string $action si se especifica se añade al final de la URL
-     * @return string 
-     */
-    public function getControllerUrl($action = null)
-
-getCurrentModuleUrl
-__________
-
-.. code-block:: php
-
-    /**
-     * Devuulve el prefijo de la ruta que apunta al modulo actual.
-     * @return string 
-     */
-    public function getCurrentModuleUrl()
 
 setCurrentModuleUrl
 __________
@@ -255,32 +283,6 @@ __________
      * @return AppContext
      */
     public function setCurrentModuleUrl($currentModuleUrl)
-
-createUrl
-__________
-
-.. code-block:: php
-
-    /**
-     * Crea una url válida. todos las libs y helpers la usan.
-     * 
-     * Ejemplos:
-     * 
-     * $this->createUrl('admin/usuarios/perfil');
-     * $this->createUrl('admin/roles');
-     * $this->createUrl('admin/recursos/editar/2');
-     * $this->createUrl('K2/Backend:usuarios'); módulo:controlador/accion/params
-     * 
-     * El ultimo ejemplo es una forma especial de crear rutas
-     * donde especificamos el nombre del módulo en vez del prefijo.
-     * ya que el prefijo lo podemos cambiar a nuestro antojo.
-     * 
-     * @param string $url
-     * @param boolean $baseUrl indica si se devuelve con el baseUrl delante ó no
-     * @return string
-     * @throws NotFoundException si no existe el módulo
-     */
-    public function createUrl($url, $baseUrl = true)
 
 parseUrl
 __________
