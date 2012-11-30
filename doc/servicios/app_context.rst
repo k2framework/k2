@@ -295,3 +295,37 @@ __________
      * @throws NotFoundException 
      */
     public function parseUrl()
+
+Ejemplos
+--------
+
+.. code-block:: php
+
+    //archivo app/modules/MiModulo/Controller/usuariosController.php
+    
+    namespace MiModulo\Controller;
+    
+    use KumbiaPHP\Kernel\Controller\Controller;
+    
+    class usuariosController extends Controller //ahora se extiende de una clase base Controller.
+    {
+        public function index_action()
+        {
+            $this->urlActual = $this->get('app.context')->getCurrentUrl(); //nos devuelve la url actual
+
+            $this->urlHastaControlador = $this->get('app.context')->getControllerUrl(); //nos devuelve la url hasta el controlador actual
+
+            //ahora crearemos una url hacia el módulo K2/Calendar, controlador eventosController acción agregar:
+            $this->url = $this->get('app.context')->createUrl("K2/Calendar:eventos/agregar");
+        } 
+    }
+
+.. code-block:: html+php
+
+    //en una vista
+    <?php use KumbiaPHP\View\View; ?>
+    
+    URL actual: <?php echo ::app()->getCurrentUrl(); //la lib view tiene una método llamado app(), que nos devuelve el servicio app.context ?>
+    <a href="<?php echo View::app()->createUrl("K2/Calendar:eventos/agregar") ?>">Agregar Evento de Calendario</a>
+
+
