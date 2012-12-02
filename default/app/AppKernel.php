@@ -1,5 +1,4 @@
 <?php
-
 /* @var $loader Composer\Autoload\ClassLoader */
 $loader = require_once __DIR__ . '/../../vendor/autoload.php';
 
@@ -10,9 +9,11 @@ use KumbiaPHP\Kernel\Kernel;
  *
  * @author manuel
  */
-class AppKernel extends Kernel {
+class AppKernel extends Kernel
+{
 
-    protected function registerModules() {
+    protected function registerModules()
+    {
         $modules = array(
             'KumbiaPHP' => __DIR__ . '/../../vendor/kumbiaphp/core/src/',
             'Index' => __DIR__ . '/modules/',
@@ -30,16 +31,22 @@ class AppKernel extends Kernel {
         return $modules;
     }
 
-    protected function registerRoutes() {
-        return array(
+    protected function registerRoutes()
+    {
+        $routes = array(
             '/' => 'Index',
-            '/demo/rest' => 'Demos/Rest',
-            '/demo/router' => 'Demos/Router',
-            '/demo/vistas' => 'Demos/Vistas',
-            '/demo/modelos' => 'Demos/Modelos',
-            '/demo/upload' => 'Demos/SubiendoArchivos',
-            '/admin' => 'Demos/Seguridad',
         );
+
+        if (!$this->production) {
+            $routes['/demo/rest'] = 'Demos/Rest';
+            $routes['/demo/router'] = 'Demos/Router';
+            $routes['/demo/vistas'] = 'Demos/Vistas';
+            $routes['/demo/modelos'] = 'Demos/Modelos';
+            $routes['/demo/upload'] = 'Demos/SubiendoArchivos';
+            $routes['/admin'] = 'Demos/Seguridad';
+        }
+
+        return $routes;
     }
 
 }
