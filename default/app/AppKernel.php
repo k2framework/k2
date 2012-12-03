@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../../vendor/autoload.php';
+/* @var $loader Composer\Autoload\ClassLoader */
+$loader = require_once __DIR__ . '/../../vendor/autoload.php';
 
 use KumbiaPHP\Kernel\Kernel;
 
@@ -14,17 +15,17 @@ class AppKernel extends Kernel
     protected function registerModules()
     {
         $modules = array(
-            'KumbiaPHP'   => __DIR__ . '/../../vendor/kumbiaphp/core/src/',
-            'Index'       => __DIR__ . '/modules/',
+            'KumbiaPHP' => __DIR__ . '/../../vendor/kumbiaphp/core/src/',
+            'Index' => __DIR__ . '/modules/',
         );
 
         if (!$this->production) {
-            $modules['Demos/Rest']              = __DIR__ . '/modules/';
-            $modules['Demos/Router']            = __DIR__ . '/modules/';
-            $modules['Demos/Vistas']            = __DIR__ . '/modules/';
-            $modules['Demos/Modelos']           = __DIR__ . '/modules/';
-            $modules['Demos/SubiendoArchivos']  = __DIR__ . '/modules/';
-            $modules['Demos/Seguridad']         = __DIR__ . '/modules/';
+            $modules['Demos/Rest'] = __DIR__ . '/modules/';
+            $modules['Demos/Router'] = __DIR__ . '/modules/';
+            $modules['Demos/Vistas'] = __DIR__ . '/modules/';
+            $modules['Demos/Modelos'] = __DIR__ . '/modules/';
+            $modules['Demos/SubiendoArchivos'] = __DIR__ . '/modules/';
+            $modules['Demos/Seguridad'] = __DIR__ . '/modules/';
         }
 
         return $modules;
@@ -32,15 +33,23 @@ class AppKernel extends Kernel
 
     protected function registerRoutes()
     {
-        return array(
-            '/'                 => 'Index',
-            '/demo/rest'        => 'Demos/Rest',
-            '/demo/router'      => 'Demos/Router',
-            '/demo/vistas'      => 'Demos/Vistas',
-            '/demo/modelos'     => 'Demos/Modelos',
-            '/demo/upload'      => 'Demos/SubiendoArchivos',
-            '/admin'            => 'Demos/Seguridad',
+        $routes = array(
+            '/' => 'Index',
         );
+
+        if (!$this->production) {
+            $routes['/demo/rest'] = 'Demos/Rest';
+            $routes['/demo/router'] = 'Demos/Router';
+            $routes['/demo/vistas'] = 'Demos/Vistas';
+            $routes['/demo/modelos'] = 'Demos/Modelos';
+            $routes['/demo/upload'] = 'Demos/SubiendoArchivos';
+            $routes['/admin'] = 'Demos/Seguridad';
+        }
+
+        return $routes;
     }
 
 }
+
+//acá podemos incluir rutas y prefijos al autoloader
+//$loader->add('PHPExcel', __DIR__ . '../../vendor/');

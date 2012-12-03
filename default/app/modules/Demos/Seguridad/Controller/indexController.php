@@ -2,8 +2,9 @@
 
 namespace Demos\Seguridad\Controller;
 
+use KumbiaPHP\Form\Form;
+use KumbiaPHP\Security\Security;
 use KumbiaPHP\Kernel\Controller\Controller;
-use KumbiaPHP\Kernel\Response;
 
 /**
  * Ejemplo de un controlador REST FULL
@@ -22,15 +23,16 @@ class indexController extends Controller
 
     public function login_action()
     {
-        $this->form = new \KumbiaPHP\Form\Form('form_login');
+        $this->form = new Form('form_login');
 
         $this->form->setAction('_autenticate')
                 ->add('username')->setLabel('Nombre de Usuario: ');
 
         $this->form->add('password', 'password')->setLabel('Contraseña: ');
 
-        if ($this->get('flash')->has('LOGIN_ERROR')) {
-            $this->form->setErrors($this->get('flash')->get('LOGIN_ERROR'));
+        if ($this->get('session')->has(Security::LOGIN_ERROR)) {
+            $this->form->addError('TODO', $this->get('session')->get(Security::LOGIN_ERROR));
+            $this->get('session')->delete(Security::LOGIN_ERROR);
         }
     }
 
