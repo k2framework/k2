@@ -102,11 +102,11 @@ Helpers
 
 Los Helpers son clases estáticas que ofrecen métodos utiles que facilitan la creacion de ciertos elementos html como links, imagenes, inserccion de stripts y css, creacion de elementos de formularios, etc. A continuación se listan los helpers disponibles:
 
-	* `Html <https://github.com/manuelj555/k2_core/blob/master/src/KumbiaPHP/View/Helper/Html.php>`_
-	* `Form <https://github.com/manuelj555/k2_core/blob/master/src/KumbiaPHP/View/Helper/Form.php>`_
-	* `Tag <https://github.com/manuelj555/k2_core/blob/master/src/KumbiaPHP/View/Helper/Tag.php>`_
-	* `Js <https://github.com/manuelj555/k2_core/blob/master/src/KumbiaPHP/View/Helper/Js.php>`_
-	* `Ajax <https://github.com/manuelj555/k2_core/blob/master/src/KumbiaPHP/View/Helper/Ajax.php>`_
+	* `Html <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/View/Helper/Html.php>`_
+	* `Form <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/View/Helper/Form.php>`_
+	* `Tag <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/View/Helper/Tag.php>`_
+	* `Js <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/View/Helper/Js.php>`_
+	* `Ajax <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/View/Helper/Ajax.php>`_
 
 Las Funciones h() y eh()
 -----------------------
