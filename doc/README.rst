@@ -35,6 +35,7 @@ Librerias
 
   * `ActiveRecord <https://github.com/manuelj555/activerecord>`_
   * Upload
+  * `Form <https://github.com/manuelj555/k2/blob/master/doc/libs/form/formularios.rst>`_
 
 Preguntas Frecuentes
 ====================
@@ -53,5 +54,5 @@ Preguntas Frecuentes
   * `¿Cómo obtengo un valor que viene por POST? <https://github.com/manuelj555/k2/blob/master/doc/request.rst#el-metodo-get>`_
   * `¿Cómo obtengo un valor que viene por GET? <https://github.com/manuelj555/k2/blob/master/doc/request.rst#el-metodo-get>`_
   * ¿Cómo obtener un servicio desde la Vista?
-  * ¿Cómo crear un formulario?
+  * `¿Cómo crear un formulario <https://github.com/manuelj555/k2/blob/master/doc/libs/form/formularios.rst>`_
   * ¿Cómo incluir un partial?
