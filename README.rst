@@ -14,9 +14,9 @@ Esta es una base para una nueva versión de KumbiaPHP framework, trabaja con php
 Instalación
 -----------
 
-KumbiaPHP 2 es muy facil de instalar, solo debes ir a la sección de descargas y bajar la ultima versión del proyecto desde aquí (Descargar el .zip con la fecha mas reciente):
+Solo debes descargar el proyecto desde la rama descarga, la cual contiene los vendors ya instalados para una facil utilización.
 
-`Descargas <https://github.com/manuelj555/k2/downloads>`_
+`Descargar <https://github.com/manuelj555/k2/archive/descarga.zip>`_
 
 Instalación mediante Composer
 _____________________________
