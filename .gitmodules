@@ -1,1 +1,6 @@
-
+[submodule "vendor/kumbiaphp/activerecord"]
+	path = vendor/kumbiaphp/activerecord
+	url = git@github.com:manuelj555/activerecord.git
+[submodule "vendor/kumbiaphp/core"]
+	path = vendor/kumbiaphp/core
+	url = git@github.com:manuelj555/Core.git
