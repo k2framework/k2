@@ -1,7 +1,7 @@
 {
     "require":{
-        "kumbiaphp/core": "dev-master",
-        "kumbiaphp/activerecord": "dev-master"
+        "k2/core": "dev-master",
+        "k2/activerecord": "dev-master"
     },
     "autoload": {
         "psr-0":{ 
