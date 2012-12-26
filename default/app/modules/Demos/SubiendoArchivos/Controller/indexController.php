@@ -2,9 +2,9 @@
 
 namespace Demos\SubiendoArchivos\Controller;
 
-use KumbiaPHP\Kernel\Controller\Controller;
-use KumbiaPHP\Kernel\Response;
-use KumbiaPHP\Upload\Upload;
+use K2\Kernel\Controller\Controller;
+use K2\Kernel\Response;
+use K2\Upload\Upload;
 
 /**
  * Description of IndexController

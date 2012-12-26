@@ -2,10 +2,10 @@
 
 namespace Index\Services;
 
-use KumbiaPHP\Kernel\Event\RequestEvent;
-use KumbiaPHP\Validation\ValidationBuilder;
-use KumbiaPHP\Security\Event\SecurityEvent;
-use KumbiaPHP\Di\Container\ContainerInterface;
+use K2\Kernel\Event\RequestEvent;
+use K2\Validation\ValidationBuilder;
+use K2\Security\Event\SecurityEvent;
+use K2\Di\Container\ContainerInterface;
 
 /**
  * Description of Servicio
@@ -26,7 +26,7 @@ class Servicio
         $this->container = $container;
     }
 
-    public function setSession(\KumbiaPHP\Kernel\Session\SessionInterface $sesion)
+    public function setSession(\K2\Kernel\Session\SessionInterface $sesion)
     {
         
     }

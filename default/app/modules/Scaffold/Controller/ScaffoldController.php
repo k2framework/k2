@@ -2,9 +2,9 @@
 
 namespace Scaffold\Controller;
 
-use \KumbiaPHP\Form\Form;
-use KumbiaPHP\ActiveRecord\ActiveRecord;
-use KumbiaPHP\Kernel\Controller\Controller;
+use \K2\Form\Form;
+use K2\ActiveRecord\ActiveRecord;
+use K2\Kernel\Controller\Controller;
 
 /**
  * Description of ScaffoldController

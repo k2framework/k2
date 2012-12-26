@@ -2,8 +2,8 @@
 
 namespace Demos\Rest\Controller;
 
-use KumbiaPHP\Kernel\Controller\Controller;
-use KumbiaPHP\Kernel\JsonResponse;
+use K2\Kernel\Controller\Controller;
+use K2\Kernel\JsonResponse;
 
 /**
  * Ejemplo de un controlador REST FULL
@@ -34,7 +34,7 @@ class indexController extends Controller
      * Este método es llamado en las peticiones de tipo GET
      * ya que el filtro reescribe la acción a llamar dependiendo del metodo de la peticion
      * 
-     * @return \KumbiaPHP\Kernel\Response 
+     * @return \K2\Kernel\Response 
      */
     public function get_action()
     {
@@ -53,7 +53,7 @@ class indexController extends Controller
     /**
      * Aplica los que para el metodo get
      * 
-     * @return \KumbiaPHP\Kernel\Response 
+     * @return \K2\Kernel\Response 
      */
     public function post_action()
     {
@@ -67,7 +67,7 @@ class indexController extends Controller
     /**
      * Aplica los que para el metodo get
      * 
-     * @return \KumbiaPHP\Kernel\Response 
+     * @return \K2\Kernel\Response 
      */
     public function put_action()
     {
@@ -81,7 +81,7 @@ class indexController extends Controller
     /**
      * Aplica los que para el metodo get
      * 
-     * @return \KumbiaPHP\Kernel\Response 
+     * @return \K2\Kernel\Response 
      */
     public function delete_action()
     {

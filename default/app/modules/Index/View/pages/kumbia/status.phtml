@@ -1,6 +1,6 @@
 <?php
 
-use KumbiaPHP\View\View;
+use K2\View\View;
 
 $database = View::get('container')->getParameter('config.database');
 $charset = View::get('container')->getParameter('config.charset');
@@ -23,7 +23,7 @@ $status = View::app()->inProduction() ? 'Production' : 'Development';
 //    }
 ?>
 <?php echo strftime("%d de %B del %Y") . "<br />"; ?>
-<h2>config.ini <span class='app'> de <?php echo basename(dirname(\KumbiaPHP\View\View::app()->getAppPath())) ?></span></h2>
+<h2>config.ini <span class='app'> de <?php echo basename(dirname(\K2\View\View::app()->getAppPath())) ?></span></h2>
 <!--        <h4>Directorio temp/:</h4>
         <p><?php //echo $tmp          ?></p>-->
 

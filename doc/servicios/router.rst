@@ -1,7 +1,7 @@
 El Servicio Router
 ==================
 
-El servicio KumbiaPHP\Kernel\Router\Router ofrece la posibilidad de redirigir la petición actual a otra petición.
+El servicio K2\Kernel\Router\Router ofrece la posibilidad de redirigir la petición actual a otra petición.
 
 .. contents:: Esta clase lo que hace es devolver un objeto Response con las cabeceras http necesarias para redirir una petición a otra ubicación.
 
@@ -15,7 +15,7 @@ _________
     /**
      * Redirije la petición a otro modulo/controlador/accion de la aplicación.
      * @param string $url
-     * @return \KumbiaPHP\Kernel\RedirectResponse 
+     * @return \K2\Kernel\RedirectResponse 
      */
     public function redirect($url = NULL, $status = 302)
 
@@ -26,7 +26,7 @@ _________
     /**
      * Redirije la petición a otra acción del mismo controlador.
      * @param type $action
-     * @return \KumbiaPHP\Kernel\RedirectResponse 
+     * @return \K2\Kernel\RedirectResponse 
      */
     public function toAction($action = NULL, $status = 302)
 
@@ -53,7 +53,7 @@ ______________
 
     namespace MiModulo\Controller;
 
-    use KumbiaPHP\Kernel\Controller\Controller;
+    use K2\Kernel\Controller\Controller;
 
     class usuariosController extends Controller
     {
@@ -92,7 +92,7 @@ Se enviará un correo a travez de un servicio ficticio llamado @mail, el correo 
 
     namespace Registro\Controller;
 
-    use KumbiaPHP\Kernel\Controller\Controller;
+    use K2\Kernel\Controller\Controller;
 
     class registroController extends Controller
     {

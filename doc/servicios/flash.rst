@@ -1,7 +1,7 @@
 El servicio Flash
 ==================
 
-.. contents:: El servicio KumbiaPHP\Flash\Flash nos permite enviar mensajes desde un controlador a una vista, ya sea en la misma petición ó en la siguiente, lo cual es muy util cuando queremos informar al usuario de un evento ocurrido en algun proceso, tambien es muy usado para enviar un mensaje y redirigir a otra página, y en esta, mostrar dicho mensaje si existe.
+.. contents:: El servicio K2\Flash\Flash nos permite enviar mensajes desde un controlador a una vista, ya sea en la misma petición ó en la siguiente, lo cual es muy util cuando queremos informar al usuario de un evento ocurrido en algun proceso, tambien es muy usado para enviar un mensaje y redirigir a otra página, y en esta, mostrar dicho mensaje si existe.
 
 Métodos del Servicio
 --------------------
@@ -107,7 +107,7 @@ En el siguiente ejemplo enviaremos 1 mensaje de información desde un controlado
 
     namespace MiModulo\Controller;
 
-    use KumbiaPHP\Kernel\Controller\Controller;
+    use K2\Kernel\Controller\Controller;
 
     class usuariosController extends Controller
     {

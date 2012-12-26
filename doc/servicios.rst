@@ -43,7 +43,7 @@ _________________________
 +------------------------------+-------------------------------------------------------------------------------------+
 |**class** (obligatorio)       | clase que será creada, ejemplo::                                                    |
 |                              |                                                                                     |
-|                              |    class = KumbiaPHP\Kernel\Session\Session                                         |
+|                              |    class = K2\Kernel\Session\Session                                         |
 +------------------------------+-------------------------------------------------------------------------------------+
 |**construct[]** (opcional)    | parametros a pasar al servicio en el constructor, ejemplo::                         |
 |                              |                                                                                     |
@@ -87,36 +87,36 @@ ______________________________________
 .. code-block:: ini
 
    [session]
-   class = KumbiaPHP\Kernel\Session\Session
+   class = K2\Kernel\Session\Session
    construct = @request ;el servicio @session usa el servicio @request
    
    [router]
-   class =  KumbiaPHP\Kernel\Router\Router
+   class =  K2\Kernel\Router\Router
    construct[] = @app.context ;el servicio @router usa el servicio @app.context
    construct[] = @app.kernel  ;el servicio @router usa el servicio @kernel
    
    [view]
-   class = KumbiaPHP\View\View
+   class = K2\View\View
    construct[] = @container ;el servicio @view usa el servicio @container
    
    [cache]
-   class = KumbiaPHP\Cache\Cache
+   class = K2\Cache\Cache
    factory[method] = factory   ;se llamará al método estático factory()
    factory[argument] = app_dir ;y se le pasará como parametro el valor del parametro app_dir
    
    [flash]
-   class = KumbiaPHP\Flash\Flash
+   class = K2\Flash\Flash
    construct[] = @session ;el servicio @flash usa el servicio @session
    
    [validator]
-   class = KumbiaPHP\Validation\Validator  ;no usa otros servicios
+   class = K2\Validation\Validator  ;no usa otros servicios
    
    [security]
-   class = KumbiaPHP\Security\Security
+   class = K2\Security\Security
    construct[] = @session
    
    [activerecord.provider]
-   class = KumbiaPHP\Security\Auth\Provider\ActiveRecord
+   class = K2\Security\Auth\Provider\ActiveRecord
    construct[] = @container
 
 Estableciendo Dependencias
@@ -171,14 +171,14 @@ Podemos lograr que a un servicio le lleguen las instancias de los servicios que 
 
    ;codigo en services.ini
    [flash]
-   class = KumbiaPHP\Flash\Flash
+   class = K2\Flash\Flash
    construct[] = @session ;el servicio @flash usa el servicio @session y le llegará en el constructor
 
 .. code-block:: php
 
    //servicio @flash
 
-   namespace KumbiaPHP\Flash\Flash; 
+   namespace K2\Flash\Flash; 
 
    class Flash
    {
@@ -196,7 +196,7 @@ Podemos lograr que a un servicio le lleguen las instancias de los servicios que 
 
    ;codigo en services.ini
    [cache]
-   class = KumbiaPHP\Cache\MiCache
+   class = K2\Cache\MiCache
    factory[method] = crearInstancia  ;se llamará a este método, el cual debe crear la instancia del servicio.
    factory[argument] = cache.driver  ;espera el valor contenido en el parametro de algun config.ini de la App.
 
@@ -204,13 +204,13 @@ Podemos lograr que a un servicio le lleguen las instancias de los servicios que 
 
    //servicio @MiCache
 
-   namespace KumbiaPHP\Cache\MiCache;
+   namespace K2\Cache\MiCache;
 
    class MiCache
    {
       public static function crearInstancia($driver)
       {
-         $driverClass = "KumbiaPHP\\Cache\\Adapter\\$driver"; creamos el nombre de la clase con el namespace.
+         $driverClass = "K2\\Cache\\Adapter\\$driver"; creamos el nombre de la clase con el namespace.
 
          if ( !class_exist($driverClass) )  //si no existe la clase lanzamos una excepción.
          {
@@ -257,8 +257,8 @@ En el ejemplo anterior, se creó un servicio llamado **k2_seguridad**, el cual e
 
     namespace K2\Seguridad;
 
-    use KumbiaPHP\Kernel\Event\RequestEvent;
-    use KumbiaPHP\Kernel\Router\RouterInterface;
+    use K2\Kernel\Event\RequestEvent;
+    use K2\Kernel\Router\RouterInterface;
 
     class Seguridad
     {
@@ -319,9 +319,9 @@ Ahora nuestro servicio k2_seguridad está escuchando varios eventos, veamos como
 
     namespace K2\Seguridad;
 
-    use KumbiaPHP\Kernel\Event\RequestEvent;
-    use KumbiaPHP\Kernel\Event\ResponseEvent;
-    use KumbiaPHP\Kernel\Event\ExceptionEvent;
+    use K2\Kernel\Event\RequestEvent;
+    use K2\Kernel\Event\ResponseEvent;
+    use K2\Kernel\Event\ExceptionEvent;
 
     class Seguridad
     {

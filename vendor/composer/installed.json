@@ -24,7 +24,7 @@
         "installation-source": "source",
         "autoload": {
             "psr-0": {
-                "KumbiaPHP\\": "src/"
+                "K2\\": "src/"
             }
         }
     },

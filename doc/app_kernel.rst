@@ -11,7 +11,7 @@ Codigo del AppKernel
     <?php
     require_once '../../vendor/autoload.php';
     
-    use KumbiaPHP\Kernel\Kernel;
+    use K2\Kernel\Kernel;
     
     class AppKernel extends Kernel
     {

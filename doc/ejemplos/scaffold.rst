@@ -11,7 +11,7 @@ extenderá del ActiveRecord y será nuestro modelo para el Scaffold.
 
     namespace Demos\Modelos\Model;
 
-    use KumbiaPHP\ActiveRecord\ActiveRecord;
+    use K2\ActiveRecord\ActiveRecord;
 
     class Usuarios extends ActiveRecord
     {

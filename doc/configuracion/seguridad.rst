@@ -65,7 +65,7 @@ Los parametros posibles son:
     * active_record: si especificamos active_record, los usuarios vienen del modelo especificado en la sección `[model_config] <#seccion-model_config>`_
     * @servicio: si especificamos el nombre de un servicio (debe ir un @ delante), se usará dicha clase para obtener el usuario.
 
-Cabe destacar que si nuestro proveedor es un servicio propio, este debe extender de **KumbiaPHP\\Security\\Auth\\Provider\\AbstractProvider** ó implementar la interfaz **KumbiaPHP\\Security\\Auth\\Provider\\UserProviderInterface**
+Cabe destacar que si nuestro proveedor es un servicio propio, este debe extender de **K2\\Security\\Auth\\Provider\\AbstractProvider** ó implementar la interfaz **K2\\Security\\Auth\\Provider\\UserProviderInterface**
 
 type
 ....

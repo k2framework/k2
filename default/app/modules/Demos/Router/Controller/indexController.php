@@ -2,8 +2,8 @@
 
 namespace Demos\Router\Controller;
 
-use KumbiaPHP\Kernel\Controller\Controller;
-use KumbiaPHP\Kernel\Response;
+use K2\Kernel\Controller\Controller;
+use K2\Kernel\Response;
 
 /**
  * Ejemplo de redirecciones usando el servicio router
@@ -62,7 +62,7 @@ class indexController extends Controller
     /**
      *
      * @param type $accion
-     * @return \KumbiaPHP\Kernel\Response 
+     * @return \K2\Kernel\Response 
      */
     protected function getRespuesta($accion)
     {

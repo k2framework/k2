@@ -2,7 +2,7 @@
 
 namespace Index\Controller;
 
-use KumbiaPHP\Kernel\Controller\Controller;
+use K2\Kernel\Controller\Controller;
 
 /**
  * Description of IndexController
@@ -26,7 +26,7 @@ class indexController extends Controller
 
     public function otro_action()
     {
-        return new \KumbiaPHP\Kernel\Response("<html><body>Mi Respuesta...!!!</body></html>");
+        return new \K2\Kernel\Response("<html><body>Mi Respuesta...!!!</body></html>");
     }
 
 }

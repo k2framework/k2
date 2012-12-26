@@ -2,15 +2,15 @@
 
 namespace Demos\Modelos\Model;
 
-use KumbiaPHP\ActiveRecord\ActiveRecord;
-use KumbiaPHP\ActiveRecord\Validation\ValidationBuilder;
+use K2\ActiveRecord\ActiveRecord;
+use K2\ActiveRecord\Validation\ValidationBuilder;
 
 /**
  * Description of Usuarios
  *
  * @author maguirre
  */
-class Usuarios extends ActiveRecord implements \KumbiaPHP\Security\Auth\User\UserInterface
+class Usuarios extends ActiveRecord implements \K2\Security\Auth\User\UserInterface
 {
 
     protected function validations(ValidationBuilder $builder)
@@ -21,7 +21,7 @@ class Usuarios extends ActiveRecord implements \KumbiaPHP\Security\Auth\User\Use
         return $builder;
     }
 
-    public function auth(\KumbiaPHP\Security\Auth\User\UserInterface $user)
+    public function auth(\K2\Security\Auth\User\UserInterface $user)
     {
         return TRUE;// crypt($user->getPassword()) === $this->getPassword();
     }

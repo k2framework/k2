@@ -14,8 +14,8 @@ Veamos con un ejemplo como crear un formulario con tres campos, nombres, apellid
 
     namespace MiModulo\Controller;
 
-    use KumbiaPHP\Form\Form;
-    use KumbiaPHP\Kernel\Controller\Controller;
+    use K2\Form\Form;
+    use K2\Kernel\Controller\Controller;
 
     class usuariosController extends Controller //ahora se extiende de una clase base Controller.
     {
@@ -44,7 +44,7 @@ Veamos con un ejemplo como crear un formulario con tres campos, nombres, apellid
 
     //la vista:
 
-    <?php KumbiaPHP\View\View::content(true); //el true es para que muestre los mensajes flash ?>
+    <?php K2\View\View::content(true); //el true es para que muestre los mensajes flash ?>
 
     <?php echo $formulario;//imprimimos la variable y esto nos generará todo el formulario con los campos agregados. ?>
 
@@ -57,7 +57,7 @@ La gran mayoria de la veces necesitaremos personalizar el como se muestran los c
 
 .. code-block:: html+php
 
-    <?php KumbiaPHP\View\View::content(true); //el true es para que muestre los mensajes flash ?>
+    <?php K2\View\View::content(true); //el true es para que muestre los mensajes flash ?>
 
     <?php echo $formulario->open(); //crea la etiqueta de apertura. ?>
 

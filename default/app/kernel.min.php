@@ -1,7 +1,7 @@
 <?php
 
 
-namespace KumbiaPHP\Kernel;
+namespace K2\Kernel;
 
 
 class Collection implements \Serializable
@@ -104,9 +104,9 @@ class Collection implements \Serializable
 
 }
 
-namespace KumbiaPHP\Kernel;
+namespace K2\Kernel;
 
-use KumbiaPHP\Kernel\Collection;
+use K2\Kernel\Collection;
 
 class CookiesCollection extends Collection
 {
@@ -159,9 +159,9 @@ class CookiesCollection extends Collection
 
 }
 
-namespace KumbiaPHP\Kernel;
+namespace K2\Kernel;
 
-use KumbiaPHP\Kernel\File;
+use K2\Kernel\File;
 
 class FilesCollection
 {
@@ -254,13 +254,13 @@ class FilesCollection
 
 }
 
-namespace KumbiaPHP\Kernel;
+namespace K2\Kernel;
 
-use KumbiaPHP\Kernel\Collection;
-use KumbiaPHP\Kernel\AppContext;
-use KumbiaPHP\Kernel\FilesCollection;
-use KumbiaPHP\Kernel\CookiesCollection;
-use KumbiaPHP\Kernel\Session\SessionInterface;
+use K2\Kernel\Collection;
+use K2\Kernel\AppContext;
+use K2\Kernel\FilesCollection;
+use K2\Kernel\CookiesCollection;
+use K2\Kernel\Session\SessionInterface;
 
 
 class Request
@@ -419,10 +419,10 @@ class Request
 
 }
 
-namespace KumbiaPHP\Kernel;
+namespace K2\Kernel;
 
-use KumbiaPHP\Kernel\Request;
-use KumbiaPHP\Kernel\Exception\NotFoundException;
+use K2\Kernel\Request;
+use K2\Kernel\Exception\NotFoundException;
 
 
 class AppContext
@@ -750,9 +750,9 @@ class AppContext
 
 
 
-namespace KumbiaPHP\Kernel\Config;
+namespace K2\Kernel\Config;
 
-use KumbiaPHP\Kernel\AppContext;
+use K2\Kernel\AppContext;
 
 
 class ConfigReader
@@ -880,7 +880,7 @@ class ConfigReader
         if (isset($configs['parameters']['config']['locales'])
                 && !isset($configs['services']['translator'])) {
             $configs['services']['translator'] = array(
-                'class' => 'KumbiaPHP\\Translation\\Translator',
+                'class' => 'K2\\Translation\\Translator',
             );
         }
 
@@ -889,9 +889,9 @@ class ConfigReader
 
 }
 
-namespace KumbiaPHP\Di;
+namespace K2\Di;
 
-use KumbiaPHP\Di\Container\Container;
+use K2\Di\Container\Container;
 
 
 interface DependencyInjectionInterface
@@ -905,13 +905,13 @@ interface DependencyInjectionInterface
 }
 
 
-namespace KumbiaPHP\Di;
+namespace K2\Di;
 
 use \ReflectionClass;
-use KumbiaPHP\Di\Container\Container;
-use KumbiaPHP\Di\Exception\DiException;
-use KumbiaPHP\Di\DependencyInjectionInterface;
-use KumbiaPHP\Di\Exception\IndexNotDefinedException;
+use K2\Di\Container\Container;
+use K2\Di\Exception\DiException;
+use K2\Di\DependencyInjectionInterface;
+use K2\Di\Exception\IndexNotDefinedException;
 
 
 class DependencyInjection implements DependencyInjectionInterface
@@ -1086,7 +1086,7 @@ class DependencyInjection implements DependencyInjectionInterface
 
 }
 
-namespace KumbiaPHP\Di\Container;
+namespace K2\Di\Container;
 
 
 interface ContainerInterface extends \ArrayAccess
@@ -1112,12 +1112,12 @@ interface ContainerInterface extends \ArrayAccess
 }
 
 
-namespace KumbiaPHP\Di\Container;
+namespace K2\Di\Container;
 
-use KumbiaPHP\Di\Container\ContainerInterface;
-use KumbiaPHP\Di\DependencyInjectionInterface as Di;
-use KumbiaPHP\Di\Definition\Service;
-use KumbiaPHP\Di\Exception\IndexNotDefinedException;
+use K2\Di\Container\ContainerInterface;
+use K2\Di\DependencyInjectionInterface as Di;
+use K2\Di\Definition\Service;
+use K2\Di\Exception\IndexNotDefinedException;
 
 
 class Container implements ContainerInterface
@@ -1249,9 +1249,9 @@ class Container implements ContainerInterface
 
 }
 
-namespace KumbiaPHP\EventDispatcher;
+namespace K2\EventDispatcher;
 
-use KumbiaPHP\EventDispatcher\Event;
+use K2\EventDispatcher\Event;
 
 
 interface EventDispatcherInterface
@@ -1270,10 +1270,10 @@ interface EventDispatcherInterface
     public function removeListener($eventName, $listener);
 }
 
-namespace KumbiaPHP\EventDispatcher;
+namespace K2\EventDispatcher;
 
-use KumbiaPHP\EventDispatcher\EventDispatcherInterface;
-use KumbiaPHP\Di\Container\ContainerInterface;
+use K2\EventDispatcher\EventDispatcherInterface;
+use K2\Di\Container\ContainerInterface;
 
 
 class EventDispatcher implements EventDispatcherInterface
@@ -1338,7 +1338,7 @@ class EventDispatcher implements EventDispatcherInterface
 
 }
 
-namespace KumbiaPHP\Kernel\Event;
+namespace K2\Kernel\Event;
 
 
 final class KumbiaEvents
@@ -1351,7 +1351,7 @@ final class KumbiaEvents
 
 }
 
-namespace KumbiaPHP\EventDispatcher;
+namespace K2\EventDispatcher;
 
 
 class Event
@@ -1374,11 +1374,11 @@ class Event
 
 }
 
-namespace KumbiaPHP\Kernel\Event;
+namespace K2\Kernel\Event;
 
-use KumbiaPHP\Kernel\Request;
-use KumbiaPHP\Kernel\Response;
-use KumbiaPHP\EventDispatcher\Event;
+use K2\Kernel\Request;
+use K2\Kernel\Response;
+use K2\EventDispatcher\Event;
 
 
 class RequestEvent extends Event
@@ -1421,14 +1421,14 @@ class RequestEvent extends Event
 
 }
 
-namespace KumbiaPHP\Kernel\Controller;
+namespace K2\Kernel\Controller;
 
 use \ReflectionClass;
 use \ReflectionObject;
-use KumbiaPHP\Kernel\Response;
-use KumbiaPHP\Kernel\Event\ControllerEvent;
-use KumbiaPHP\Di\Container\ContainerInterface;
-use KumbiaPHP\Kernel\Exception\NotFoundException;
+use K2\Kernel\Response;
+use K2\Kernel\Event\ControllerEvent;
+use K2\Di\Container\ContainerInterface;
+use K2\Kernel\Exception\NotFoundException;
 
 
 class ControllerResolver
@@ -1640,12 +1640,12 @@ class ControllerResolver
 
 }
 
-namespace KumbiaPHP\Kernel\Controller;
+namespace K2\Kernel\Controller;
 
-use KumbiaPHP\Di\Container\ContainerInterface;
-use KumbiaPHP\Kernel\Request;
-use KumbiaPHP\Kernel\Router\Router;
-use KumbiaPHP\Kernel\Response;
+use K2\Di\Container\ContainerInterface;
+use K2\Kernel\Request;
+use K2\Kernel\Router\Router;
+use K2\Kernel\Response;
 
 
 class Controller
@@ -1680,7 +1680,7 @@ class Controller
 
     protected function renderNotFound($message)
     {
-        throw new \KumbiaPHP\Kernel\Exception\NotFoundException($message);
+        throw new \K2\Kernel\Exception\NotFoundException($message);
     }
 
     
@@ -1768,10 +1768,10 @@ class Controller
 
 }
 
-namespace KumbiaPHP\Kernel\Event;
+namespace K2\Kernel\Event;
 
-use KumbiaPHP\Kernel\Request;
-use KumbiaPHP\Kernel\Event\RequestEvent;
+use K2\Kernel\Request;
+use K2\Kernel\Event\RequestEvent;
 
 
 class ControllerEvent extends RequestEvent
@@ -1817,9 +1817,9 @@ class ControllerEvent extends RequestEvent
 
 }
 
-namespace KumbiaPHP\Kernel;
+namespace K2\Kernel;
 
-use KumbiaPHP\Kernel\Collection;
+use K2\Kernel\Collection;
 
 
 class Response implements \Serializable
@@ -1970,11 +1970,11 @@ class Response implements \Serializable
 
 }
 
-namespace KumbiaPHP\Kernel\Event;
+namespace K2\Kernel\Event;
 
-use KumbiaPHP\Kernel\Event\RequestEvent;
-use KumbiaPHP\Kernel\Request;
-use KumbiaPHP\Kernel\Response;
+use K2\Kernel\Event\RequestEvent;
+use K2\Kernel\Request;
+use K2\Kernel\Response;
 
 
 class ResponseEvent extends RequestEvent
@@ -1996,11 +1996,11 @@ class ResponseEvent extends RequestEvent
 
 }
 
-namespace KumbiaPHP\Kernel;
+namespace K2\Kernel;
 
-use KumbiaPHP\Kernel\Request;
-use KumbiaPHP\Kernel\Response;
-use KumbiaPHP\Di\Container\ContainerInterface;
+use K2\Kernel\Request;
+use K2\Kernel\Response;
+use K2\Di\Container\ContainerInterface;
 
 
 interface KernelInterface
@@ -2020,25 +2020,25 @@ interface KernelInterface
 }
 
 
-namespace KumbiaPHP\Kernel;
+namespace K2\Kernel;
 
-use KumbiaPHP\Loader\Autoload;
-use KumbiaPHP\Kernel\AppContext;
-use KumbiaPHP\Di\Definition\Service;
-use KumbiaPHP\Di\DependencyInjection;
-use KumbiaPHP\Di\Container\Container;
-use KumbiaPHP\Kernel\KernelInterface;
-use KumbiaPHP\Di\Definition\Parameter;
-use KumbiaPHP\Kernel\Event\KumbiaEvents;
-use KumbiaPHP\Kernel\Event\RequestEvent;
-use KumbiaPHP\Kernel\Event\ResponseEvent;
-use KumbiaPHP\Kernel\Config\ConfigReader;
-use KumbiaPHP\Kernel\Event\ExceptionEvent;
-use KumbiaPHP\Kernel\Event\ControllerEvent;
-use KumbiaPHP\Di\Definition\DefinitionManager;
-use KumbiaPHP\EventDispatcher\EventDispatcher;
-use KumbiaPHP\Kernel\Exception\ExceptionHandler;
-use KumbiaPHP\Kernel\Controller\ControllerResolver;
+use K2\Loader\Autoload;
+use K2\Kernel\AppContext;
+use K2\Di\Definition\Service;
+use K2\Di\DependencyInjection;
+use K2\Di\Container\Container;
+use K2\Kernel\KernelInterface;
+use K2\Di\Definition\Parameter;
+use K2\Kernel\Event\KumbiaEvents;
+use K2\Kernel\Event\RequestEvent;
+use K2\Kernel\Event\ResponseEvent;
+use K2\Kernel\Config\ConfigReader;
+use K2\Kernel\Event\ExceptionEvent;
+use K2\Kernel\Event\ControllerEvent;
+use K2\Di\Definition\DefinitionManager;
+use K2\EventDispatcher\EventDispatcher;
+use K2\Kernel\Exception\ExceptionHandler;
+use K2\Kernel\Controller\ControllerResolver;
 
 
 abstract class Kernel implements KernelInterface

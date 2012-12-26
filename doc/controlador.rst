@@ -19,7 +19,7 @@ _________________________
 
     namespace MiModulo\Controller;
 
-    use KumbiaPHP\Kernel\Controller\Controller;
+    use K2\Kernel\Controller\Controller;
 
     class usuariosController extends Controller //ahora se extiende de una clase base Controller.
     {
@@ -123,7 +123,7 @@ Una acción de un controlador puede tener parametros ó argumentos que esperan c
 
     namespaces Home\Controller;
 
-    use KumbiaPHP\Kernel\Controller\Controller;
+    use K2\Kernel\Controller\Controller;
 
     class usuariosController extends Controller
     {
@@ -156,7 +156,7 @@ Una acción de un controlador puede tener parametros ó argumentos que esperan c
 La clase base Controller
 -------------------------
 
-Todos los controladores de la aplicación deben extender de la clase base "KumbiaPHP\Kernel\Controller\Controller", si no lo hacen, el framework lanzará una excepción indicandonos que debemos extender de dicha clase.
+Todos los controladores de la aplicación deben extender de la clase base "K2\Kernel\Controller\Controller", si no lo hacen, el framework lanzará una excepción indicandonos que debemos extender de dicha clase.
 
 Esta clase ofrece ciertos métodos de gran utilidad para ser usados por los controladores de la aplicación, a continuación se detallarán cada uno de ellos:
 
@@ -175,7 +175,7 @@ Este método devuelve la instancia del servicio, para ser usado en las acciónes
 
     namespace MiModulo\Controller;
 
-    use KumbiaPHP\Kernel\Controller\Controller;
+    use K2\Kernel\Controller\Controller;
 
     class usuariosController extends Controller //ahora se extiende de una clase base Controller.
     {
@@ -230,7 +230,7 @@ una vez el template a usar. Tambien es posible dejar de mostrar la vista y/ó el
 
     namespace MiModulo\Controller;
 
-    use KumbiaPHP\Kernel\Controller\Controller;
+    use K2\Kernel\Controller\Controller;
 
     class usuariosController extends Controller //ahora se extiende de una clase base Controller.
     {
@@ -274,7 +274,7 @@ Los templates se pueden clasificar en dos grupos:
 
     namespace MiModulo\Controller;
 
-    use KumbiaPHP\Kernel\Controller\Controller;
+    use K2\Kernel\Controller\Controller;
 
     class usuariosController extends Controller //ahora se extiende de una clase base Controller.
     {
@@ -309,7 +309,7 @@ Establece el tiempo de caché para una vista ó controlador completos, se debe p
 
     namespace MiModulo\Controller;
 
-    use KumbiaPHP\Kernel\Controller\Controller;
+    use K2\Kernel\Controller\Controller;
 
     class usuariosController extends Controller //ahora se extiende de una clase base Controller.
     {

@@ -2,9 +2,9 @@
 
 namespace Demos\Seguridad\Controller;
 
-use KumbiaPHP\Form\Form;
-use KumbiaPHP\Security\Security;
-use KumbiaPHP\Kernel\Controller\Controller;
+use K2\Form\Form;
+use K2\Security\Security;
+use K2\Kernel\Controller\Controller;
 
 /**
  * Ejemplo de un controlador REST FULL

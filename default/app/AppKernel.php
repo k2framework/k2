@@ -2,7 +2,7 @@
 /* @var $loader Composer\Autoload\ClassLoader */
 $loader = require_once __DIR__ . '/../../vendor/autoload.php';
 
-use KumbiaPHP\Kernel\Kernel;
+use K2\Kernel\Kernel;
 
 /**
  * Description of AppKernel
@@ -15,7 +15,7 @@ class AppKernel extends Kernel
     protected function registerModules()
     {
         $modules = array(
-            'KumbiaPHP' => __DIR__ . '/../../vendor/kumbiaphp/core/src/',
+            'K2' => __DIR__ . '/../../vendor/kumbiaphp/core/src/',
             'Index' => __DIR__ . '/modules/',
         );
 

@@ -14,8 +14,8 @@ Ejemplo:
 
     namespace MiModulo\\Controller;
 
-    use KumbiaPHP\\Kernel\\Controller\\Controller;
-    use KumbiaPHP\\Kernel\\Response;
+    use K2\\Kernel\\Controller\\Controller;
+    use K2\\Kernel\\Response;
 
     class usuariosController extends Controller
     {
@@ -40,9 +40,9 @@ Ejemplo:
 
     namespace MiModulo\\Controller;
 
-    use KumbiaPHP\\Kernel\\Controller\\Controller;
-    use KumbiaPHP\\Kernel\\Response;
-    use KumbiaPHP\\Kernel\\JsonResponse;
+    use K2\\Kernel\\Controller\\Controller;
+    use K2\\Kernel\\Response;
+    use K2\\Kernel\\JsonResponse;
 
     class usuariosController extends Controller
     {

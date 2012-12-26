@@ -85,7 +85,7 @@ __________
     /**
      * Establece el tipo de request del kernel, (MASTER, SUB)
      * @param string $type
-     * @return \KumbiaPHP\Kernel\AppContext 
+     * @return \K2\Kernel\AppContext 
      */
     public function setRequestType($type)
 
@@ -305,7 +305,7 @@ Ejemplos
     
     namespace MiModulo\Controller;
     
-    use KumbiaPHP\Kernel\Controller\Controller;
+    use K2\Kernel\Controller\Controller;
     
     class usuariosController extends Controller //ahora se extiende de una clase base Controller.
     {
@@ -323,7 +323,7 @@ Ejemplos
 .. code-block:: html+php
 
     //en una vista
-    <?php use KumbiaPHP\View\View; ?>
+    <?php use K2\View\View; ?>
     
     URL actual: <?php echo ::app()->getCurrentUrl(); //la lib view tiene una método llamado app(), que nos devuelve el servicio app.context ?>
     <a href="<?php echo View::app()->createUrl("K2/Calendar:eventos/agregar") ?>">Agregar Evento de Calendario</a>

@@ -23,7 +23,7 @@ El nombre de la vista por defecto debe ser igual al nombre de la acción (métod
 
     namespace MiModulo\Controller;
 
-    use KumbiaPHP\Kernel\Controller\Controller;
+    use K2\Kernel\Controller\Controller;
 
     class usuariosController extends Controller
     {

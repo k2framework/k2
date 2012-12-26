@@ -16,7 +16,7 @@ En realidad esto es muy sencillo, en cualquier controlador que extienda de Contr
 
     namespace MiModulo\\Controller;
 
-    use KumbiaPHP\\Kernel\\Controller\\Controller;
+    use K2\\Kernel\\Controller\\Controller;
 
     class usuariosController extends Controller
     {
@@ -42,7 +42,7 @@ La clase Request ofrece una serie de métodos para devolvernos esos valores de m
 
     namespace MiModulo\\Controller;
 
-    use KumbiaPHP\\Kernel\\Controller\\Controller;
+    use K2\\Kernel\\Controller\\Controller;
 
     class usuariosController extends Controller
     {
@@ -87,7 +87,7 @@ Ejemplo de uso:
 
     namespace MiModulo\\Controller;
 
-    use KumbiaPHP\\Kernel\\Controller\\Controller;
+    use K2\\Kernel\\Controller\\Controller;
 
     class usuariosController extends Controller
     {
