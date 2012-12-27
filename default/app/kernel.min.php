@@ -175,12 +175,12 @@ class FilesCollection
             if (isset($file['name']) && is_array($file['name'])) {
                 foreach (array_keys($file['name']) as $key) {
                     $this->set($key, new File(array(
-                            'name' => $file['name'][$key],
-                            'type' => $file['type'][$key],
-                            'tmp_name' => $file['tmp_name'][$key],
-                            'error' => $file['error'][$key],
-                            'size' => $file['size'][$key],
-                        )), $name);
+                                'name' => $file['name'][$key],
+                                'type' => $file['type'][$key],
+                                'tmp_name' => $file['tmp_name'][$key],
+                                'error' => $file['error'][$key],
+                                'size' => $file['size'][$key],
+                            )), $name);
                 }
             } else {
                 $this->set($name, new File($file));
@@ -768,7 +768,7 @@ class ConfigReader
         $configFile = $app->getAppPath() . '/config/config.php';
         if ($app->inProduction()) {
             if (is_file($configFile)) {
-                $this->config = require_once $configFile;
+                $this->config = require $configFile;
                 return;
             } else {
                 $this->config = $this->compile($app);
@@ -806,44 +806,27 @@ class ConfigReader
             }
             if (is_file($servicesFile)) {
                 foreach (parse_ini_file($servicesFile, TRUE) as $serviceName => $config) {
+                    if (isset($config['listen'])) {
+                        foreach ($config['listen'] as $method => $event) {
+                            $config['listen'][$method] = $event = explode(':', $event);
+                            isset($event[1]) || $config['listen'][$method][1] = 0;
+                        }
+                    }
                     $services[$serviceName] = $config;
                 }
             }
         }
-//           var_dump($this->prepareAditionalConfig(array(
-//            'parameters' => $parameters,
-//            'services' => $services,
-//        )));die;
+
         return $this->prepareAditionalConfig(array(
-            'parameters' => $parameters,
-            'services' => $services,
-        ));
+                    'parameters' => $parameters,
+                    'services' => $services,
+                ));
     }
 
     public function getConfig()
     {
         return $this->config;
     }
-
-    
-//    protected function explodeIndexes(array $section)
-//    {
-//        foreach ($section['config'] as $key => $value) {
-//            $explode = explode('.', $key);
-//            //si hay un punto y el valor delante del punto
-//            //es el nombre de un servicio existente
-//            if (count($explode) > 1 && isset($section['services'][$explode[0]])) {
-//                //le asignamos el nuevo valor al parametro
-//                //que usará ese servicio
-//                if (isset($section['parameters'][$explode[1]])) {
-//                    $section['parameters'][$explode[1]] = $value;
-//                }
-//            } else {
-//                $section['parameters']['config.' . $key] = $value;
-//            }
-//        }
-//        return $section;
-//    }
 
     
     protected function prepareAditionalConfig($configs)
@@ -854,24 +837,9 @@ class ConfigReader
 
             //si es el router por defecto quien reescribirá las url
             if ('router' === $router) {
-                //solo le añadimos un listener.
+                //le añadimos un listener.
                 $configs['services']['router']
-                        ['listen']['rewrite'] = 'kumbia.request';
-            } else {
-                //si es un servicio distinto al router. y existe,
-                //lo añadimos al principio de todos los servicios.
-                $def = $configs['services'][$router]; //guardamos la definición del servicio en una variable temporal.
-                unset($configs['services'][$router]); //eliminamos la definición del arreglo $config
-                //volteamos el arreglo de servicios, para insertar de nuevo la definición.
-                $configs['services'] = array_reverse($configs['services'], true);
-                //insertamos la definición, quedando esta al final del array.
-                $configs['services'][$router] = $def;
-                //volvemos a voltear los servicios, con lo que la definición insertada
-                //queda de primera.
-                $configs['services'] = array_reverse($configs['services'], true);
-                //esto es importante debido a que queremos que el primer escucha que siempre
-                //se ejecute sea el que hace las reescrituras de url, para que cuando se
-                //llamen a los siguientes escuchas ya la url esté reescrita.
+                        ['listen']['rewrite'] = 'kumbia.request:1000'; //con priotidad 1000 para que sea el primero en ejecutarse.
             }
         }
 
@@ -976,7 +944,7 @@ class DependencyInjection implements DependencyInjectionInterface
         if (isset($config['call'])) {
             $this->setOtherDependencies($id, $instance, $config['call']);
         }
-        
+
         return $instance;
     }
 
@@ -1109,6 +1077,9 @@ interface ContainerInterface extends \ArrayAccess
 
     
     public function setParameter($id, $value);
+
+    
+    public function getDefinitions();
 }
 
 
@@ -1252,22 +1223,28 @@ class Container implements ContainerInterface
 namespace K2\EventDispatcher;
 
 use K2\EventDispatcher\Event;
+use K2\EventDispatcher\EventSubscriberInterface;
 
 
 interface EventDispatcherInterface
 {
 
     
-    public function dispatch($eventName, Event $event);
+    public function dispatch($eventName, Event $event = null);
 
     
-    public function addListener($eventName, $listener);
+    public function addListener($eventName, $listener, $priority = 0);
 
     
-    public function hasListener($eventName, $listener);
+    public function addSubscriber(EventSubscriberInterface $subscriber);
+
+    
+    public function hasListeners($eventName);
 
     
     public function removeListener($eventName, $listener);
+
+    public function getListeners($eventName);
 }
 
 namespace K2\EventDispatcher;
@@ -1286,54 +1263,117 @@ class EventDispatcher implements EventDispatcherInterface
     protected $container;
 
     
-    public function __construct(ContainerInterface $container)
+    protected $sorted = array();
+
+    
+    public function __construct(ContainerInterface $container = null)
     {
-        $this->container = $container;
+        if ($container) {
+            $this->setContainer($container);
+        }
     }
 
-    public function dispatch($eventName, Event $event)
+    
+    public function setContainer(ContainerInterface $container)
     {
-        if (!array_key_exists($eventName, $this->listeners)) {
+        $this->container = $container;
+        $definitions = $container->getDefinitions();
+        foreach ($definitions['services'] as $id => $config) {
+            if (isset($config['listen'])) {//si está escuchando eventos
+                foreach ($config['listen'] as $method => $params) {
+                    isset($params[1]) || $params[1] = 0; //si no existe la prioridad la seteamos a 0
+                    $this->addListener($params[0], array($id, $method), $params[1]);
+                }
+            } elseif (isset($config['subscriber'])) {
+                $this->addSubscriber($container->get($id));
+            }
+        }
+    }
+
+    public function dispatch($eventName, Event $event = null)
+    {
+        if (!$this->hasListeners($eventName)) {
             return;
         }
-        if (is_array($this->listeners[$eventName]) && count($this->listeners[$eventName])) {
-            foreach ($this->listeners[$eventName] as $listener) {
+
+        if (!$event) {
+            $event = new Event();
+        }
+
+        foreach ($this->getListeners($eventName) as $listener) {
+            call_user_func($listener, $event);
+            if ($event->isPropagationStopped()) {
+                return;
+            }
+        }
+    }
+
+    public function addListener($eventName, $listener, $priority = 0)
+    {
+        $this->listeners[$eventName][$priority][] = $listener;
+        unset($this->sorted[$eventName]);
+    }
+
+    public function hasListeners($eventName)
+    {
+        return isset($this->listeners[$eventName]);
+    }
+
+    public function getListeners($eventName)
+    {
+        if (isset($this->sorted[$eventName])) {
+            //si ya estan ordenados, solo devolvemos los listeners.
+            return $this->sorted[$eventName];
+        }
+
+        //si no estan en el arreglo $sorted, lo creamos.
+        $this->sortListeners($eventName);
+
+        foreach ($this->sorted[$eventName] as $index => $listener) {
+            if (!is_callable($listener)) {
+                //si listener no es un funcion ó un objeto con un metodo que se pueda llamar
+                //es porque estamos solicitando un servicio.
+                //entonces convertirmos el listener en un objeto con un metodo que se
+                //puedan llamar.
                 $service = $this->container->get($listener[0]);
-                $service->{$listener[1]}($event);
-                if ($event->isPropagationStopped()) {
+                $this->sorted[$eventName][$index][0] = $service;
+            }
+        }
+
+        return $this->sorted[$eventName];
+    }
+
+    public function removeListener($eventName, $listener)
+    {
+        if ($this->hasListeners($eventName)) {
+            foreach ($this->listeners[$eventName] as $priority => $listeners) {
+                if (false !== ($key = array_search($listener, $listeners))) {
+                    unset($this->listeners[$eventName][$priority][$key]);
+                    unset($this->sorted[$eventName]);
                     return;
                 }
             }
         }
     }
 
-    public function addListener($eventName, $listener)
-    {
-        if (!$this->hasListener($eventName, $listener)) {
-            $this->listeners[$eventName][] = $listener;
-        }
-    }
-
-    public function hasListener($eventName, $listener)
+    protected function sortListeners($eventName)
     {
         if (isset($this->listeners[$eventName])) {
-            return in_array($listener, $this->listeners[$eventName]);
-        } else {
-            return FALSE;
+            krsort($this->listeners[$eventName]);
         }
+        //unimos todos los listener que estan en prioridades diferentes.
+        $this->sorted[$eventName] = call_user_func_array('array_merge', $this->listeners[$eventName]);
     }
 
-    public function removeListener($eventName, $listener)
+    public function addSubscriber(EventSubscriberInterface $subscriber)
     {
-        if ($this->hasListener($eventName, $listener)) {
-            do {
-                if ($listener === current($this->listeners[$eventName])) {
-                    $key = key(current($this->listeners[$eventName]));
-                    break;
-                }
-            } while (next($this->listeners[$eventName]));
+        foreach ($subscriber->getSubscribedEvents() as $method => $params) {
+            $params = (array) $params;
+            isset($params[1]) || $params[1] = 0; //si no se pasa la prioridad, la creamos.
+            //params[0] es el método del objeto a llamar.
+            //params[1] es la prioridad.
+            $this->addListener($params[0], array($subscriber, $method), $params[1]);
         }
-        unset($this->listeners[$eventName][$key]);
     }
 
 }
@@ -2005,37 +2045,27 @@ use K2\Di\Container\ContainerInterface;
 
 interface KernelInterface
 {
-    
+
     const MASTER_REQUEST = 1;
     const SUB_REQUEST = 2;
 
     
     public function execute(Request $request, $type = KernelInterface::MASTER_REQUEST);
-    
-    
-    public static function get($service);
-    
-    
-    public static function getParam($param);
 }
 
 
 namespace K2\Kernel;
 
-use K2\Loader\Autoload;
 use K2\Kernel\AppContext;
-use K2\Di\Definition\Service;
 use K2\Di\DependencyInjection;
 use K2\Di\Container\Container;
 use K2\Kernel\KernelInterface;
-use K2\Di\Definition\Parameter;
 use K2\Kernel\Event\KumbiaEvents;
 use K2\Kernel\Event\RequestEvent;
 use K2\Kernel\Event\ResponseEvent;
 use K2\Kernel\Config\ConfigReader;
 use K2\Kernel\Event\ExceptionEvent;
 use K2\Kernel\Event\ControllerEvent;
-use K2\Di\Definition\DefinitionManager;
 use K2\EventDispatcher\EventDispatcher;
 use K2\Kernel\Exception\ExceptionHandler;
 use K2\Kernel\Controller\ControllerResolver;
@@ -2054,7 +2084,7 @@ abstract class Kernel implements KernelInterface
     protected $di;
 
     
-    protected static $container;
+    protected $container;
 
     
     protected $request;
@@ -2074,11 +2104,7 @@ abstract class Kernel implements KernelInterface
         ob_start(); //arrancamos el buffer de salida.
         $this->production = $production;
 
-        Autoload::registerDirectories(
-                $this->modules = $this->registerModules()
-        );
-
-        Autoload::register();
+        App::getLoader()->add(null, $this->modules = $this->registerModules());
 
         ExceptionHandler::handle($this);
 
@@ -2103,14 +2129,14 @@ abstract class Kernel implements KernelInterface
         //iniciamos el container con esa config
         $this->initContainer($config->getConfig());
         //asignamos el kernel al container como un servicio
-        self::$container->setInstance('app.kernel', $this);
+        $this->container->setInstance('app.kernel', $this);
         //iniciamos el dispatcher con esa config
-        $this->initDispatcher($config->getConfig());
+        $this->initDispatcher();
         //seteamos el contexto de la aplicación como servicio
-        self::$container->setInstance('app.context', $context);
+        $this->container->setInstance('app.context', $context);
         //si se usan locales los añadimos.
-        if (isset(self::$container['config']['locales'])) {
-            $context->setLocales(self::$container['config']['locales']);
+        if (isset($this->container['config']['locales'])) {
+            $context->setLocales($this->container['config']['locales']);
         }
         //establecemos el Request en el AppContext
         $context->setRequest($request);
@@ -2127,9 +2153,9 @@ abstract class Kernel implements KernelInterface
                 //original. y actualizamos el AppContext.
                 //tambien el tipo de request
                 $originalRequest = $this->request;
-                $originalRequestType = self::$container->get('app.context')
+                $originalRequestType = $this->container->get('app.context')
                         ->getRequestType();
-                self::$container->get('app.context')
+                $this->container->get('app.context')
                         ->setRequest($request)
                         ->setRequestType($type);
 
@@ -2138,8 +2164,8 @@ abstract class Kernel implements KernelInterface
                 //Luego devolvemos el request original al kernel,
                 //al AppContext, y el tipo de request
                 $this->request = $originalRequest;
-                self::$container->setInstance('request', $originalRequest);
-                self::$container->get('app.context')
+                $this->container->setInstance('request', $originalRequest);
+                $this->container->get('app.context')
                         ->setRequest($originalRequest)
                         ->setRequestType($originalRequestType);
 
@@ -2154,12 +2180,12 @@ abstract class Kernel implements KernelInterface
     {
         $this->request = $request;
 
-        if (!self::$container) { //si no se ha creado el container lo creamos.
+        if (!$this->container) { //si no se ha creado el container lo creamos.
             $this->init($request);
-            self::$container->get('app.context')->setRequestType($type);
+            $this->container->get('app.context')->setRequestType($type);
         }
         //agregamos el request al container
-        self::$container->setInstance('request', $this->request);
+        $this->container->setInstance('request', $this->request);
 
         //ejecutamos el evento request
         $this->dispatcher->dispatch(KumbiaEvents::REQUEST, $event = new RequestEvent($request));
@@ -2167,7 +2193,7 @@ abstract class Kernel implements KernelInterface
         if (!$event->hasResponse()) {
 
             //creamos el resolver.
-            $resolver = new ControllerResolver(self::$container);
+            $resolver = new ControllerResolver($this->container);
             //obtenemos la instancia del controlador, el nombre de la accion
             //a ejecutar, y los parametros que recibirá dicha acción a traves del método
             //getController del $resolver y lo pasamos al ControllerEvent
@@ -2195,7 +2221,7 @@ abstract class Kernel implements KernelInterface
         //para pasarlos al servicio view, y este construya la respuesta
         //llamamos al render del servicio "view" y esté nos devolverá
         //una instancia de response con la respuesta creada
-        return self::$container->get('view')->render(array(
+        return $this->container->get('view')->render(array(
                     'template' => $resolver->callMethod('getTemplate'),
                     'view' => $resolver->callMethod('getView'),
                     'response' => $resolver->callMethod('getResponse'),
@@ -2235,16 +2261,6 @@ abstract class Kernel implements KernelInterface
         return $this->production;
     }
 
-    public static function get($service)
-    {
-        return self::$container->get($service);
-    }
-
-    public static function getParam($param)
-    {
-        return self::$container->getParameter($param);
-    }
-
     
     abstract protected function registerModules();
 
@@ -2268,22 +2284,15 @@ abstract class Kernel implements KernelInterface
 
         $this->di = new DependencyInjection();
 
-        self::$container = new Container($this->di, $config);
+        $this->container = new Container($this->di, $config);
+        App::setContainer($this->container);
     }
 
     
-    protected function initDispatcher(array $config = array())
+    protected function initDispatcher()
     {
-        $this->dispatcher = new EventDispatcher(self::$container);
-        foreach ($config['services'] as $service => $params) {
-            if (isset($params['listen'])) {
-                foreach ($params['listen'] as $method => $event) {
-                    $this->dispatcher->addListener($event, array($service, $method));
-                }
-            }
-        }
-
-        self::$container->setInstance('dispatcher', $this->dispatcher);
+        $this->dispatcher = new EventDispatcher($this->container);
+        $this->container->setInstance('event.dispatcher', $this->dispatcher);
     }
 
 }

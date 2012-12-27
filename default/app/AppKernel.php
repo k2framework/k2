@@ -1,8 +1,10 @@
 <?php
+
 /* @var $loader Composer\Autoload\ClassLoader */
 $loader = require_once __DIR__ . '/../../vendor/autoload.php';
 
 use K2\Kernel\Kernel;
+use K2\Kernel\App;
 
 /**
  * Description of AppKernel
@@ -50,6 +52,9 @@ class AppKernel extends Kernel
     }
 
 }
+
+
+App::setLoader($loader);
 
 //acá podemos incluir rutas y prefijos al autoloader
 //$loader->add('PHPExcel', __DIR__ . '../../vendor/');

@@ -1,9 +1,10 @@
 <?php
 
 use K2\View\View;
+use K2\Kernel\App;
 
-$database = View::get('container')->getParameter('config.database');
-$charset = View::get('container')->getParameter('config.charset');
+$database = App::getParameter('config.database');
+$charset = App::getParameter('config.charset');
 $status = View::app()->inProduction() ? 'Production' : 'Development';
 
 //    if(isset($config['application']['locale'])){
@@ -23,7 +24,7 @@ $status = View::app()->inProduction() ? 'Production' : 'Development';
 //    }
 ?>
 <?php echo strftime("%d de %B del %Y") . "<br />"; ?>
-<h2>config.ini <span class='app'> de <?php echo basename(dirname(\K2\View\View::app()->getAppPath())) ?></span></h2>
+<h2>config.ini <span class='app'> de <?php echo basename(dirname(App::appPath())) ?></span></h2>
 <!--        <h4>Directorio temp/:</h4>
         <p><?php //echo $tmp          ?></p>-->
 
