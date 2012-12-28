@@ -31,11 +31,6 @@ class Servicio
         
     }
 
-    public function onRequest(RequestEvent $event)
-    {
-        
-    }
-
     public function onLogin(SecurityEvent $event)
     {
         $this->container->get('flash')->success("Bienvenido al sistema <b>{$event->getSecutiry()->getToken()->getUsername()}</b>");

@@ -17,17 +17,17 @@ class AppKernel extends Kernel
     protected function registerModules()
     {
         $modules = array(
-            'K2' => __DIR__ . '/../../vendor/kumbiaphp/core/src/',
-            'Index' => __DIR__ . '/modules/',
+            new \K2\K2Module(),
+            new \Index\IndexModule(),
         );
 
         if (!$this->production) {
-            $modules['Demos/Rest'] = __DIR__ . '/modules/';
-            $modules['Demos/Router'] = __DIR__ . '/modules/';
-            $modules['Demos/Vistas'] = __DIR__ . '/modules/';
-            $modules['Demos/Modelos'] = __DIR__ . '/modules/';
-            $modules['Demos/SubiendoArchivos'] = __DIR__ . '/modules/';
-            $modules['Demos/Seguridad'] = __DIR__ . '/modules/';
+            $modules[] = new Demos\Modelos\ModelosModule();
+            $modules[] = new Demos\Rest\RestModule();
+            $modules[] = new Demos\Router\RouterModule();
+            $modules[] = new Demos\SubiendoArchivos\ArchivosModule();
+            $modules[] = new Demos\Seguridad\SeguridadModule();
+            $modules[] = new Demos\Vistas\VistasModule();
         }
 
         return $modules;
@@ -52,7 +52,6 @@ class AppKernel extends Kernel
     }
 
 }
-
 
 App::setLoader($loader);
 

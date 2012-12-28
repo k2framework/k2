@@ -462,9 +462,6 @@ class AppContext
     protected $requestType;
 
     
-    protected $locales;
-
-    
     protected $request;
 
     
@@ -482,7 +479,6 @@ class AppContext
     {
         $request->setAppContext($this);
         $this->request = $request;
-        $this->parseUrl();
         return $this;
     }
 
@@ -530,30 +526,6 @@ class AppContext
             return rtrim($this->modules[$module], '/') . "/{$module}/";
         } else {
             return NULL;
-        }
-    }
-
-    
-    public function getModules($module = NULL)
-    {
-        if ($module) {
-            return isset($this->modules[$module]) ? $this->modules[$module] : NULL;
-        } else {
-            return $this->modules;
-        }
-    }
-
-    
-    public function getRoutes($route = NULL)
-    {
-        if ($route) {
-            if (isset($this->routes[$route])) {
-                return isset($this->modules[$this->routes[$route]]) ? $this->routes[$route] : NULL;
-            } else {
-                return NULL;
-            }
-        } else {
-            return $this->routes;
         }
     }
 
@@ -660,92 +632,6 @@ class AppContext
         $this->request->getLocale() && $url = $this->request->getLocale() . '/' . $url;
         return $baseUrl ? $this->request->getBaseUrl() . $url : $url;
     }
-
-    
-    public function parseUrl()
-    {
-        $controller = 'index'; //controlador por defecto si no se especifica.
-        $action = 'index'; //accion por defecto si no se especifica.
-        $moduleUrl = '/';
-        $params = array(); //parametros de la url, de existir.
-        //obtenemos la url actual de la petición.
-        $currentUrl = '/' . trim($this->request->getRequestUrl(), '/');
-
-        list($moduleUrl, $module, $currentUrl) = $this->getModule($currentUrl);
-
-        if (!$moduleUrl || !$module) {
-            throw new NotFoundException(sprintf("La ruta \"%s\" no concuerda con ningún módulo ni controlador en la App", $currentUrl), 404);
-        }
-
-        if ($url = explode('/', trim(substr($currentUrl, strlen($moduleUrl)), '/'))) {
-
-            //ahora obtengo el controlador
-            if (current($url)) {
-                //si no es un controlador lanzo la excepcion
-                $controller = current($url);
-                next($url);
-            }
-            //luego obtenemos la acción
-            if (current($url)) {
-                $action = current($url);
-                next($url);
-            }
-            //por ultimo los parametros
-            if (current($url)) {
-                $params = array_slice($url, key($url));
-            }
-        }
-
-        $this->setCurrentModule($module)
-                ->setCurrentModuleUrl($moduleUrl)
-                ->setCurrentController($controller)
-                ->setCurrentAction($action)
-                ->setCurrentParameters($params);
-    }
-
-    
-    private function camelcase($string)
-    {
-        return str_replace(' ', '', ucwords(preg_replace('@(.+)_(\w)@', '$1 $2', strtolower($string))));
-    }
-
-    
-    protected function getModule($url, $recursive = true)
-    {
-        if (count($this->locales) && $recursive) {
-            $_url = explode('/', trim($url, '/'));
-            $locale = array_shift($_url);
-            if (in_array($locale, $this->locales)) {
-                $this->request->setLocale($locale);
-                return $this->getModule('/' . join('/', $_url), false);
-            } else {
-                $this->request->setLocale($this->locales[0]);
-            }
-        }
-
-        if ('/logout' === $url) {
-            return array($url, $url, $url);
-        }
-
-        $routes = array_keys($this->getRoutes());
-
-        usort($routes, function($a, $b) {
-                    return strlen($a) > strlen($b) ? -1 : 1;
-                }
-        );
-
-        foreach ($routes as $route) {
-            if (0 === strpos($url, $route)) {
-                if ('/' === $route) {
-                    return array($route, $this->getRoutes('/'), $url);
-                } elseif ('/' === substr($url, strlen($route), 1) || strlen($url) === strlen($route)) {
-                    return array($route, $this->getRoutes($route), $url);
-                }
-            }
-        }
-        return false;
-    }
-
 }
 
 
@@ -857,203 +743,6 @@ class ConfigReader
 
 }
 
-namespace K2\Di;
-
-use K2\Di\Container\Container;
-
-
-interface DependencyInjectionInterface
-{
-
-    
-    public function newInstance($id, $config);
-
-    
-    public function setContainer(Container $container);
-}
-
-
-namespace K2\Di;
-
-use \ReflectionClass;
-use K2\Di\Container\Container;
-use K2\Di\Exception\DiException;
-use K2\Di\DependencyInjectionInterface;
-use K2\Di\Exception\IndexNotDefinedException;
-
-
-class DependencyInjection implements DependencyInjectionInterface
-{
-
-    
-    protected $container;
-
-    
-    private $queue = array();
-
-    
-    private $isQueue = FALSE;
-
-    
-    public function setContainer(Container $container)
-    {
-        $this->container = $container;
-    }
-
-    
-    public function newInstance($id, $config)
-    {
-        if (!isset($config['class'])) {
-            throw new IndexNotDefinedException("No se Encontró el indice \"class\" en la definicón del servicio \"$id\"");
-        }
-
-        $reflection = new ReflectionClass($config['class']);
-
-        if (isset($config['factory'])) {
-            $method = $config['factory']['method'];
-            if (isset($config['factory']['argument'])) {
-                $instance = $this->callFactory($reflection, $method, $config['factory']['argument']);
-            } else {
-                $instance = $this->callFactory($reflection, $method);
-            }
-        } else {
-
-            if (isset($config['construct'])) {
-                $arguments = $this->getArgumentsFromConstruct($id, $config);
-            } else {
-                $arguments = array();
-            }
-
-            //verificamos si ya se creó una instancia en una retrollamada del
-            //metodo injectObjectIntoServicesQueue
-            if (is_object($this->container->hasInstance($id))) {
-                return $this->container->get($id);
-            }
-
-            if (isset($config['construct'])) {
-                $instance = $reflection->newInstanceArgs($arguments);
-            } else {
-                $instance = $reflection->newInstanceArgs();
-            }
-        }
-        //agregamos la instancia del objeto al contenedor.
-        $this->container->setInstance($id, $instance);
-
-        $this->injectObjectIntoServicesQueue();
-
-        if (isset($config['call'])) {
-            $this->setOtherDependencies($id, $instance, $config['call']);
-        }
-
-        return $instance;
-    }
-
-    
-    protected function getArgumentsFromConstruct($id, array $config)
-    {
-        $args = array();
-        //lo agregamos a la cola hasta que se creen los servicios del
-        //que depende
-        $this->addToQueue($id, $config);
-
-        if (is_array($config['construct'])) {
-            foreach ($config['construct'] as $serviceOrParameter) {
-                if ('@' === $serviceOrParameter[0]) {//si comienza con @ es un servicio lo que solicita
-                    $args[] = $this->container->get(substr($serviceOrParameter, 1));
-                } else { //si no comienza por arroba es un parametro lo que solicita
-                    $args[] = $this->container->getParameter($serviceOrParameter);
-                }
-            }
-        } else {
-            if ('@' === $config['construct'][0]) {//si comienza con @ es un servicio lo que solicita
-                $args[] = $this->container->get(substr($config['construct'], 1));
-            } else { //si no comienza por arroba es un parametro lo que solicita
-                $args[] = $this->container->getParameter($config['construct']);
-            }
-        }
-        //al tener los servicios que necesitamos
-        //quitamos al servicio en construccion de la cola
-        $this->removeToQueue($id);
-        return $args;
-    }
-
-    
-    protected function setOtherDependencies($id, $object, array $calls)
-    {
-        foreach ($calls as $method => $serviceOrParameter) {
-            if ('@' === $serviceOrParameter[0]) {//si comienza con @ es un servicio lo que solicita
-                $object->$method($this->container->get(substr($serviceOrParameter, 1)));
-            } else { //si no comienza por arroba es un parametro lo que solicita
-                $object->$method($this->container->getParameter($serviceOrParameter));
-            }
-        }
-    }
-
-    
-    protected function injectObjectIntoServicesQueue()
-    {
-        $this->isQueue = TRUE;
-        foreach ($this->queue as $id => $config) {
-            $this->newInstance($id, $config);
-        }
-        $this->isQueue = FALSE;
-    }
-
-    protected function inQueue($id)
-    {
-        return isset($this->queue[$id]);
-    }
-
-    
-    protected function addToQueue($id, $config)
-    {
-        //si el servicio actual aparece en la cola de servicios
-        //indica que dicho servicio tiene una dependencia a un servicio 
-        //que depende de este, por lo que hay una dependencia circular.
-        if (!$this->isQueue && $this->inQueue($id)) {
-            throw new \LogicException("Se ha Detectado una Dependencia Circular entre Servicios");
-        }
-        $this->queue[$id] = $config;
-    }
-
-    
-    protected function removeToQueue($id)
-    {
-        if ($this->inQueue($id)) {
-            unset($this->queue[$id]);
-        }
-    }
-
-    
-    protected function callFactory(\ReflectionClass $class, $method, $argument = NULL)
-    {
-        if (!$class->hasMethod($method)) {
-            throw new DiException("No existe el Método \"$method\" en la clase \"{$class->name}\"");
-        }
-
-        $method = $class->getMethod($method);
-
-        if (!$method->isStatic()) {
-            throw new DiException("El Método \"$method\" de la clase \"{$class->name}\" debe ser Estático");
-        }
-
-        if ('@' === $argument[0]) {//si comienza con @ es un servicio lo que solicita
-            $argument = $this->container->get(substr($argument, 1));
-        } elseif ($argument) { //si no comienza por arroba es un parametro lo que solicita
-            $argument = $this->container->getParameter($argument);
-        }
-
-        $class = $method->invoke(NULL, $argument);
-
-        if (!is_object($class)) {
-            throw new DiException("El Método \"$method\" de la clase \"{$class->name}\" debe retornar un Objeto");
-        }
-
-        return $class;
-    }
-
-}
-
 namespace K2\Di\Container;
 
 
@@ -1086,8 +775,6 @@ interface ContainerInterface extends \ArrayAccess
 namespace K2\Di\Container;
 
 use K2\Di\Container\ContainerInterface;
-use K2\Di\DependencyInjectionInterface as Di;
-use K2\Di\Definition\Service;
 use K2\Di\Exception\IndexNotDefinedException;
 
 
@@ -1098,18 +785,15 @@ class Container implements ContainerInterface
     protected $services;
 
     
-    protected $di;
-
-    
     protected $definitions;
 
-    public function __construct(Di $di, array $definitions = array())
+    public function __construct()
     {
         $this->services = array();
-        $this->di = $di;
-        $this->definitions = $definitions + array('parameters' => array(), 'services' => array());
-
-        $di->setContainer($this);
+        $this->definitions = array(
+            'parameters' => array(),
+            'services' => array()
+        );
 
         //agregamos al container como servicio.
         $this->setInstance('container', $this);
@@ -1127,10 +811,7 @@ class Container implements ContainerInterface
             return $this->services[$id];
         }
         //si existe pero no se ha creado, creamos la instancia
-        $config = $this->definitions['services'][$id];
-
-        //retorna la instancia recien creada
-        return $this->di->newInstance($id, $config);
+        return $this->services[$id] = $this->definitions['services'][$id]($this);
     }
 
     public function has($id)
@@ -1150,9 +831,7 @@ class Container implements ContainerInterface
         //y lo agregamos a las definiciones. (solo será a gregado si no existe)
         if (!isset($this->definitions['services'][$id])) {
 
-            $this->definitions['services'][$id] = array(
-                'class' => get_class($object)
-            );
+            $this->definitions['services'][$id] = true;
         }
     }
 
@@ -1170,7 +849,6 @@ class Container implements ContainerInterface
         return array_key_exists($id, $this->definitions['parameters']);
     }
 
-    
     public function getDefinitions()
     {
         return $this->definitions;
@@ -1183,10 +861,9 @@ class Container implements ContainerInterface
     }
 
     
-    public function set($id, $className, array $config = array())
+    public function set($id, \Closure $function)
     {
-        $config['class'] = $className;
-        $this->definitions['services'][$id] = $config;
+        $this->definitions['services'][$id] = $function;
         return $this;
     }
 
@@ -1277,17 +954,17 @@ class EventDispatcher implements EventDispatcherInterface
     public function setContainer(ContainerInterface $container)
     {
         $this->container = $container;
-        $definitions = $container->getDefinitions();
-        foreach ($definitions['services'] as $id => $config) {
-            if (isset($config['listen'])) {//si está escuchando eventos
-                foreach ($config['listen'] as $method => $params) {
-                    isset($params[1]) || $params[1] = 0; //si no existe la prioridad la seteamos a 0
-                    $this->addListener($params[0], array($id, $method), $params[1]);
-                }
-            } elseif (isset($config['subscriber'])) {
-                $this->addSubscriber($container->get($id));
-            }
-        }
+//        $definitions = $container->getDefinitions();
+//        foreach ($definitions['services'] as $id => $config) {
+//            if (isset($config['listen'])) {//si está escuchando eventos
+//                foreach ($config['listen'] as $method => $params) {
+//                    isset($params[1]) || $params[1] = 0; //si no existe la prioridad la seteamos a 0
+//                    $this->addListener($params[0], array($id, $method), $params[1]);
+//                }
+//            } elseif (isset($config['subscriber'])) {
+//                $this->addSubscriber($container->get($id));
+//            }
+//        }
     }
 
     public function dispatch($eventName, Event $event = null)
@@ -2057,7 +1734,6 @@ interface KernelInterface
 namespace K2\Kernel;
 
 use K2\Kernel\AppContext;
-use K2\Di\DependencyInjection;
 use K2\Di\Container\Container;
 use K2\Kernel\KernelInterface;
 use K2\Kernel\Event\KumbiaEvents;
@@ -2068,6 +1744,7 @@ use K2\Kernel\Event\ExceptionEvent;
 use K2\Kernel\Event\ControllerEvent;
 use K2\EventDispatcher\EventDispatcher;
 use K2\Kernel\Exception\ExceptionHandler;
+use K2\Kernel\Exception\NotFoundException;
 use K2\Kernel\Controller\ControllerResolver;
 
 
@@ -2099,12 +1776,15 @@ abstract class Kernel implements KernelInterface
     protected $appPath;
 
     
+    protected $locales;
+
+    
     public function __construct($production = FALSE)
     {
         ob_start(); //arrancamos el buffer de salida.
         $this->production = $production;
 
-        App::getLoader()->add(null, $this->modules = $this->registerModules());
+        App::getLoader()->add(null, $this->getAppPath() . '/modules/');
 
         ExceptionHandler::handle($this);
 
@@ -2125,21 +1805,65 @@ abstract class Kernel implements KernelInterface
         //creamos la instancia del AppContext
         $context = new AppContext($this->production, $this->getAppPath(), $this->modules, $this->routes);
         //leemos la config de la app
-        $config = new ConfigReader($context);
+        //$config = new ConfigReader($context);
         //iniciamos el container con esa config
-        $this->initContainer($config->getConfig());
+        $this->initContainer();
         //asignamos el kernel al container como un servicio
         $this->container->setInstance('app.kernel', $this);
         //iniciamos el dispatcher con esa config
         $this->initDispatcher();
+        //inicializamos los modulos de la app.
+        $this->initModules();
         //seteamos el contexto de la aplicación como servicio
         $this->container->setInstance('app.context', $context);
         //si se usan locales los añadimos.
         if (isset($this->container['config']['locales'])) {
-            $context->setLocales($this->container['config']['locales']);
+            $this->locales = $this->container['config']['locales'];
         }
         //establecemos el Request en el AppContext
         $context->setRequest($request);
+    }
+
+    
+    public function parseUrl()
+    {
+        $controller = 'index'; //controlador por defecto si no se especifica.
+        $action = 'index'; //accion por defecto si no se especifica.
+        $moduleUrl = '/';
+        $params = array(); //parametros de la url, de existir.
+        //obtenemos la url actual de la petición.
+        $currentUrl = '/' . trim($this->request->getRequestUrl(), '/');
+
+        list($moduleUrl, $module, $currentUrl) = $this->getModule($currentUrl);
+
+        if (!$moduleUrl || !$module) {
+            throw new NotFoundException(sprintf("La ruta \"%s\" no concuerda con ningún módulo ni controlador en la App", $currentUrl), 404);
+        }
+
+        if ($url = explode('/', trim(substr($currentUrl, strlen($moduleUrl)), '/'))) {
+
+            //ahora obtengo el controlador
+            if (current($url)) {
+                //si no es un controlador lanzo la excepcion
+                $controller = current($url);
+                next($url);
+            }
+            //luego obtenemos la acción
+            if (current($url)) {
+                $action = current($url);
+                next($url);
+            }
+            //por ultimo los parametros
+            if (current($url)) {
+                $params = array_slice($url, key($url));
+            }
+        }
+
+        App::getContext()->setCurrentModule($module)
+                ->setCurrentModuleUrl($moduleUrl)
+                ->setCurrentController($controller)
+                ->setCurrentAction($action)
+                ->setCurrentParameters($params);
     }
 
     public function execute(Request $request, $type = Kernel::MASTER_REQUEST)
@@ -2186,6 +1910,9 @@ abstract class Kernel implements KernelInterface
         }
         //agregamos el request al container
         $this->container->setInstance('request', $this->request);
+
+        //parseamos la url para obtener el modulo,controlador,accion,parametros
+        $this->parseUrl();
 
         //ejecutamos el evento request
         $this->dispatcher->dispatch(KumbiaEvents::REQUEST, $event = new RequestEvent($request));
@@ -2280,12 +2007,19 @@ abstract class Kernel implements KernelInterface
     
     protected function initContainer(array $config = array())
     {
-        $config['parameters']['app_dir'] = $this->getAppPath();
-
-        $this->di = new DependencyInjection();
-
-        $this->container = new Container($this->di, $config);
+        $this->container = new Container();
+        $this->container->setParameter('app_dir', $this->getAppPath());
         App::setContainer($this->container);
+    }
+
+    protected function initModules()
+    {
+        $this->modules = (array) $this->registerModules();
+        foreach ($this->modules as $name => $module) {
+            $module->setContainer($this->container);
+            $module->setEventDispatcher($this->dispatcher);
+            $module->init();
+        }
     }
 
     
@@ -2293,6 +2027,75 @@ abstract class Kernel implements KernelInterface
     {
         $this->dispatcher = new EventDispatcher($this->container);
         $this->container->setInstance('event.dispatcher', $this->dispatcher);
+    }
+
+    
+    protected function getModule($url, $recursive = true)
+    {
+        if (count($this->locales) && $recursive) {
+            $_url = explode('/', trim($url, '/'));
+            $locale = array_shift($_url);
+            if (in_array($locale, $this->locales)) {
+                $this->request->setLocale($locale);
+                return $this->getModule('/' . join('/', $_url), false);
+            } else {
+                $this->request->setLocale($this->locales[0]);
+            }
+        }
+
+        if ('/logout' === $url) {
+            return array($url, $url, $url);
+        }
+
+        $routes = array_keys($this->routes);
+
+        usort($routes, function($a, $b) {
+                    return strlen($a) > strlen($b) ? -1 : 1;
+                }
+        );
+
+        foreach ($routes as $route) {
+            if (0 === strpos($url, $route)) {
+                if ('/' === $route) {
+                    return array($route, $this->getRoutes('/'), $url);
+                } elseif ('/' === substr($url, strlen($route), 1) || strlen($url) === strlen($route)) {
+                    return array($route, $this->getRoutes($route), $url);
+                }
+            }
+        }
+        return false;
+    }
+
+    
+    public function getModules($name = null)
+    {
+        if ($name) {
+            foreach ($this->modules as $module) {
+                if ($name === $module->getName()) {
+                    return $module;
+                }
+            }
+            return null;
+        } else {
+            return $this->modules;
+        }
+    }
+
+    
+    protected function getRoutes($route = null)
+    {
+        if ($route) {
+            if (isset($this->routes[$route])) {
+                foreach ($this->modules as $module) {
+                    if ($this->routes[$route] === $module->getName()) {
+                        return $this->routes[$route];
+                    }
+                }
+            }
+            return null;
+        } else {
+            return $this->routes;
+        }
     }
 
 }
