@@ -2,9 +2,10 @@
 
 /* @var $loader Composer\Autoload\ClassLoader */
 $loader = require_once __DIR__ . '/../../vendor/autoload.php';
+//establecemos el loader en la clase App
+\K2\Kernel\App::setLoader($loader);
 
 use K2\Kernel\Kernel;
-use K2\Kernel\App;
 
 /**
  * Description of AppKernel
@@ -53,7 +54,9 @@ class AppKernel extends Kernel
 
 }
 
-App::setLoader($loader);
-
+//establecemos la ruta a vendor en el loader por defecto.
+//sin embargo es mejor registrar las libs y modulos que estén en vendor, ya que así
+//el autoload las cargará más rapido.
+$loader->add(null, __DIR__ . '/../../vendor/');
 //acá podemos incluir rutas y prefijos al autoloader
-//$loader->add('PHPExcel', __DIR__ . '../../vendor/');
+//$loader->add('PHPExcel', __DIR__ . '/../../vendor/');
