@@ -887,7 +887,11 @@ class Container implements ContainerInterface
 
     public function offsetSet($offset, $value)
     {
-        //nada por ahora
+        if($value instanceof \Closure){
+            $this->set($offset, $value);
+        }else{
+            $this->setParameter($offset, $value);
+        }
     }
 
     public function offsetUnset($offset)
@@ -1058,11 +1062,10 @@ class EventDispatcher implements EventDispatcherInterface
 namespace K2\Kernel\Event;
 
 
-final class KumbiaEvents
+final class K2Events
 {
 
     const REQUEST = 'kumbia.request';
-    const CONTROLLER = 'kumbia.controller';
     const RESPONSE = 'kumbia.response';
     const EXCEPTION = 'kumbia.exception';
 
@@ -1185,7 +1188,7 @@ class ControllerResolver
     public function getController()
     {
         if ('/logout' === $this->module) {
-            throw new NotFoundException(sprintf("La ruta \"%s\" no concuerda con ningún módulo ni controlador en la App", $this->module), 404);
+            throw new NotFoundException(sprintf("La ruta \"%s\" no concuerda con ningún módulo ni controlador en la App", $this->module));
         }
 
         $app = $this->container->get('app.context');
@@ -1200,21 +1203,18 @@ class ControllerResolver
             }
         } catch (\Exception $e) {
             $modulePath = $app->getPath($this->module);
-            throw new NotFoundException(sprintf("No existe el controlador \"%s\" en la ruta \"%sController/%s.php\"", $this->controllerName, $modulePath, $this->controllerName), 404);
+            throw new NotFoundException(sprintf("No existe el controlador \"%s\" en la ruta \"%sController/%s.php\"", $this->controllerName, $modulePath, $this->controllerName));
         }
 
         $this->controller = $reflectionClass->newInstanceArgs(array($this->container));
         $this->setViewDefault($app->getCurrentAction());
-
-        return array($this->controller, $this->action, $this->parameters);
     }
 
     
-    public function executeAction(ControllerEvent $controllerEvent)
+    public function executeAction()
     {
-        $this->controller = $controllerEvent->getController();
-        $this->action = $controllerEvent->getAction();
-
+        $this->getController();
+        
         $controller = new ReflectionObject($this->controller);
 
         if (($response = $this->executeBeforeFilter($controller)) instanceof Response) {
@@ -1224,9 +1224,9 @@ class ControllerResolver
         if (false === $this->action) {
             return; //si el before devuelve false, es porque no queremos que se ejecute nuestra acción.
         }
-        $this->validateAction($controller, $controllerEvent->getParameters());
+        $this->validateAction($controller, $this->parameters);
 
-        $response = call_user_func_array(array($this->controller, $this->action), $controllerEvent->getParameters());
+        $response = call_user_func_array(array($this->controller, $this->action), $this->parameters);
 
         $this->executeAfterFilter($controller);
 
@@ -1257,7 +1257,7 @@ class ControllerResolver
         }
         //verificamos la existencia del metodo.
         if (!$controller->hasMethod($this->action)) {
-            throw new NotFoundException(sprintf("No existe el metodo \"%s\" en el controlador \"%s\"", $this->action, $this->controllerName), 404);
+            throw new NotFoundException(sprintf("No existe el metodo \"%s\" en el controlador \"%s\"", $this->action, $this->controllerName));
         }
 
         $reflectionMethod = $controller->getMethod($this->action);
@@ -1265,19 +1265,19 @@ class ControllerResolver
         //el nombre del metodo debe ser exactamente igual al camelCase
         //de la porcion de url
         if ($reflectionMethod->getName() !== $this->action) {
-            throw new NotFoundException(sprintf("No existe el metodo <b>%s</b> en el controlador \"%s\"", $this->action, $this->controllerName), 404);
+            throw new NotFoundException(sprintf("No existe el metodo <b>%s</b> en el controlador \"%s\"", $this->action, $this->controllerName));
         }
 
         //se verifica que el metodo sea public
         if (!$reflectionMethod->isPublic()) {
-            throw new NotFoundException(sprintf("Éstas Tratando de acceder a un metodo no publico \"%s\" en el controlador \"%s\"", $this->action, $this->controllerName), 404);
+            throw new NotFoundException(sprintf("Éstas Tratando de acceder a un metodo no publico \"%s\" en el controlador \"%s\"", $this->action, $this->controllerName));
         }
 
         
         if ($limitParams && (count($params) < $reflectionMethod->getNumberOfRequiredParameters() ||
                 count($params) > $reflectionMethod->getNumberOfParameters())) {
 
-            throw new NotFoundException(sprintf("Número de parámetros erróneo para ejecutar la acción \"%s\" en el controlador \"%sr\"", $this->action, $this->controllerName), 404);
+            throw new NotFoundException(sprintf("Número de parámetros erróneo para ejecutar la acción \"%s\" en el controlador \"%sr\"", $this->action, $this->controllerName));
         }
     }
 
@@ -1736,7 +1736,7 @@ namespace K2\Kernel;
 use K2\Kernel\AppContext;
 use K2\Di\Container\Container;
 use K2\Kernel\KernelInterface;
-use K2\Kernel\Event\KumbiaEvents;
+use K2\Kernel\Event\K2Events;
 use K2\Kernel\Event\RequestEvent;
 use K2\Kernel\Event\ResponseEvent;
 use K2\Kernel\Config\ConfigReader;
@@ -1756,9 +1756,6 @@ abstract class Kernel implements KernelInterface
 
     
     protected $routes;
-
-    
-    protected $di;
 
     
     protected $container;
@@ -1820,6 +1817,7 @@ abstract class Kernel implements KernelInterface
         if (isset($this->container['config']['locales'])) {
             $this->locales = $this->container['config']['locales'];
         }
+        $this->readConfig();
         //establecemos el Request en el AppContext
         $context->setRequest($request);
     }
@@ -1915,21 +1913,15 @@ abstract class Kernel implements KernelInterface
         $this->parseUrl();
 
         //ejecutamos el evento request
-        $this->dispatcher->dispatch(KumbiaEvents::REQUEST, $event = new RequestEvent($request));
+        $this->dispatcher->dispatch(K2Events::REQUEST, $event = new RequestEvent($request));
 
         if (!$event->hasResponse()) {
 
             //creamos el resolver.
             $resolver = new ControllerResolver($this->container);
-            //obtenemos la instancia del controlador, el nombre de la accion
-            //a ejecutar, y los parametros que recibirá dicha acción a traves del método
-            //getController del $resolver y lo pasamos al ControllerEvent
-            $event = new ControllerEvent($request, $resolver->getController($request));
-            //ejecutamos el evento controller.
-            $this->dispatcher->dispatch(KumbiaEvents::CONTROLLER, $event);
 
             //ejecutamos la acción de controlador pasandole los parametros.
-            $response = $resolver->executeAction($event);
+            $response = $resolver->executeAction();
             if (!$response instanceof Response) {
                 $response = $this->createResponse($resolver);
             }
@@ -1960,7 +1952,7 @@ abstract class Kernel implements KernelInterface
     private function exception(\Exception $e)
     {
         $event = new ExceptionEvent($e, $this->request);
-        $this->dispatcher->dispatch(KumbiaEvents::EXCEPTION, $event);
+        $this->dispatcher->dispatch(K2Events::EXCEPTION, $event);
 
         if ($event->hasResponse()) {
             return $this->response($event->getResponse());
@@ -1977,7 +1969,7 @@ abstract class Kernel implements KernelInterface
     {
         $event = new ResponseEvent($this->request, $response);
         //ejecutamos el evento response.
-        $this->dispatcher->dispatch(KumbiaEvents::RESPONSE, $event);
+        $this->dispatcher->dispatch(K2Events::RESPONSE, $event);
         //retornamos la respuesta
         return $event->getResponse();
     }
@@ -2027,6 +2019,18 @@ abstract class Kernel implements KernelInterface
     {
         $this->dispatcher = new EventDispatcher($this->container);
         $this->container->setInstance('event.dispatcher', $this->dispatcher);
+    }
+
+    protected function readConfig()
+    {
+        $config = Config\Reader::read('config');
+
+        foreach ($config as $section => $values) {
+            if ($this->container->hasParameter($section)) {
+                $values = $this->mergeConfig($this->container->getParameter($section), $values);
+            }
+            $this->container->setParameter($section, $values);
+        }
     }
 
     
@@ -2096,6 +2100,166 @@ abstract class Kernel implements KernelInterface
         } else {
             return $this->routes;
         }
+    }
+
+    private function mergeConfig($config, $newConfig)
+    {
+        foreach ($newConfig as $key => $value) {
+            if (array_key_exists($key, $config) && is_array($value)) {
+                $config[$key] = $this->mergeConfig($config[$key], $newConfig[$key]);
+            } else {
+                $config[$key] = $value;
+            }
+        }
+
+        return $config;
+    }
+
+}
+
+namespace K2\Kernel;
+
+use K2\Kernel\Request;
+use K2\Kernel\AppContext;
+use Composer\Autoload\ClassLoader;
+use K2\Di\Container\ContainerInterface;
+use K2\Security\Auth\User\UserInterface;
+
+class App
+{
+
+    
+    protected static $container;
+
+    
+    protected static $loader;
+
+    
+    public static function setContainer(ContainerInterface $container)
+    {
+        self::$container = $container;
+    }
+
+    
+    public static function setLoader(ClassLoader $loader)
+    {
+        self::$loader = $loader;
+    }
+
+    
+    public static function getLoader()
+    {
+        return self::$loader;
+    }
+
+    
+    public static function get($service)
+    {
+        return self::$container->get($service);
+    }
+
+    
+    public static function getParameter($parameter)
+    {
+        return self::$container->getParameter($parameter);
+    }
+
+    
+    public static function getRequest()
+    {
+        return self::$container->get('request');
+    }
+
+    
+    public static function getContext()
+    {
+        return self::$container->get('app.context');
+    }
+
+    
+    public static function getUser()
+    {
+        if (!is_object($token = self::$container->get('security')->getToken())) {
+            return null;
+        }
+        return $token->getUser();
+    }
+
+    
+    public static function appPath()
+    {
+        return self::$container->getParameter('app_dir');
+    }
+
+    
+    public static function requestUrl()
+    {
+        return self::getRequest()->getRequestUrl();
+    }
+
+    
+    public static function baseUrl()
+    {
+        return self::getRequest()->getBaseUrl();
+    }
+
+}
+
+
+namespace K2\Kernel;
+
+use K2\Di\Container\Container;
+use K2\EventDispatcher\EventDispatcherInterface;
+
+class Module
+{
+
+    
+    protected $container;
+
+    
+    protected $dispatcher;
+
+    
+    protected $path;
+    protected $name;
+
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    public function setEventDispatcher(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
+
+    public function init()
+    {
+        
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName()
+    {
+        if (!$this->name) {
+            $r = new \ReflectionObject($this);
+            $this->name = str_replace('\\', '/', $r->getNamespaceName());
+        }
+        return $this->name;
+    }
+
+    public function getPath()
+    {
+        if (!$this->path) {
+            $r = new \ReflectionObject($this);
+            $this->path = dirname($r->getFileName()) . '/';
+        }
+        return $this->path;
     }
 
 }

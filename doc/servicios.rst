@@ -67,7 +67,7 @@ ______________________________________
     namespace K2;
 
     use K2\Kernel\Module;
-    use K2\Kernel\Event\KumbiaEvents;
+    use K2\Kernel\Event\K2Events;
 
     class K2Module extends Module
     {
@@ -233,7 +233,7 @@ Ahora agregamos el servicio al EventDispatcher:
     namespace K2\Seguridad;
 
     use K2\Kernel\Module;
-    use K2\Kernel\Event\KumbiaEvents;
+    use K2\Kernel\Event\K2Events;
 
     class SeguridadModule extends Module
     {
@@ -247,9 +247,9 @@ Ahora agregamos el servicio al EventDispatcher:
 
             //agregamos el escucha para el evento request donde k2_seguridad es el nombre del servicio
             //y verificarAcceso es el método que será llamado.
-            $this->dispatcher->addListener(KumbiaEvents::REQUEST, array('k2_seguridad', 'verificarAcceso'));
+            $this->dispatcher->addListener(K2Events::REQUEST, array('k2_seguridad', 'verificarAcceso'));
 
-            $this->dispatcher->addListener(KumbiaEvents::REQUEST, function(){
+            $this->dispatcher->addListener(K2Events::REQUEST, function(){
                 echo "Tambien podemos añadir una función al event_dispatcher";
             });
 
@@ -302,7 +302,7 @@ Ahora agregamos el servicio al EventDispatcher:
     namespace K2\Seguridad;
 
     use K2\Kernel\Module;
-    use K2\Kernel\Event\KumbiaEvents;
+    use K2\Kernel\Event\K2Events;
 
     class SeguridadModule extends Module
     {
@@ -314,11 +314,11 @@ Ahora agregamos el servicio al EventDispatcher:
                 return new K2\Seguridad\Seguridad($c['router']);
             });
 
-            $this->dispatcher->addListener(KumbiaEvents::REQUEST, array('k2_seguridad', 'verificarAcceso'));
+            $this->dispatcher->addListener(K2Events::REQUEST, array('k2_seguridad', 'verificarAcceso'));
 
-            $this->dispatcher->addListener(KumbiaEvents::EXCEPTION, array('k2_seguridad', 'ocurrioExcepcion'));
+            $this->dispatcher->addListener(K2Events::EXCEPTION, array('k2_seguridad', 'ocurrioExcepcion'));
 
-            $this->dispatcher->addListener(KumbiaEvents::RESPONSE, array('k2_seguridad', 'onResponse'));
+            $this->dispatcher->addListener(K2Events::RESPONSE, array('k2_seguridad', 'onResponse'));
 
         }
 

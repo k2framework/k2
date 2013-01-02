@@ -3,7 +3,7 @@
 namespace Index;
 
 use K2\Kernel\Module;
-use K2\Kernel\Event\KumbiaEvents as E;
+use K2\Kernel\Event\K2Events as E;
 use K2\Security\Event\Events as SE;
 
 class IndexModule extends Module
