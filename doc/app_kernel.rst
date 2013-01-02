@@ -19,17 +19,16 @@ Codigo del AppKernel
         protected function registerModules()
         {
             $modules = array(
-                'KumbiaPHP'   => __DIR__ . '/../../vendor/kumbiaphp/core/src/',
-                'Index'       => __DIR__ . '/modules/',
+                new \Index\IndexModule(),
             );
 
             if (!$this->production) {
-                $modules['Demos/Rest']              = __DIR__ . '/modules/';
-                $modules['Demos/Router']            = __DIR__ . '/modules/';
-                $modules['Demos/Vistas']            = __DIR__ . '/modules/';
-                $modules['Demos/Modelos']           = __DIR__ . '/modules/';
-                $modules['Demos/SubiendoArchivos']  = __DIR__ . '/modules/';
-                $modules['Demos/Seguridad']         = __DIR__ . '/modules/';
+                $modules[] = new Demos\Modelos\ModelosModule();
+                $modules[] = new Demos\Rest\RestModule();
+                $modules[] = new Demos\Router\RouterModule();
+                $modules[] = new Demos\SubiendoArchivos\ArchivosModule();
+                $modules[] = new Demos\Seguridad\SeguridadModule();
+                $modules[] = new Demos\Vistas\VistasModule();
             }
 
             return $modules;
@@ -50,16 +49,35 @@ Codigo del AppKernel
     
     }
 
+    App::setLoader($loader);
+    //acá podemos incluir rutas y prefijos al autoloader
+    //$loader->add('K2\\Backend\\', __DIR__ . '/../../vendor/');
+
 Como podemos ver este es un ejemplo del código que se encuentra en nuestro AppKernel.php, dicha clase tiene dos métodos principales "registerModules()" y "registerRoutes()", a traves de los cuales registraremos los módulos y libs que vayamos necesitando en la aplicación.
+
+Para añadir libs solo es necesario registrarlas en el autoload de la aplicación, el cual está disponible mediante el uso del objeto $loader.
 
 
 El Metodo registerModules()
 -----------------------------
 
-Este método permite registrar los direcotiros donde se encuentran los modulos de la aplicación. por defecto carga el modulo KumbiaPHP en el dir dentro de vendor.
+Este método permite registrar los modulos de la aplicación. por defecto carga el modulo Index y los demos que vienen con el proyecto.
 
-Si deseamos incluir alguna libreria que cumpla con el estandar autoload PSR-0, solo debemos instalarla en la carpeta vendors y registrarla en este método, donde el indice será el nombre de la libreria y el valor será la ruta hacia el direcotiro donde se encuentra la carpeta.
+Ejemplo
+=======
 
+.. code-block:: php
+
+    protected function registerModules()
+        {
+            $modules = array(
+                new \Index\IndexModule(),
+                new \Namespace\MiModulo();
+            );
+            return $modules;
+        }
+
+Todo módulo debe tener una clase en la carpeta raiz del mismo que extienda de **K2\\Kernel\\Module** ya que será mediante dicha clase que registraremos el módulo en nuestro proyecto.
 
 El Metodo registerRoutes()
 -------------------------
@@ -69,7 +87,7 @@ A traves de este método registraremos los módulos que tendrá la aplicación, 
 Prefijo de un Modulo
 ____________________
 
-El prefijo de un módulo es la porción inicial de la URL, despues del PublicPath, que debe tener tener la la misma para cargar un módulo especifico, veamoslo con algunos ejemplos:
+El prefijo de un módulo es la porción inicial de la URL, despues del PublicPath, que debe tener tener la misma para cargar un módulo especifico, veamoslo con algunos ejemplos:
 
 Para llamar al "indexController" del módulo "Demos/Rest" nuestra URL de petición deberá comenzar por "/demo/rest", algunos patrones de URl que coincidiran con el prefijo son:
 

@@ -7,139 +7,97 @@ La gran ventaja de usar estas clases como servicios radica en que las clases que
 
 Ademas los servicios tambien pueden depender de otros servicios, entonces el inyector al crear las instancias de los primeros les proporciona las instancias que estos necesitan.
 
-Por ultimo es importante destacar que los servicios que se crean son instancias unicas que se mantienen desde que se crean hasta terminar la petición, es decir, si en algun momento necesitamos de un servicio, el inyector primero verifica si ya habia sido previamente creado, si es así, simplemente lo devuelve a quien lo solicitó, de no existir el servicio aun, lo crea y lo guarda junto con los demas servicio creados por si mas adelante se vuelve a solicitar.
+Por ultimo es importante destacar que los servicios que se crean son instancias unicas que se mantienen desde que se crean hasta terminar la petición, es decir, si en algun momento necesitamos de un servicio, el inyector primero verifica si ya habia sido previamente creado, si es así, simplemente lo devuelve a quien lo solicitó, de no existir el servicio aun, lo crea y lo guarda junto con los demas servicio creados por si más adelante se vuelve a solicitar.
 
 .. contents:: Índice:
 
 Definiendo un Servicio
 ----------------------
 
-Los servicios se definen en un archivo llamado services.ini que se puede encontrar en "proyecto/app/config/services.ini" y/ó dentro de la carpeta config de cada módulo. Ejemplos:
+Los Servicios se definen en las clases que representan los módulos de la aplicación, en el método init() de las mismas, veamos un ejemplo:
 
-    * app/config/services.ini                           archivo services global de la App
-    * app/moudles/K2/Backend/config/services.ini        archivo services del módulo K2/Backend
-    * app/modules/Index/config/services.ini             archivo services del módulo Index
+.. code::block php
 
-En cada uno de esos archivos se pueden definir servicios que luego serán creados por el framework solo si son necesitados.
+    <?php
 
-Se debe tener cuidado al nombrar los servicios, ya que si 2 servicios tienen el mismo nombre, el ultimo en ser leido por el framework en los services.ini va a ser el que se creé realmente.
+    namespace Default;
+
+    use K2\Kernel\Module;
+
+    class IndexModule extends Module
+    {
+
+        public function init()
+        {
+            //acá registramos un servicio en el container
+            $this->container->set('pdf', function($c) {
+                return new Default\Lib\MiPDF(); //devolvemos la instancia para el servicio
+            });
+
+            //establecemos un parametro en el contenedor.
+            $this->container->setParameter("fecha_hoy", date('d-m-Y'));
+        }
+
+    }
+
+Acá hemos registrado un servicio al que llamamos "pdf", el cual representa la instancia de una clase Default\\Lib\\MiPDF, dicha clase solo será creada si en algun momento el servicio pdf es solicitado dentro de la aplicación.
+
+Se debe tener cuidado al nombrar los servicios, ya que si 2 servicios tienen el mismo nombre, el ultimo en ser leido por el framework va a ser el que se creé realmente.
 
 Nombre del Servicio
 ___________________
 
-El nombre del servicio puede ser cualquier cadena válida, no debe llevar espacios en blanco ni caracteres especiales, solo guiones, puntos y/ó underescores, cada servicio representa una sección dentro del archivo services.ini y los pares clave valor dentro de estas secciones son las configuraciónes de cada servicio. Algunos ejemplos son:
+El nombre del servicio puede ser cualquier cadena válida, no debe llevar espacios en blanco ni caracteres especiales, solo guiones, puntos y/ó underescores, ejemplos
 
-    * [mi_servicio]
-    * [otro-servicio]
-    * [twitter]
-    * [session]
-    * [app.context]
-    * [view]
-    * [PHPExcel]
-
-Propiedades de la Sesión
-_________________________
-
-+------------------------------+-------------------------------------------------------------------------------------+
-|**class** (obligatorio)       | clase que será creada, ejemplo::                                                    |
-|                              |                                                                                     |
-|                              |    class = K2\Kernel\Session\Session                                         |
-+------------------------------+-------------------------------------------------------------------------------------+
-|**construct[]** (opcional)    | parametros a pasar al servicio en el constructor, ejemplo::                         |
-|                              |                                                                                     |
-|                              |    ;pasando 1 solo parametro al constructor:                                        |
-|                              |    construct = @app.context ;si solo es un parametro obviamos los corchetes         |
-|                              |                                                                                     |           
-|                              |    //pasando más de un parametro al constructor:                                    |  
-|                              |    construct[] = @app.context ;esperamos un primer parametro                        | 
-|                              |    construct[] = @session     ;esperamos un segundo parametro.                      |
-|                              |    construct[] = config.name  ;esperamos un parametro de configuración llamado      |
-|                              |                               config.name                                           |
-+------------------------------+-------------------------------------------------------------------------------------+
-|                              |                                                                                     |
-|**call[metodo]** (opcional)   | metodo a llamar para insertar un servicio ó parametro, ejemplo::                    |
-|                              |                                                                                     |
-|                              |     call[setSession] = @session ;espera la instancia de la sesion en el método      |              
-|                              |                                  setSession().                                      | 
-|                              |     call[setAppContext] = @app.context ;espera la instancia de AppContext.          |
-|                              |     call[setAppName] = config.name ;espera un parametro de config con el nombre     |
-|                              |                                     de la aplicación.                               |
-+------------------------------+-------------------------------------------------------------------------------------+
-|**factory[method]**           | método estatico a llamar, el cual crea una instancia que es la que se guardará en   |
-|y **factory[argument]**       | el inyector de dependencias. por ejemplo::                                          |
-|(opcionales)                  |                                                                                     |
-|                              |     factory[method]   = factory      ;llama al método estático llamdo factory() de  |
-|                              |                                       la clase                                      |
-|                              |     factory[argument] = @app.context ;se le pasa el sercivio AppContext como        |
-|                              |                                       argumento al método factory()                 |
-+------------------------------+-------------------------------------------------------------------------------------+
-|**listen[metodo]** (opcional) |  se especifica un método que escuchará un evento del framework. Ejemplos::          |
-|                              |                                                                                     |
-|                              |      listen[onRequest] = kumbia.request ;se llama al método onRequest() en el       |
-|                              |                                          evento kumbia.request                      |
-|                              |      listen[miMetodo] = kumbia.response ;ejecutado en el evento kumbia.response     |
-|                              |      listen[onError] = kumbia.exception ;ejecutado al ocurrir una excepcion         |
-+------------------------------+-------------------------------------------------------------------------------------+
+    * mi_servicio
+    * otro-servicio
+    * twitter
+    * session
+    * app.context
+    * view
+    * PHPExcel
 
 Ejemplos de Definiciones de Servicios:
 ______________________________________
 
-.. code-block:: ini
+..code::block php
 
-   [session]
-   class = K2\Kernel\Session\Session
-   construct = @request ;el servicio @session usa el servicio @request
-   
-   [router]
-   class =  K2\Kernel\Router\Router
-   construct[] = @app.context ;el servicio @router usa el servicio @app.context
-   construct[] = @app.kernel  ;el servicio @router usa el servicio @kernel
-   
-   [view]
-   class = K2\View\View
-   construct[] = @container ;el servicio @view usa el servicio @container
-   
-   [cache]
-   class = K2\Cache\Cache
-   factory[method] = factory   ;se llamará al método estático factory()
-   factory[argument] = app_dir ;y se le pasará como parametro el valor del parametro app_dir
-   
-   [flash]
-   class = K2\Flash\Flash
-   construct[] = @session ;el servicio @flash usa el servicio @session
-   
-   [validator]
-   class = K2\Validation\Validator  ;no usa otros servicios
-   
-   [security]
-   class = K2\Security\Security
-   construct[] = @session
-   
-   [activerecord.provider]
-   class = K2\Security\Auth\Provider\ActiveRecord
-   construct[] = @container
+    <?php
+
+    namespace K2;
+
+    use K2\Kernel\Module;
+    use K2\Kernel\Event\KumbiaEvents;
+
+    class K2Module extends Module
+    {
+
+        public function init()
+        {
+            //acá establecemos los servicios en el container
+            $this->container->set('flash', function() {
+                return new K2\Flash\Flash();
+            });
+
+            $this->container->set('php_excel', function() {
+                return new K2\Excel\Excel();
+            });
+        }
+
+    }
 
 Estableciendo Dependencias
 --------------------------
 
 Algunos servicios (clases) necesitan de otros servicios ( otras clases ) para realizar algunas tareas especificas, por ejemplo el servicio para crear mensajes Flash necesita del servicio @session para guardar los mensajes entre una petición y otra, el servicio @router necesita dos servicios: el @app.context y el @app.kernel para poder trabajar con las redirecciónes dentro de la aplicación. Todo esto quiere decir que algunos servicios **dependen** de otros para su correcto funcionamiento.
 
-Podemos lograr que a un servicio le lleguen las instancias de los servicios que necesitan mediante métodos de la clase ó desde el mismo constructor. Pero para lograr esto debemos configurarlo en nuestro archivo services.ini, en donde hallamos colocado la definición del servicio. Esto se logra de la siguiente manera:
-
-.. code-block:: ini
-
-   ;codigo en services.ini
-   [api.twitter]
-   class = K2\Twitter\Twitter
-   construct[] = @request ;el servicio @apt.twitter usa el servicio @request y le llegará en el constructor
-   call[establecerSession] = @session ;se le pasa el servicio @session por medio del método establecerSession()
-   call[setFlash]          = @flash   ;se le pasa el servicio @flash por medio del método setFlash()
+Podemos lograr que a un servicio le lleguen las instancias de los servicios que necesitan mediante métodos de la clase ó desde el mismo constructor, ejemplo:
 
 .. code-block:: php
 
    //servicio @Twitter
 
-   namespace K2\Twitter\Twitter;
+   namespace K2\Twitter;
 
    class Twitter
    {
@@ -167,60 +125,38 @@ Podemos lograr que a un servicio le lleguen las instancias de los servicios que 
       }
    }
 
-.. code-block:: ini
+Ahora en nuestra clase Module agregamos el servicio al container:
 
-   ;codigo en services.ini
-   [flash]
-   class = K2\Flash\Flash
-   construct[] = @session ;el servicio @flash usa el servicio @session y le llegará en el constructor
+..code::block php
 
-.. code-block:: php
+    <?php
 
-   //servicio @flash
+    namespace K2\Twitter;
 
-   namespace K2\Flash\Flash; 
+    use K2\Kernel\Module;
 
-   class Flash
-   {
-      protected $session;
+    class K2Module extends Module
+    {
 
-      public function __construct(Session $session) //acá estamos esperando la instancia del servicio @session.
-      {
-         //al solicitar la instancia del servicio @flash, el inyector de dependencias le pasará a esta clase
-         //el servicio session en el constructor.
-         $this->session = $session;
-      }
-   }
+        public function init()
+        {
+            //creamos el servicio @twitter y le pasamos los servicios que solicita
+            $this->container->set('flash', function($c) { //nuestra función siempre recibe el contenedor de servicios
 
-.. code-block:: ini
+                $twitter = new K2\Twitter\Twitter($c->get("request"));
 
-   ;codigo en services.ini
-   [cache]
-   class = K2\Cache\MiCache
-   factory[method] = crearInstancia  ;se llamará a este método, el cual debe crear la instancia del servicio.
-   factory[argument] = cache.driver  ;espera el valor contenido en el parametro de algun config.ini de la App.
+                $twitter->establecerSession($c['session']);//tambien podemos acceder a un servicio como si fuese un indice del container
 
-.. code-block:: php
+                $twitter->setFlash($c['flash']);//tambien podemos acceder a un servicio como si fuese un indice del container
 
-   //servicio @MiCache
+                return $twitter;
+            });
 
-   namespace K2\Cache\MiCache;
+        }
 
-   class MiCache
-   {
-      public static function crearInstancia($driver)
-      {
-         $driverClass = "K2\\Cache\\Adapter\\$driver"; creamos el nombre de la clase con el namespace.
+    }
 
-         if ( !class_exist($driverClass) )  //si no existe la clase lanzamos una excepción.
-         {
-            throw new InvalidArgumentException("No existe el driver de cache $driver");
-         }
-
-         //si existe, creamos y retornamos la instancia del adaptador.
-         return new $driverClass();
-      }
-   }
+Podemos ver como hemos creado la instancia del objeto y luego le insertamos las dependencias, con lo cual, cuando solicitemos el servicio, este ya tendrá los objetos que le pasamos al crearlo.
 
 Escuchando Eventos
 ------------------
@@ -240,16 +176,9 @@ Como se puede apreciar son muchas las posibilidades que brinda el podes escuchar
 Como escuchar un Evento
 _______________________
 
-Para que un servicio escuche eventos solo debemos agregar la instruccion **listen[nombreMetodo] = nombreEvento** , con esto ya nuestro servicio está esperando a que en el evento **nombreEvento** sea ejecutado el método nombreMetodo() del mismo, ejemplo:
+Para que un servicio escuche eventos solo debemos agregalo al EventDispatcher desde el init() de la clase que define nuestro módulo, ejemplo:
 
-.. code-block: ini
-
-    [k2_seguridad]
-    class = K2/Seguridad/Seguridad ;la clase es K2/Seguridad/Seguridad.php
-    construct[] = @router ;usa el servicio router para redirigir la petición en caso de estár protegida y no haber iniciado sesión.
-    listen[verificarAcceso] = kumbia.request ;estamos escuchando el evento kumbia.request
-
-En el ejemplo anterior, se creó un servicio llamado **k2_seguridad**, el cual está escuchando el evento **kumbia.request**, entonces al iniciar la petición, se creará la instancia de la clase K2/Seguridad/Seguridad.php y se llamará al método verificarAcceso() de la misma, pasandole el objeto con la información de evento correspondiente, ejemplo del código de la clase:
+Crearemos un servicio llamado **k2_seguridad**, el cual escuchará el evento **kumbia.request**, entonces al iniciar la petición, se creará la instancia de la clase K2/Seguridad/Seguridad.php y se llamará al método verificarAcceso() de la misma, pasandole el objeto con la información del evento correspondiente, ejemplo del código de la clase:
 
 .. code-block:: php
 
@@ -295,21 +224,40 @@ En el ejemplo anterior, se creó un servicio llamado **k2_seguridad**, el cual e
         }
     }
 
+Ahora agregamos el servicio al EventDispatcher:
+
+..code::block php
+
+    <?php
+
+    namespace K2\Seguridad;
+
+    use K2\Kernel\Module;
+    use K2\Kernel\Event\KumbiaEvents;
+
+    class SeguridadModule extends Module
+    {
+
+        public function init()
+        {
+            $this->container->set('k2_seguridad', function($c) {
+
+                return new K2\Seguridad\Seguridad($c['router']);
+            });
+
+            //agregamos el escucha para el evento request donde k2_seguridad es el nombre del servicio
+            //y verificarAcceso es el método que será llamado.
+            $this->dispatcher->addListener(KumbiaEvents::REQUEST, array('k2_seguridad', 'verificarAcceso'));
+
+            $this->dispatcher->addListener(KumbiaEvents::REQUEST, function(){
+                echo "Tambien podemos añadir una función al event_dispatcher";
+            });
+
+        }
+
+    }
+
 El ejemplo aunque un poco complejo, ofrece una visión de lo que se puede lograr escuchando eventos en nuestras aplicaciones.
-
-Escuchando varios Eventos
-_________________________
-
-Tambien es posible escuchar varios eventos en un mismo servicios, solo debemos añadir varias instruccines **listen** en la definicion del servicio:
-
-.. code-block: ini
-
-    [k2_seguridad]
-    class = K2/Seguridad/Seguridad 
-    construct[] = @router ;usa el servicio router para redirigir la petición en caso de estár protegida y no haber iniciado sesión.
-    listen[verificarAcceso] = kumbia.request ;estamos escuchando el evento kumbia.request
-    listen[ocurrioExcepcion] = kumbia.exception ;se llamará al ocurrir una excepcion
-    listen[onResponse] = kumbia.response ;se llamará al generar la respuesta.
 
 Ahora nuestro servicio k2_seguridad está escuchando varios eventos, veamos como sería el código de la clase:
 
@@ -342,3 +290,36 @@ Ahora nuestro servicio k2_seguridad está escuchando varios eventos, veamos como
     }
 
 La clase Seguridad tiene tres métodos que están escuchando por diferentes eventos, y cada uno de ellos espera un tipo de objeto diferente que ofree métodos de utilidad para el tipo de evento.
+
+En la clase Module:
+
+Ahora agregamos el servicio al EventDispatcher:
+
+..code::block php
+
+    <?php
+
+    namespace K2\Seguridad;
+
+    use K2\Kernel\Module;
+    use K2\Kernel\Event\KumbiaEvents;
+
+    class SeguridadModule extends Module
+    {
+
+        public function init()
+        {
+            $this->container->set('k2_seguridad', function($c) {
+
+                return new K2\Seguridad\Seguridad($c['router']);
+            });
+
+            $this->dispatcher->addListener(KumbiaEvents::REQUEST, array('k2_seguridad', 'verificarAcceso'));
+
+            $this->dispatcher->addListener(KumbiaEvents::EXCEPTION, array('k2_seguridad', 'ocurrioExcepcion'));
+
+            $this->dispatcher->addListener(KumbiaEvents::RESPONSE, array('k2_seguridad', 'onResponse'));
+
+        }
+
+    }
