@@ -6,7 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'K2\\' => $vendorDir . '/kumbiaphp/core/src/',
-    'ActiveRecord\\' => $vendorDir . '/kumbiaphp/activerecord/lib/',
+    'K2\\' => $vendorDir . '/k2/core/src/',
+    'ActiveRecord\\' => $vendorDir . '/k2/activerecord/lib/',
     '' => $baseDir . '/app/modules/',
 );

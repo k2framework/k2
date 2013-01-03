@@ -811,7 +811,13 @@ class Container implements ContainerInterface
             return $this->services[$id];
         }
         //si existe pero no se ha creado, creamos la instancia
-        return $this->services[$id] = $this->definitions['services'][$id]($this);
+        $this->services[$id] = $this->definitions['services'][$id]($this);
+                
+        if (!is_object($this->services[$id])){
+            throw new \K2\Di\Exception\DiException("La función que crea el servicio $id bebe retornar un objeto");
+        }
+        
+        return $this->services[$id];
     }
 
     public function has($id)
@@ -1419,7 +1425,7 @@ class Controller
     }
 
     
-    protected function setView($view, $template = false)
+    final protected function setView($view, $template = false)
     {
         $this->view = $view;
         if ($template !== false) {
@@ -1428,7 +1434,7 @@ class Controller
     }
 
     
-    protected function setResponse($response, $template = false)
+    final protected function setResponse($response, $template = false)
     {
         $this->response = $response;
         if ($template !== false) {
@@ -1437,36 +1443,36 @@ class Controller
     }
 
     
-    protected function setTemplate($template)
+    final protected function setTemplate($template)
     {
         $this->template = $template;
     }
 
     
-    protected function getView()
+    final protected function getView()
     {
         return $this->view;
     }
 
     
-    protected function getResponse()
+    final protected function getResponse()
     {
         return $this->response;
     }
 
     
-    protected function getTemplate()
+    final protected function getTemplate()
     {
         return $this->template;
     }
 
     
-    protected function cache($time = false)
+    final protected function cache($time = false)
     {
         $this->cache = $time;
     }
 
-    protected function getCache()
+    final protected function getCache()
     {
         return $this->cache;
     }
@@ -1481,55 +1487,6 @@ class Controller
                     'params' => $params,
                     'time' => $time,
                 ));
-    }
-
-}
-
-namespace K2\Kernel\Event;
-
-use K2\Kernel\Request;
-use K2\Kernel\Event\RequestEvent;
-
-
-class ControllerEvent extends RequestEvent
-{
-
-    protected $controller = array();
-
-    function __construct(Request $request, array $controller = array())
-    {
-        parent::__construct($request);
-        $this->controller = $controller;
-    }
-
-    public function getController()
-    {
-        return $this->controller[0];
-    }
-
-    public function setController($controller)
-    {
-        $this->controller[0] = $controller;
-    }
-
-    public function getAction()
-    {
-        return $this->controller[1];
-    }
-
-    public function setAction($action)
-    {
-        $this->controller[1] = $action;
-    }
-
-    public function getParameters()
-    {
-        return $this->controller[2];
-    }
-
-    public function setParameters(array $parameters)
-    {
-        $this->controller[2] = $parameters;
     }
 
 }
@@ -1741,7 +1698,6 @@ use K2\Kernel\Event\RequestEvent;
 use K2\Kernel\Event\ResponseEvent;
 use K2\Kernel\Config\ConfigReader;
 use K2\Kernel\Event\ExceptionEvent;
-use K2\Kernel\Event\ControllerEvent;
 use K2\EventDispatcher\EventDispatcher;
 use K2\Kernel\Exception\ExceptionHandler;
 use K2\Kernel\Exception\NotFoundException;
