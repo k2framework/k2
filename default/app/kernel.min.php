@@ -812,11 +812,11 @@ class Container implements ContainerInterface
         }
         //si existe pero no se ha creado, creamos la instancia
         $this->services[$id] = $this->definitions['services'][$id]($this);
-                
-        if (!is_object($this->services[$id])){
+
+        if (!is_object($this->services[$id])) {
             throw new \K2\Di\Exception\DiException("La función que crea el servicio $id bebe retornar un objeto");
         }
-        
+
         return $this->services[$id];
     }
 
@@ -867,10 +867,16 @@ class Container implements ContainerInterface
     }
 
     
-    public function set($id, \Closure $function)
+    public function set($id, \Closure $function, $singleton = true)
     {
         $this->definitions['services'][$id] = $function;
         return $this;
+    }
+
+    
+    public function setFromArray(array $services)
+    {
+        $this->definitions['services'] = $services + $this->definitions['services'];
     }
 
     
@@ -893,9 +899,9 @@ class Container implements ContainerInterface
 
     public function offsetSet($offset, $value)
     {
-        if($value instanceof \Closure){
+        if ($value instanceof \Closure) {
             $this->set($offset, $value);
-        }else{
+        } else {
             $this->setParameter($offset, $value);
         }
     }
@@ -1771,7 +1777,7 @@ abstract class Kernel implements KernelInterface
         $this->container->setInstance('app.context', $context);
         //si se usan locales los añadimos.
         if (isset($this->container['config']['locales'])) {
-            $this->locales = $this->container['config']['locales'];
+            $this->locales = explode(',', $this->container['config']['locales']);
         }
         $this->readConfig();
         //establecemos el Request en el AppContext
