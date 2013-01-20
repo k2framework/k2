@@ -1158,7 +1158,6 @@ namespace K2\Kernel\Controller;
 use \ReflectionClass;
 use \ReflectionObject;
 use K2\Kernel\Response;
-use K2\Kernel\Event\ControllerEvent;
 use K2\Di\Container\ContainerInterface;
 use K2\Kernel\Exception\NotFoundException;
 
@@ -1199,8 +1198,8 @@ class ControllerResolver
     
     public function getController()
     {
-        if ('/logout' === $this->module) {
-            throw new NotFoundException(sprintf("La ruta \"%s\" no concuerda con ningún módulo ni controlador en la App", $this->module));
+        if ($this->controller instanceof Controller) {
+            return $this->controller;
         }
 
         $app = $this->container->get('app.context');
@@ -1219,14 +1218,16 @@ class ControllerResolver
         }
 
         $this->controller = $reflectionClass->newInstanceArgs(array($this->container));
-        $this->setViewDefault($app->getCurrentAction());
+        $this->controller->setView($app->getCurrentAction());
+
+        return $this->controller;
     }
 
     
     public function executeAction()
     {
         $this->getController();
-        
+
         $controller = new ReflectionObject($this->controller);
 
         if (($response = $this->executeBeforeFilter($controller)) instanceof Response) {
@@ -1243,12 +1244,6 @@ class ControllerResolver
         $this->executeAfterFilter($controller);
 
         return $response;
-    }
-
-    
-    public function getPublicProperties()
-    {
-        return get_object_vars($this->controller);
     }
 
     
@@ -1357,14 +1352,7 @@ class ControllerResolver
     
     protected function setViewDefault($action)
     {
-        $reflection = new \ReflectionClass($this->controller);
-
-        //obtengo el parametro del controlador.
-        $propertie = $reflection->getProperty('view');
-
-        //lo hago accesible para poderlo leer
-        $propertie->setAccessible(true);
-        $propertie->setValue($this->controller, $action);
+        $this->controller->setView($action);
     }
 
 }
@@ -1431,7 +1419,7 @@ class Controller
     }
 
     
-    final protected function setView($view, $template = false)
+    final public function setView($view, $template = false)
     {
         $this->view = $view;
         if ($template !== false) {
@@ -1440,7 +1428,7 @@ class Controller
     }
 
     
-    final protected function setResponse($response, $template = false)
+    final public function setResponse($response, $template = false)
     {
         $this->response = $response;
         if ($template !== false) {
@@ -1449,36 +1437,36 @@ class Controller
     }
 
     
-    final protected function setTemplate($template)
+    final public function setTemplate($template)
     {
         $this->template = $template;
     }
 
     
-    final protected function getView()
+    final public function getView()
     {
         return $this->view;
     }
 
     
-    final protected function getResponse()
+    final public function getResponse()
     {
         return $this->response;
     }
 
     
-    final protected function getTemplate()
+    final public function getTemplate()
     {
         return $this->template;
     }
 
     
-    final protected function cache($time = false)
+    final public function cache($time = false)
     {
         $this->cache = $time;
     }
 
-    final protected function getCache()
+    final public function getCache()
     {
         return $this->cache;
     }
@@ -1897,17 +1885,18 @@ abstract class Kernel implements KernelInterface
     
     private function createResponse(ControllerResolver $resolver)
     {
+        $controller = $resolver->getController();
         //como la acción no devolvió respuesta, debemos
         //obtener la vista y el template establecidos en el controlador
         //para pasarlos al servicio view, y este construya la respuesta
         //llamamos al render del servicio "view" y esté nos devolverá
         //una instancia de response con la respuesta creada
         return $this->container->get('view')->render(array(
-                    'template' => $resolver->callMethod('getTemplate'),
-                    'view' => $resolver->callMethod('getView'),
-                    'response' => $resolver->callMethod('getResponse'),
-                    'time' => $resolver->callMethod('getCache'),
-                    'params' => $resolver->getPublicProperties(), //nos devuelve las propiedades publicas del controlador
+                    'template' => $controller->getTemplate(),
+                    'view' => $controller->getView(),
+                    'response' => $controller->getResponse(),
+                    'time' => $controller->getCache(),
+                    'params' => get_object_vars($controller),
                 ));
     }
 
@@ -2007,10 +1996,6 @@ abstract class Kernel implements KernelInterface
             } else {
                 $this->request->setLocale($this->locales[0]);
             }
-        }
-
-        if ('/logout' === $url) {
-            return array($url, $url, $url);
         }
 
         $routes = array_keys($this->routes);
