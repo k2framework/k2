@@ -1,7 +1,7 @@
-KumbiaPHP 2
+K2 Framework PHP
 ===========
 
-Esta es una base para una nueva versión de KumbiaPHP framework, trabaja con php 5.3 ó superior.
+Framework que une la facilidad de trabajo de KumbiaPHP con el potencial de Symfony2, trabaja con php 5.3 ó superior.
 
     * Estado del Core: |buildcore|
     * Estado del ActiveRecord: |buildar|
@@ -42,7 +42,7 @@ Ademas se necesita tener activado el `mod_rewrite <https://www.google.com/search
 
 Para las conexiones a BD se utiliza PDO por lo que es necesario tener activada dicha extensión.
 
-Estos son los tres requermientos básicos para poder Trabajar con KumbiaPHP 2.
+Estos son los tres requermientos básicos para poder Trabajar con K2.
 
 
 
