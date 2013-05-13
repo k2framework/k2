@@ -21,7 +21,9 @@ class indexController extends Controller
 
     public function index_action()
     {
-        //$this->cache('+10 sec');
+        $form = $this->createForm(new \Index\Form\TestForm());
+        
+        var_dump($form);
     }
 
     public function otro_action()
