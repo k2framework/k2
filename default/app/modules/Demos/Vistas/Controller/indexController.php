@@ -14,11 +14,7 @@ class indexController extends Controller
 
     public function index_action()
     {
-        /* 
-         * Aqui le decimos al fw que queremos usar el template de nuestro
-         * módulo llamado "mi_template.phtml"
-         */
-        $this->setTemplate('Demos/Vistas:mi_template');
+        
     }
 
     public function saludo_action($nombre)
@@ -28,13 +24,7 @@ class indexController extends Controller
         /*
          * Escogemos la vista otra_accion.phtml
          */
-        $this->setView('otra_accion');
-        
-        /* 
-         * Aqui le decimos al fw que queremos usar el template de nuestro
-         * módulo llamado "mi_template.phtml"
-         */
-        $this->setTemplate('Demos/Vistas:mi_template');
+        $this->setView('@Demos_Vistas/index/otra_accion');
     }
 
 }

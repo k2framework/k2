@@ -1,4 +1,4 @@
-{% extends "@Index/layout.twig" %}
+{% extends "default.twig" %}
 {% block content %}
 <h1>KumbiaPHP está listo para usarse</h1>
 <p><strong>Bienvenido a KumbiaPHP Framework</strong>. El framework ya está listo para desarrollar aplicaciones web con PHP, rápida y fácilmente, sin tener que reinventar la rueda, y preocupandose por lo más importante, la lógica de su aplicación.</p>
@@ -18,12 +18,12 @@
         <h2>Ejemplos</h2>
         <p>Estos Son Algunos ejemplos que vienen con el framewrok:</p>
         <ul>
-            <li><?php echo Html::link('demo/modelos','Los Modelos') ?></li>
-            <li><?php echo Html::link('demo/upload','Subiendo Archivos') ?></li>
-            <li><?php echo Html::link('demo/router','Uso del Router') ?></li>
-            <li><?php echo Html::link('demo/vistas','Trabajando con Vistas') ?></li>
-            <li><?php echo Html::link('demo/rest','Controlador REST') ?></li>
-            <li><?php echo Html::link('admin','Autenticación') ?></li>
+            <li><a href="{{ url('demo/modelos') }}">Los Modelos</a></li>
+            <li><a href="{{ url('demo/upload') }}">Subiendo Archivos</a></li>
+            <li><a href="{{ url('demo/router') }}">Uso del Router</a></li>
+            <li><a href="{{ url('demo/vistas') }}">Trabajando con Vistas</a></li>
+            <li><a href="{{ url('demo/rest') }}">Controlador REST</a></li>
+            <li><a href="{{ url('admin') }}">Autenticación</a></li>
         </ul>
     </div>
 </div>

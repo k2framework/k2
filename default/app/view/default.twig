@@ -3,25 +3,28 @@
     <head>
         <meta http-equiv='Content-type' content='text/html; charset=<?php APP_CHARSET ?>' />
         <title>KumbiaPHP web &amp; App Framework</title>
-        <?php Tag::css('structure'); ?>
-        <?php echo Html::includeCss() ?>
+        {% block css %}
+        <link rel="stylesheet" href="{{ asset('css/structure.css') }}" type="text/css" />
+        {% endblock %}
     </head>
     <body>
+        {% block body %}
         <header class="container-top">
             <div class="row">
-                <h1><?php echo Html::link('', 'KumbiaPHP') ?>
+                <h1><a href="{{ url('') }}">KumbiaPHP</a>
                     <small>web & app Framework versión K2
-                        <?php echo Html::link('pages/show/kumbia/status', 'Config', 'class="pull-right"') ?>
+                        <a href="{{ url('pages/show/kumbia/status') }}" class="pull-right">Config</a>
                     </small>
                 </h1>             
             </div>
         </header>
         <div class="row">
-            <?php K2\View\View::content(true) ?>            
+            {% block content '' %}
         </div>
-        <?php K2\View\View::partial('footer') ?>
-        <?php Tag::js('jquery/jquery.min', -100) ?>
-        <?php echo Html::includeJs() ?>
+        {% include 'footer.twig' %}
+        {% endblock %}
+        {% block javascript %}
+        {% endblock %}
     </body>
 </html>
 

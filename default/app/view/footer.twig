@@ -15,11 +15,11 @@
     </div>
     <div class="row">
         <div class="span6">
-            <a href='http://wiki.kumbiaphp.com/Team_Development_KumbiaPHP_Framework'>© 2007 - <?php echo date('Y'); ?> KumbiaPHP Team</a>
+            <a href='http://wiki.kumbiaphp.com/Team_Development_KumbiaPHP_Framework'>© 2007 - {{ 'now'|date('Y') }} KumbiaPHP Team</a>
         </div>
         <div class='span6 pull-right' style="text-align: right">
-            <?php echo 'Tiempo: ' . round((microtime(1) - START_TIME), 4) . ' seg.'; ?>
-            <?php echo ', Memoria Usada: ' . number_format(memory_get_usage() / 1048576, 2) . ' MB'; ?>
+            Tiempo: {{k2_execution_time() }} seg.
+            Memoria Usada: {{ k2_memory_usage() }}  MB
         </div>
     </div>
 </footer>

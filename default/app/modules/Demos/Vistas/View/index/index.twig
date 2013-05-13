@@ -1,0 +1,9 @@
+{% extends "@Demos_Vistas/mi_template.twig" %}
+
+{% block content %}
+<h3>Vista</h3>
+<p>este es el contenido de la vista</p>
+<p>Url actual: {{ url() }}</p>
+<p>Controlador ejecutado: {{ app.context.currentController }}Controller</p>
+<p>Ip del Cliente: {{ app.request.clientIp }}</p>
+{% endblock %}

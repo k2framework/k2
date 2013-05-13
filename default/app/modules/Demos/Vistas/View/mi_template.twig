@@ -1,0 +1,17 @@
+{% extends "default.twig" %}
+
+{% block body %}
+<header class="container-top"><div class="row"><h1>Cabecera de la Página
+            <small><a href="{{ url('') }}" class="pull-right">Inicio</a></small>
+        </h1></div></header>
+<section class="row">
+    {% block content '' %}
+    <ul>
+        <li><a href="{{ url_action('') }}">Ejemplo 1</a></li>
+        <li><a href="{{ url_action('saludo/Amigo') }}">Ejemplo 2</a></li>
+    </ul>
+</section>
+<footer><div class="row">Pié de la página</div></footer>
+{% endblock %}
+
+
