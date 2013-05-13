@@ -7,8 +7,8 @@
 <section class="row">
     {% block content '' %}
     <ul>
-        <li><a href="{{ url_action('') }}">Ejemplo 1</a></li>
-        <li><a href="{{ url_action('saludo/Amigo') }}">Ejemplo 2</a></li>
+        <li><a href="{{ url(action = 'index') }}">Ejemplo 1</a></li>
+        <li><a href="{{ url(action = 'saludo', parameters = ['Amigo']) }}">Ejemplo 2</a></li>
     </ul>
 </section>
 <footer><div class="row">Pié de la página</div></footer>

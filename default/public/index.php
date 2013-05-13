@@ -1,15 +1,32 @@
 <?php
 
+use K2\Kernel\Kernel;
+use K2\Kernel\Request;
+
 define('START_TIME', microtime(1));
 
-//require_once __DIR__ . '/../app/kernel.min.php';
-require_once __DIR__ . '/../app/AppKernel.php';
+###### Especificamos si el proyecto está en producción o no ############
+define('PRODUCTION', false);
 
-use K2\Kernel\Request;
-use K2\Cache\AppCache;
+###### obtenemos la url de la petición ############
+$_url = isset($_GET['_url']) ? $_GET['_url'] : '/';
 
-$app = new AppKernel(false);
+###### Creamos el PUBLIC_PATH ############
+if ($_SERVER['QUERY_STRING']) {
+    $uri = $_SERVER['REQUEST_URI'];
+    if (false !== ($pos = strpos($_SERVER['REQUEST_URI'], '?'))) {
+        $uri = substr($_SERVER['REQUEST_URI'], 0, $pos);
+    }
+    define('PUBLIC_PATH', str_replace($_url, '/', urldecode($uri)));
+    unset($uri);
+} else {
+    define('PUBLIC_PATH', $_SERVER['REQUEST_URI']);
+}
 
-//$app = new AppCache($app);
+###### Arrancamos la config inical del Framework ############
+require_once '../app/bootstrap.php';
 
-$app->execute(new Request())->send();
+###### Arrancamos y ejecutamos el FW ############
+$app = new Kernel();
+
+$app->execute(new Request($_url))->send();

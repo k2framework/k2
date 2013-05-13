@@ -24,7 +24,7 @@ class indexController extends Controller
         /*
          * Escogemos la vista otra_accion.phtml
          */
-        $this->setView('@Demos_Vistas/index/otra_accion');
+        $this->setView('@DemosVistas/index/otra_accion');
     }
 
 }

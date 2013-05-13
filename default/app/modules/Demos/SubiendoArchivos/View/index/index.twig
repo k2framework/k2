@@ -1,0 +1,15 @@
+{% extends "default.twig" %}
+
+{% block content %}
+<?php Tag::css('scaffold') ?>
+<h3>Ejemplo de subida de Imagenes</h3>
+<p>
+    {% include 'messages.twig' %}
+</p>
+<form method="post" action="{{ url() }}" enctype="multipart/form-data">
+<ul>
+    <li><label>Imagen: <input type="file" name="imagen" /></label></li>
+    <li><input type="submit" value="Enviar Form" class="btn" /></li>
+</ul>
+</form>
+{% endblock %}

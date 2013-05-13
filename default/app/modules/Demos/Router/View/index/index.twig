@@ -1,0 +1,10 @@
+{% extends "default.twig" %}
+
+{% block content %}
+<h2>Hola desde la Acción: {{ accionEjecutada }}</h2>
+<ul>
+    <li><a href="{{ url(action='index') }}">Ir a la acción index()</a></li>
+    <li><a href="{{ url(action='to_action') }}">Ir a la acción toAction()</a></li>
+    <li><a href="{{ url(action='forward') }}">Ir a la acción forward()</a></li>
+</ul>
+{% endblock %}

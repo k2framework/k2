@@ -19,7 +19,7 @@ class indexController extends Controller
      */
     public function index_action()
     {
-        return $this->getRouter()->redirect('demo/router/index/accion2');
+        return $this->getRouter()->redirect('DemosRouter:index/accion2');
     }
 
     /**
@@ -66,10 +66,9 @@ class indexController extends Controller
      */
     protected function getRespuesta($accion)
     {
-        $this->setView('index');
-        return $this->render(array(
+        return $this->render('@DemosRouter/index/index', array(
                     'accionEjecutada' => $accion,
-                ));
+        ));
     }
 
 }
