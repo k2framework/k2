@@ -31,7 +31,7 @@ class indexController extends Controller
 
         $this->form->add('password', 'password')->setLabel('Contraseña: ');
 
-        if ($this->get('session')->has(Security::LOGIN_ERROR)) {
+        if (App::get('session')->has(Security::LOGIN_ERROR)) {
             $this->form->addError('TODO', App::get('session')->get(Security::LOGIN_ERROR));
             App::get('session')->delete(Security::LOGIN_ERROR);
         }

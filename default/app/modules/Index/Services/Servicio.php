@@ -5,7 +5,7 @@ namespace Index\Services;
 use K2\Kernel\Event\RequestEvent;
 use K2\Validation\ValidationBuilder;
 use K2\Security\Event\SecurityEvent;
-use K2\Di\Container\ContainerInterface;
+use K2\Di\Container\Container;
 
 /**
  * Description of Servicio
@@ -17,11 +17,11 @@ class Servicio
 
     /**
      *
-     * @var ContainerInterface 
+     * @var Container 
      */
     protected $container;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
     }

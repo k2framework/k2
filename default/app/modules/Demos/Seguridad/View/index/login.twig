@@ -1,5 +1,10 @@
-<?php Tag::css('scaffold') ?>
-<?php echo $form ?>
-<hr/>
-<h2>Código de la Vista</h2>
-<?php highlight_file(__FILE__); ?>
+{% extends "default.twig" %}
+
+{%  block css %}
+{{ parent() }}
+<link rel="stylesheet" href="{{ asset('css/scaffold.css') }}" type="text/css" />
+{%  endblock %}
+
+{% block content %}
+{{ form|raw }}
+{% endblock %}

@@ -1,6 +1,7 @@
-<h3>Parte Segura de la Aplicación <?php echo Html::link('logout', 'Cerrar Sesión', 'class="pull-right"') ?></h3>
-<?php \K2\View\View::content(true) ?>
-<p>Información del Usuario<?php var_dump($usuario) ?></p>
-<hr/>
-<h2>Código de la Vista</h2>
-<?php highlight_file(__FILE__); ?>
+{% extends "default.twig" %}
+
+{% block content %}
+<h3>Parte Segura de la Aplicación <a href="{{ url('logout') }}" class="pull-right">Cerrar Sesión</a></h3>
+{% include 'messages.twig' %}
+<p>Información del Usuario {{ dump(usuario) }} </p>
+{% endblock %}
