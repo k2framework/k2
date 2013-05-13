@@ -1,5 +1,5 @@
-<?php echo Html::img('default/kumbia.png', 'KumbiaPHP logo') ?>
-<?php \K2\View\View::content(true) ?>
+{% extends "@Index/layout.twig" %}
+{% block content %}
 <h1>KumbiaPHP está listo para usarse</h1>
 <p><strong>Bienvenido a KumbiaPHP Framework</strong>. El framework ya está listo para desarrollar aplicaciones web con PHP, rápida y fácilmente, sin tener que reinventar la rueda, y preocupandose por lo más importante, la lógica de su aplicación.</p>
 <div class="row">    
@@ -27,3 +27,4 @@
         </ul>
     </div>
 </div>
+{% endblock %}

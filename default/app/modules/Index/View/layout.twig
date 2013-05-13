@@ -3,9 +3,6 @@
     <head>
         <meta http-equiv='Content-type' content='text/html; charset=UTF-8' />
         <title>KumbiaPHP web &amp; App Framework</title>
-        <?php $view['tag']->css('css/bienvenida') ?>
-        <?php $view['tag']->css('css/style') ?>
-        <?php echo $view['tag']->includeCss() ?>
     </head>
     <body>
         <div id='content'>
@@ -21,7 +18,7 @@
                 <h2 id='info-app'>web &amp; app Framework versión <?php //echo kumbia_version()   ?></h2>
             </div>
 
-            <?php echo $view ?>
+            {% block content '' %}
 
             <?php //View::partial('kumbia/footer') ?>
             <div id="footer">

@@ -1,0 +1,138 @@
+[
+    {
+        "name": "k2/core",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/k2framework/Core.git",
+            "reference": "6e81908e66a3b00574ca0bd4e8ef86c78ff1ff05"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/k2framework/Core/zipball/6e81908e66a3b00574ca0bd4e8ef86c78ff1ff05",
+            "reference": "6e81908e66a3b00574ca0bd4e8ef86c78ff1ff05",
+            "shasum": ""
+        },
+        "replace": {
+            "k2/dependency-injection": "self.version",
+            "k2/event-dispatcher": "self.version",
+            "k2/validation": "self.version"
+        },
+        "time": "2013-02-06 01:04:14",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "K2\\": "src/"
+            }
+        },
+        "notification-url": "http://packagist.org/downloads/",
+        "license": [
+            "BSD"
+        ],
+        "authors": [
+            {
+                "name": "Manuel Aguirre",
+                "email": "programador.manuel@gmail.com"
+            }
+        ],
+        "description": "Core de KumbiaPHP versión K2 framework, trabaja con php 5.3 ó superior.",
+        "keywords": [
+            "framework"
+        ]
+    },
+    {
+        "name": "k2/activerecord",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/k2framework/activerecord.git",
+            "reference": "72a2e1793b35b035d3a8ee5fb2b44257f3b5bb10"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/k2framework/activerecord/zipball/72a2e1793b35b035d3a8ee5fb2b44257f3b5bb10",
+            "reference": "72a2e1793b35b035d3a8ee5fb2b44257f3b5bb10",
+            "shasum": ""
+        },
+        "require": {
+            "k2/dependency-injection": "dev-master",
+            "k2/event-dispatcher": "dev-master"
+        },
+        "time": "2013-03-07 13:52:23",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "ActiveRecord\\": "lib/"
+            }
+        },
+        "notification-url": "http://packagist.org/downloads/",
+        "license": [
+            "BSD"
+        ],
+        "authors": [
+            {
+                "name": "Manuel Aguirre",
+                "email": "programador.manuel@gmail.com"
+            }
+        ],
+        "description": "Active Record para KumbiaPHP versión K2, trabaja con PHP 5.3 ó superior y requiere PDO.",
+        "keywords": [
+            "framework"
+        ]
+    },
+    {
+        "name": "twig/twig",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/fabpot/Twig.git",
+            "reference": "4a49a3ae30ad2694057a63eccc3fb7b551b93e74"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/fabpot/Twig/zipball/4a49a3ae30ad2694057a63eccc3fb7b551b93e74",
+            "reference": "4a49a3ae30ad2694057a63eccc3fb7b551b93e74",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.4"
+        },
+        "time": "2013-05-10 15:25:39",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.13-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Twig_": "lib/"
+            }
+        },
+        "notification-url": "http://packagist.org/downloads/",
+        "license": [
+            "BSD-3"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Armin Ronacher",
+                "email": "armin.ronacher@active-4.com"
+            }
+        ],
+        "description": "Twig, the flexible, fast, and secure template language for PHP",
+        "homepage": "http://twig.sensiolabs.org",
+        "keywords": [
+            "templating"
+        ]
+    }
+]
