@@ -1,13 +1,11 @@
 {
     "require":{
         "k2/core": "dev-master",
-        "k2/activerecord": "dev-master",
-        "twig/twig": "1.*"
+        "k2/activerecord": "dev-master"
     },
     "autoload": {
         "psr-0":{ 
             "": "app/modules/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }

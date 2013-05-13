@@ -1,67 +1,20 @@
 [
     {
-        "name": "k2/core",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/k2framework/Core.git",
-            "reference": "6e81908e66a3b00574ca0bd4e8ef86c78ff1ff05"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/k2framework/Core/zipball/6e81908e66a3b00574ca0bd4e8ef86c78ff1ff05",
-            "reference": "6e81908e66a3b00574ca0bd4e8ef86c78ff1ff05",
-            "shasum": ""
-        },
-        "replace": {
-            "k2/dependency-injection": "self.version",
-            "k2/event-dispatcher": "self.version",
-            "k2/validation": "self.version"
-        },
-        "time": "2013-02-06 01:04:14",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "K2\\": "src/"
-            }
-        },
-        "notification-url": "http://packagist.org/downloads/",
-        "license": [
-            "BSD"
-        ],
-        "authors": [
-            {
-                "name": "Manuel Aguirre",
-                "email": "programador.manuel@gmail.com"
-            }
-        ],
-        "description": "Core de KumbiaPHP versión K2 framework, trabaja con php 5.3 ó superior.",
-        "keywords": [
-            "framework"
-        ]
-    },
-    {
         "name": "k2/activerecord",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/k2framework/activerecord.git",
-            "reference": "72a2e1793b35b035d3a8ee5fb2b44257f3b5bb10"
+            "reference": "03686a45b756b6dd06e1072b8950f534ea51f6e9"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/k2framework/activerecord/zipball/72a2e1793b35b035d3a8ee5fb2b44257f3b5bb10",
-            "reference": "72a2e1793b35b035d3a8ee5fb2b44257f3b5bb10",
+            "url": "https://api.github.com/repos/k2framework/activerecord/zipball/03686a45b756b6dd06e1072b8950f534ea51f6e9",
+            "reference": "03686a45b756b6dd06e1072b8950f534ea51f6e9",
             "shasum": ""
         },
-        "require": {
-            "k2/dependency-injection": "dev-master",
-            "k2/event-dispatcher": "dev-master"
-        },
-        "time": "2013-03-07 13:52:23",
+        "time": "2013-05-13 18:31:45",
         "type": "library",
         "installation-source": "source",
         "autoload": {
@@ -85,24 +38,65 @@
         ]
     },
     {
-        "name": "twig/twig",
+        "name": "k2/core",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/fabpot/Twig.git",
-            "reference": "4a49a3ae30ad2694057a63eccc3fb7b551b93e74"
+            "url": "https://github.com/k2framework/Core.git",
+            "reference": "c71e2c8e585cb61362adfe28dcf597e6174f73c8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/fabpot/Twig/zipball/4a49a3ae30ad2694057a63eccc3fb7b551b93e74",
-            "reference": "4a49a3ae30ad2694057a63eccc3fb7b551b93e74",
+            "url": "https://api.github.com/repos/k2framework/Core/zipball/c71e2c8e585cb61362adfe28dcf597e6174f73c8",
+            "reference": "c71e2c8e585cb61362adfe28dcf597e6174f73c8",
+            "shasum": ""
+        },
+        "require": {
+            "twig/twig": "1.*"
+        },
+        "time": "2013-05-13 19:18:42",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "K2\\": "src/"
+            }
+        },
+        "notification-url": "http://packagist.org/downloads/",
+        "license": [
+            "BSD"
+        ],
+        "authors": [
+            {
+                "name": "Manuel Aguirre",
+                "email": "programador.manuel@gmail.com"
+            }
+        ],
+        "description": "Core de KumbiaPHP versión K2 framework, trabaja con php 5.3 ó superior.",
+        "keywords": [
+            "framework"
+        ]
+    },
+    {
+        "name": "twig/twig",
+        "version": "v1.13.0",
+        "version_normalized": "1.13.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/fabpot/Twig.git",
+            "reference": "v1.13.0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/fabpot/Twig/zipball/v1.13.0",
+            "reference": "v1.13.0",
             "shasum": ""
         },
         "require": {
             "php": ">=5.2.4"
         },
-        "time": "2013-05-10 15:25:39",
+        "time": "2013-05-10 15:12:43",
         "type": "library",
         "extra": {
             "branch-alias": {

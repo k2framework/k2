@@ -6,8 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Twig_' => $vendorDir . '/twig/twig/lib',
-    'K2\\' => $vendorDir . '/k2/core/src',
-    'ActiveRecord\\' => $vendorDir . '/k2/activerecord/lib',
-    '' => $baseDir . '/app/modules',
+    'Twig_' => array($vendorDir . '/twig/twig/lib'),
+    'K2\\' => array($vendorDir . '/k2/core/src'),
+    'ActiveRecord\\' => array($vendorDir . '/k2/activerecord/lib'),
+    '' => array($baseDir . '/app/modules'),
 );
