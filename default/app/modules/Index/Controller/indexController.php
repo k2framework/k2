@@ -22,8 +22,12 @@ class indexController extends Controller
     public function index_action()
     {
         $form = $this->createForm(new \Index\Form\TestForm());
-        
-        var_dump($form);
+
+        $form->bind(array(
+            'apellido' => 'Aguirre',
+        ));
+
+        $this->form = $form->createView();
     }
 
     public function otro_action()
