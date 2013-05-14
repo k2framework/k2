@@ -1,7 +1,8 @@
 {#% extends "default.twig" %#}
 {% block content %}
 <form method="post" action="{{ url() }}">
-{{ form_field(form) }}
+{{ form_row(form) }}
+{{ form_label(form.estados) }}
         <input type="submit" />
 </form>
 {% endblock %}

@@ -23,9 +23,6 @@ class indexController extends Controller
     {
         $form = $this->createForm(new \Index\Form\TestForm());
 
-//        echo "<pre>";
-//        print_r($form->get('estados'));die;
-        
         if ($this->getRequest()->isMethod('POST')) {
             var_dump($this->getRequest()->request($form->getName()));
             $form->bind($this->getRequest());
