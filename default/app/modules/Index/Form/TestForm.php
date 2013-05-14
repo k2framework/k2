@@ -12,6 +12,18 @@ class TestForm extends \K2\Form\Field\AbstractField
             'label' => 'Estados',
             'options' => $e,
             'expanded' => true,
+            //'multiple' => true,
+        ));
+        $builder->add('estados2', 'choice', array(
+            'label' => 'Estados',
+            'options' => $e,
+            'expanded' => true,
+            'multiple' => true,
+        ));
+        $builder->add('estados_select', 'choice', array(
+            'label' => 'Estados',
+            'options' => $e,
+            //'multiple' => true,
         ));
     }
 
