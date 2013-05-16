@@ -29,7 +29,6 @@ class indexController extends Controller
         }
 
         $this->form = $form->createView();
-//        echo "<pre>";print_r($this->form, false);
     }
 
     public function otro_action()
