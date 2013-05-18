@@ -1,0 +1,34 @@
+{% extends "scaffolds/" ~ scaffold ~ "/base.twig" %}
+
+{% block scaffold_content %}
+{% if paginator.items %}
+    <table>
+        <thead><tr>
+                {% for e in model.metadata.attributes %}
+                    <th>{{ e.alias }}</th>
+                {% endfor %}
+                <th>Acciones</th>
+            </tr></thead>
+        <tbody>
+            {% for e in paginator.items %}
+                <tr>
+                    {% for property, attr in model.metadata.attributes %}
+                        <td>{{ attribute(e, property) }}</td>
+                    {% endfor %}
+                    <td>
+                        <a href="{{ url(action="ver", parameters=[e.id]) }}">Ver</a> |
+                        <a href="{{ url(action="editar", parameters=[e.id]) }}">Editar</a> |
+                        <a href="{{ url(action="borrar", parameters=[e.id]) }}" onclick="return confirm('¿Está seguro?')">Borrar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {#% include 'paginators/default.twig' with { page: paginator } %#}
+{% else %}
+        <h2>No hay ningún registro</h2>
+{% endif %}
+<div class="actions">
+    <a href="{{ url(action="crear") }}">Crear</a>
+</div>
+{% endblock %}

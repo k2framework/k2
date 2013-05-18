@@ -1,0 +1,13 @@
+{% extends "default.twig" %}
+
+{% block css %}
+{{ parent() }}
+<link rel="stylesheet" href="{{ asset('css/scaffold.css') }}" type="text/css" />
+{% endblock %}
+
+{% block content %}
+<div id="scaffold">
+    <h1>{{ basename(get_class(model))|title }}: <small>{{ app.context.action|title }}</small></h1>
+    {% block scaffold_content %}{% endblock %}
+</div>
+{% endblock %}

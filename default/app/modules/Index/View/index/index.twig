@@ -1,12 +1,5 @@
-{#% extends "default.twig" %#}
+{% extends "default.twig" %}
 {% block content %}
-<form method="post" action="{{ url() }}">
-{{ form_row(form) }}
-{{ form_label(form.estados) }}
-        <input type="submit" />
-</form>
-{% endblock %}
-{#% block content1 %}
 <h1>KumbiaPHP está listo para usarse</h1>
 <p><strong>Bienvenido a KumbiaPHP Framework</strong>. El framework ya está listo para desarrollar aplicaciones web con PHP, rápida y fácilmente, sin tener que reinventar la rueda, y preocupandose por lo más importante, la lógica de su aplicación.</p>
 <div class="row">    
@@ -25,7 +18,7 @@
         <h2>Ejemplos</h2>
         <p>Estos Son Algunos ejemplos que vienen con el framewrok:</p>
         <ul>
-            <li><a href="{{ url('demo/modelos') }}">Los Modelos</a></li>
+            <li><a href="{{ url(module = 'DemosModelos') }}">Los Modelos</a></li>
             <li><a href="{{ url(module = 'DemosUpload') }}">Subiendo Archivos</a></li>
             <li><a href="{{ url(module = 'DemosRouter') }}">Uso del Router</a></li>
             <li><a href="{{ url(module = 'DemosVistas') }}">Trabajando con Vistas</a></li>
@@ -34,4 +27,4 @@
         </ul>
     </div>
 </div>
-{% endblock %#}
+{% endblock %}

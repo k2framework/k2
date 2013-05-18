@@ -2,7 +2,7 @@
 
 namespace Scaffold\Controller;
 
-use \K2\Form\Form;
+use K2\Kernel\App;
 use K2\ActiveRecord\ActiveRecord;
 use K2\Kernel\Controller\Controller;
 
@@ -34,22 +34,20 @@ abstract class ScaffoldController extends Controller
     {
         $this->checkModel();
 
-        $this->model = $this->model->findByPK((int) $id);
+        $this->model = $this->model->findByID($id);
     }
 
     public function crear_action()
     {
         $this->checkModel();
 
-        $this->form = new Form($this->model, true);
-
         if ($this->getRequest()->isMethod('POST')) {
-            if ($this->form->bindRequest($this->getRequest())->isValid()) {
-                if ($this->form->getData()->save()) {
-                    $this->get('flash')->success("El registro fué exitoso");
-                    return $this->getRouter()->toAction('index');
-                }
-            }
+//            if ($this->form->bindRequest($this->getRequest())->isValid()) {
+//                if ($this->form->getData()->save()) {
+//                    App::get('flash')->success("El registro fué exitoso");
+//                    return $this->getRouter()->toAction('index');
+//                }
+//            }
         }
     }
 
@@ -58,7 +56,7 @@ abstract class ScaffoldController extends Controller
         $this->checkModel();
         $this->setView('crear');
 
-        if (!$model = $this->model->findByPK((int) $id)) {
+        if (!$model = $this->model->findByID($id)) {
             $this->renderNotFound("No existe el Registro");
         }
 
@@ -67,7 +65,7 @@ abstract class ScaffoldController extends Controller
         if ($this->getRequest()->isMethod('POST')) {
             if ($this->form->bindRequest($this->getRequest())->isValid()) {
                 if ($this->form->getData()->save()) {
-                    $this->get('flash')->success("El Guardado fué exitoso");
+                    App::get('flash')->success("El Guardado fué exitoso");
                     return $this->getRouter()->toAction('index');
                 }
             }
@@ -78,14 +76,14 @@ abstract class ScaffoldController extends Controller
     {
         $this->checkModel();
 
-        if (!$model = $this->model->findByPK((int) $id)) {
+        if (!$model = $this->model->findByID($id)) {
             $this->renderNotFound("No existe el Registro");
         }
 
-        if ($model->deleteByPK((int) $id)) {
-            $this->get('flash')->success("El Registro fué Eliminado");
+        if ($model->deleteByID($id)) {
+            App::get('flash')->success("El Registro fué Eliminado");
         } else {
-            $this->get('flash')->error("No se pudo eliminar el registro");
+            App::get('flash')->error("No se pudo eliminar el registro");
         }
 
         return $this->getRouter()->toAction('index');

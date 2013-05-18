@@ -2,7 +2,6 @@
 
 namespace Demos\Seguridad\Controller;
 
-use K2\Form\Form;
 use K2\Kernel\App;
 use K2\Security\Security;
 use K2\Kernel\Controller\Controller;
@@ -24,15 +23,9 @@ class indexController extends Controller
 
     public function login_action()
     {
-        $this->form = new Form('form_login');
-
-        $this->form->setAction('_autenticate')
-                ->add('username')->setLabel('Nombre de Usuario: ');
-
-        $this->form->add('password', 'password')->setLabel('Contraseña: ');
 
         if (App::get('session')->has(Security::LOGIN_ERROR)) {
-            $this->form->addError('TODO', App::get('session')->get(Security::LOGIN_ERROR));
+            App::get('flash')->error(App::get('session')->get(Security::LOGIN_ERROR));
             App::get('session')->delete(Security::LOGIN_ERROR);
         }
     }

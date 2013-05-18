@@ -6,5 +6,11 @@
 {%  endblock %}
 
 {% block content %}
-{{ form|raw }}
+<form method="post" action="{{ url() }}">
+    {{ form_label('login.username', 'Nombre de Usuario: ') }}
+    {{ form_input('login.username') }}<br/>
+    {{ form_label('login.password', 'Contraseña: ') }}
+    {{ form_input('login.password', 'password') }}<br/>
+    <input type="submit" class="btn" value="Iniciar Sesión" />
+</form>
 {% endblock %}
