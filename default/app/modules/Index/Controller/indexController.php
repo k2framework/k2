@@ -21,7 +21,7 @@ class indexController extends Controller
 
     public function index_action()
     {
-        $form = $this->createForm(new \Index\Form\TestForm());
+        $form = $this->createForm(new \Index\Form\TestForm(), array('estados' => array('2')));
 
         if ($this->getRequest()->isMethod('POST')) {
             var_dump($this->getRequest()->request($form->getName()));

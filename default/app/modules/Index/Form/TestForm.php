@@ -7,7 +7,7 @@ class TestForm extends \K2\Form\Field\AbstractField
 
     public function build(\K2\Form\FormBuilder $builder, array $options = array())
     {
-        $e = array('Aragua', 'Falcon', 'Merida');
+        $e = array( 1=> 'Aragua', 'Falcon', 'Merida');
         $builder->add('estados', 'choice', array(
             'label' => 'Estados',
             'options' => $e,
