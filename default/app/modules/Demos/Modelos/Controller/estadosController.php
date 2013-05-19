@@ -2,14 +2,14 @@
 
 namespace Demos\Modelos\Controller;
 
-use Demos\Modelos\Model\Usuarios;
+use Demos\Modelos\Model\Estados;
 use Scaffold\Controller\ScaffoldController;
 
-class indexController extends ScaffoldController
+class estadosController extends ScaffoldController
 {
     
     protected function beforeFilter()
     {
-        $this->model = new Usuarios();
+        $this->model = new Estados();
     }
 }

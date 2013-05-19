@@ -41,14 +41,13 @@ abstract class ScaffoldController extends Controller
     public function crear_action()
     {
         $this->checkModel();
-        
+
         $this->form = new FormConfig($this->model);
 
         if ($this->getRequest()->isMethod('POST')) {
 
             App::get('mapper')->bindPublic($this->model, 'model');
 
-            var_dump($this->model);
         }
     }
 
@@ -56,23 +55,22 @@ abstract class ScaffoldController extends Controller
     {
         $this->checkModel();
 
+        $this->setView('crear');
 
         if (!$this->model = $this->model->findByID($id)) {
             $this->renderNotFound("No existe el Registro");
         }
-        
+
         $this->form = new FormConfig($this->model);
 
         if ($this->getRequest()->isMethod('POST')) {
+
             App::get('mapper')->bindPublic($this->model, 'model');
 
-            var_dump($this->model);
-//            if ($this->form->bindRequest($this->getRequest())->isValid()) {
-//                if ($this->form->getData()->save()) {
-//                    App::get('flash')->success("El Guardado fué exitoso");
-//                    return $this->getRouter()->toAction('index');
-//                }
-//            }
+            if ($this->model->save()) {
+                App::get('flash')->success("El Guardado fué exitoso");
+                return $this->getRouter()->toAction('index');
+            }
         }
     }
 
