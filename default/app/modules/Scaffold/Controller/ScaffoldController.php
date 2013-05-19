@@ -48,6 +48,10 @@ abstract class ScaffoldController extends Controller
 
             App::get('mapper')->bindPublic($this->model, 'model');
 
+            if ($this->model->save()) {
+                App::get('flash')->success("El Guardado fué exitoso");
+                return $this->getRouter()->toAction('index');
+            }
         }
     }
 
