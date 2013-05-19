@@ -42,33 +42,31 @@ abstract class ScaffoldController extends Controller
         $this->checkModel();
 
         if ($this->getRequest()->isMethod('POST')) {
-//            if ($this->form->bindRequest($this->getRequest())->isValid()) {
-//                if ($this->form->getData()->save()) {
-//                    App::get('flash')->success("El registro fué exitoso");
-//                    return $this->getRouter()->toAction('index');
-//                }
-//            }
+            
+            App::get('mapper')->bindPublic($this->model, 'model');
+            
+            var_dump($this->model);
         }
     }
 
     public function editar_action($id)
     {
         $this->checkModel();
-        $this->setView('crear');
 
         if (!$model = $this->model->findByID($id)) {
             $this->renderNotFound("No existe el Registro");
         }
 
-        $this->form = new Form($model, true);
-
         if ($this->getRequest()->isMethod('POST')) {
-            if ($this->form->bindRequest($this->getRequest())->isValid()) {
-                if ($this->form->getData()->save()) {
-                    App::get('flash')->success("El Guardado fué exitoso");
-                    return $this->getRouter()->toAction('index');
-                }
-            }
+            App::get('mapper')->bindPublic($this->model, 'model');
+            
+            var_dump($this->model);
+//            if ($this->form->bindRequest($this->getRequest())->isValid()) {
+//                if ($this->form->getData()->save()) {
+//                    App::get('flash')->success("El Guardado fué exitoso");
+//                    return $this->getRouter()->toAction('index');
+//                }
+//            }
         }
     }
 

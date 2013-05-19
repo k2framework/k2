@@ -2,6 +2,7 @@
 
 namespace Index\Controller;
 
+use K2\Kernel\App;
 use K2\Kernel\Controller\Controller;
 
 /**
@@ -16,7 +17,10 @@ class pagesController extends Controller
 
     public function show_action()
     {
-        $this->setView(implode('/', $this->parameters));
+        $module = App::getContext('module');
+        $view = '@' . $module['name'] . '/pages/' . join('/', $this->parameters);
+        
+        $this->setView($view);
     }
 
 }

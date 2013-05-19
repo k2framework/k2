@@ -1,7 +1,15 @@
 {% extends "scaffolds/" ~ scaffold ~ "/base.twig" %}
 
 {% block scaffold_content %}
-{{ dump(model.metadata.attributes|keys) }}
+<form method="post" action="{{ url() }}">
+{% for property, attr in model.metadata.attributes %}
+    {% if property != 'id' %}
+        {{ form_label('model.' ~ property, attr.alias|title) }}
+        {{ form_input('model.' ~ property) }}<br/>
+    {% endif %}
+{% endfor %}
+<input type="submit" value="Guardar" class="btn" />
+</form>
 <div class="actions">
     <a href="{{ url(action="index") }}">Listado</a>
 </div>

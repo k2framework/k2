@@ -1,0 +1,26 @@
+{% extends "default.twig" %}
+{% block content %}
+
+{% set config = call_user_func('K2\\Kernel\\App::getParameter', 'config') %}
+
+{{ strftime("%d de %B del %Y") }}<br />
+<h2>config.ini <span class='app'> de {{ basename(dirname(constant('APP_PATH'))) }}</span></h2>
+
+<h4>Estado Actual del Framework: <span>{{ constant('PRODUCTION') ? 'Preducción' : 'Desarrollo' }}</span></h4>
+
+<h4>Base de Datos: <span>{{ config.database }}</span></h4>
+<p>Datos de la conexión a la BD que será utilizada, ver configuración <a href="http://wiki.kumbiaphp.com/KumbiaPHP_Framework_Versi%C3%B3n_1.0_Spirit#databases.ini">databases.ini</a>.</p>
+
+<h4>Charset: <span>{{ config.charset }}</span></h4>
+<p>Codificación de caracteres. Recomendado UTF-8</p>
+
+<h4>TimeZone: <span{{ config.timezone|default(date_default_timezone_get()) }}</span></h4>
+<p>Zona horaria que usará el Framework.</p>
+
+<h4>Cache Driver: <span>{{ config.cache|default('No ha seleccionado un driver para la cache') }}</span></h4>
+<p>Driver que se utilizara para realizar las operaciones de cache.</p>
+
+<h4>Locale: <span>{{ config.locales|default('No se están usando locales') }}</span></h4>
+<p>Localización. Característica que depende de los locale instalado en el servidor.</p>
+
+{% endblock %}
