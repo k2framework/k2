@@ -3,6 +3,7 @@
 namespace Scaffold\Controller;
 
 use K2\Kernel\App;
+use K2\Scaffold\FormConfig;
 use K2\ActiveRecord\ActiveRecord;
 use K2\Kernel\Controller\Controller;
 
@@ -40,11 +41,13 @@ abstract class ScaffoldController extends Controller
     public function crear_action()
     {
         $this->checkModel();
+        
+        $this->form = new FormConfig($this->model);
 
         if ($this->getRequest()->isMethod('POST')) {
-            
+
             App::get('mapper')->bindPublic($this->model, 'model');
-            
+
             var_dump($this->model);
         }
     }
@@ -53,13 +56,16 @@ abstract class ScaffoldController extends Controller
     {
         $this->checkModel();
 
-        if (!$model = $this->model->findByID($id)) {
+
+        if (!$this->model = $this->model->findByID($id)) {
             $this->renderNotFound("No existe el Registro");
         }
+        
+        $this->form = new FormConfig($this->model);
 
         if ($this->getRequest()->isMethod('POST')) {
             App::get('mapper')->bindPublic($this->model, 'model');
-            
+
             var_dump($this->model);
 //            if ($this->form->bindRequest($this->getRequest())->isValid()) {
 //                if ($this->form->getData()->save()) {

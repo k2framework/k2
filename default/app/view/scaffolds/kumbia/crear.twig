@@ -2,12 +2,7 @@
 
 {% block scaffold_content %}
 <form method="post" action="{{ url() }}">
-{% for property, attr in model.metadata.attributes %}
-    {% if property != 'id' %}
-        {{ form_label('model.' ~ property, attr.alias|title) }}
-        {{ form_input('model.' ~ property) }}<br/>
-    {% endif %}
-{% endfor %}
+{{ form|raw }}
 <input type="submit" value="Guardar" class="btn" />
 </form>
 <div class="actions">
