@@ -22,13 +22,14 @@ h1,h2,h3{color:#333}
 img, object, embed{max-width:100%;height:auto}
 img{-ms-interpolation-mode:bicubic}
 /************Kumbia*******************/
-header{background:#300}
+header+.row{padding-top: 60px}
+header{background:#17325C}
 footer{margin-top:1em;padding-top:1em;border-top:1px solid #ccc;background:#efefef}
 #content{margin-top:50px}
 .logo{color:red;font-weight:700;text-transform:uppercase;letter-spacing:3px;font-size:1.3em;line-height:47px;text-decoration:none;display:block;padding:0 1em}
-.container-top{color:#fff;margin-bottom:1em;padding:4px 0}
-.container-top a{color:#FA0;text-decoration:none}
-.container-top h1, .container-top h2{color:#FA0;margin:6px}
+.container-top{color:#fff;margin-bottom:1em;padding:4px 0;position: fixed;width: 100%;top: 0}
+.container-top a{color:#FFF;text-decoration:none}
+.container-top h1, .container-top h2{color:#FFF;margin:6px}
 .container-bottom{margin-bottom:50px}
 /* Formatea los mensajes Flash::xxx() de KumbiaPHP */
 .flash{padding:8px 10px 8px 50px;margin-bottom:20px;color:#c09853;text-shadow:0 1px 0 rgba(255,255,255,0.5);background-color:#fcf8e3;border:1px solid #fbeed5;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;background-repeat:no-repeat;background-position:10px center}
