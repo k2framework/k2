@@ -1,67 +1,12 @@
-.exception_file { font-size: 0.9em; color: black; }
-
-.exception_title {margin: 1em 0.5em 0.5em 0.5em; font-weight: bold; text-align: left; font-size: 0.8em;}
-
-.exception_trace { 
-    border-collapse: collapse; 
-    background-color: white; 
-    border: solid gray 1px;
-    font-size: 1em;
-}
-.trace .exception_trace{display: none}
-
-.exception_trace_number, .exception_highlight { font-weight: bold;}
-
-.exception_trace_number { background-color: #C0C0C0; }
-
-.exception_line { padding-left: 1em; }
-
-.exception_highlight { background-color: #ffdddd; width: 100%; }
-
+.exception_trace {border: solid gray 1px;font-size: 1em;overflow: auto;border-radius: 5px}
+.trace .exception_trace{display: none;margin: 10px 30px}
+.exception_highlight {background-color: #F1F1C4;font-weight: bold}
 .trace{cursor: pointer}
-
-.exception{
-    padding:1em;
-}
-.round{
-    border-radius: 5px;
-}
-.exception h1 {
-    text-shadow:1px 1px 1px rgba(0, 0, 0, 0.4);
-}
-.exception h2 {
-    background-color: #D1C2A3;
-    padding:.2em;
-    margin: 1em 0 .3em;
-    color:rgb(138, 111, 92);
-    border-radius: 5px;
-    text-shadow:1px 1px 1px rgba(255, 255, 255, 0.8);
-}
-.exception em {
-    color: black;
-}
-.solution {
-    background-color: lime;
-}
-pre {
-    background-color: #eee;
-    padding: 1em;
-    border:1px solid #ccc;
-    color: #000;
-    margin: 1em 0;
-
-}
-.exception table {
-    width: 100%;
-    border-spacing: 2px 2px;
-    color: rgb(138, 111, 92);
-}
-.exception thead {
-    background-color: #D1C2A3;
-}
-.exception tr {
-    border-bottom:1px solid #D1C2A3;
-}
-.exception td{
-    padding: .2em .2em;
-}
+.exception{padding:1em;}
+.exception h2 {background-color: #17325C;padding: 6px;margin: 10px 0 10px;color:#fff;border-radius: 5px;text-shadow:1px 1px 1px rgba(255, 255, 255, 0.8)}
+.exception em {color: black;}
+.solution {background-color: lime;}
+.well{background-color: #EFEFEF;border-radius: 5px;padding: 20px;margin-bottom: 10px;color: #17325C;border: 1px solid #B6B6B6}
+.trace.well{padding: 10px;color: #222}
+code{white-space: nowrap}
+.exception table{width: 100%;color: #000;background-color: #EFEFEF;border: 1px solid #B6B6B6;border-radius: 10px;margin-top: 10px}
