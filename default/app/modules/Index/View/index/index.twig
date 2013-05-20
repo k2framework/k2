@@ -1,9 +1,9 @@
 {% extends "default.twig" %}
 {% block content %}
-<h1>KumbiaPHP está listo para usarse</h1>
-<p><strong>Bienvenido a KumbiaPHP Framework</strong>. El framework ya está listo para desarrollar aplicaciones web con PHP, rápida y fácilmente, sin tener que reinventar la rueda, y preocupandose por lo más importante, la lógica de su aplicación.</p>
-<div class="row">    
-    <div class="span6">
+<h1>K2framewrok está listo para usarse</h1>
+<p><strong>Bienvenido a K2Framework</strong>. El framework ya está listo para desarrollar aplicaciones web con PHP, rápida y fácilmente, sin tener que reinventar la rueda, y preocupandose por lo más importante, la lógica de su aplicación.</p>
+<div class="row">
+    <div class="span{{ constant('PRODUCTION') ? 12 : 6 }}">
         <h2>Como empezar</h2>
         <p>Puedes ver la <a href="https://github.com/manuelj555/k2/tree/master/doc#indice-de-contenidos">Documentación en linea</a> donde está la sección <a href="https://github.com/manuelj555/k2/tree/master/doc#preguntas-frecuentes">Preguntas Frecuentes</a> y encontrarás información actualizada sobre el uso del framework, tambien puede interesarte saber sobre:</p>
         <ul>
@@ -14,6 +14,7 @@
             <li><a href="https://github.com/manuelj555/k2/blob/master/doc/los_modulos.rst#instalando-modulos-de-terceros">¿Cómo Instalar un Módulo de Terceros?</a></li>
         </ul>
     </div>
+    {% if constant('PRODUCTION') == false %}
     <div class="span5 pull-right">
         <h2>Ejemplos</h2>
         <p>Estos Son Algunos ejemplos que vienen con el framewrok:</p>
@@ -26,5 +27,6 @@
             <li><a href="{{ url(module = 'DemosSeguridad') }}">Autenticación</a></li>
         </ul>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

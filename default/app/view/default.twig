@@ -2,7 +2,7 @@
 <html lang="es">
     <head>
         <meta charset="{{ _charset }}" />
-        <title>KumbiaPHP web &amp; App Framework</title>
+        <title>K2Framework</title>
         {% block css %}
         <link rel="stylesheet" href="{{ asset('css/structure.css') }}" type="text/css" />
         {% endblock %}
@@ -10,13 +10,8 @@
     <body>
         {% block body %}
         <header class="container-top">
-            <div class="row">
-                <h1><a href="{{ url('') }}">KumbiaPHP</a>
-                    <small>web & app Framework versión K2
-                        <a href="{{ url('pages/show/kumbia/status') }}" class="pull-right">Config</a>
-                    </small>
-                </h1>             
-            </div>
+            <div class="row"><h1><a href="{{ url('') }}">K2Framework</a><small>
+                <a href="{{ url('pages/show/kumbia/status') }}" class="pull-right">Config</a></small></h1>                          </div>
         </header>
         <div class="row">
             {% include 'messages.twig' %}
