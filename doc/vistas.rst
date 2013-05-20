@@ -53,3 +53,8 @@ Las vistas para ese controlador deben ir en:
 	* **Compras/View/articulos/index.twig**
 	* **Compras/View/articulos/ver.twig**
 	* **Compras/View/articulos/agregar.twig**
+	
+Twig
+====
+
+Para las vistas se usa el motor de plantillas `Twig <http://twig.sensiolabs.org/>`_, el cual ofrece una serie de caracteristicas que facilitan y mejoran el trabajo de construcción de páginas html, xml, json, etc, mediante el uso de una sintaxis sencilla, con funciones, filtros, y etiquetas que brindan potencia en la creación de dichas vistas.
