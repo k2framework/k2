@@ -1,4 +1,4 @@
-.exception_trace {border: solid gray 1px;font-size: 1em;overflow: auto;border-radius: 5px}
+.exception_trace {border: solid gray 1px;font-size: 1em;overflow: auto;border-radius: 5px;background-color: #fff;padding: 5px}
 .trace .exception_trace{display: none;margin: 10px 30px}
 .exception_highlight {background-color: #F1F1C4;font-weight: bold}
 .trace{cursor: pointer}
