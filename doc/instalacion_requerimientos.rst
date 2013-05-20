@@ -12,10 +12,7 @@ Estos son los tres requermientos básicos para poder Trabajar con K2Framework.
 Instalación
 ==========
 
-K2Framework se descarga mediante composer, ó como un proyecto GIT:
-
-Mediante Composer
---------
+K2Framework se descarga mediante composer, estos son los pasos:
 
 1. Descargar el proyecto como un .zip y descomprimir en el directorio public del servidor web
 2. Descargar e instalar `composer <http://getcomposer.org/>`_
@@ -24,12 +21,3 @@ Mediante Composer
 ::
     
     composer install
-    
-Mediante GIT
----------
-
-Descargar como un proyecto GIT usando el siguiente comando:
-
-::
-
-    git clone --recursive git://github.com/k2framework/k2.git carpeta_proyecto
