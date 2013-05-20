@@ -17,12 +17,12 @@ Ejemplo de este tipo de módulos son, un servicio de correo, un ACL, un traducto
 Nombre del Módulo
 -----------------
 
-Un módulo puede contener cualquier nombre válido como el que le damos a nuestras carpetas en el sistema, ya que por defecto el nonmbre del módulo va de la mano con el nombre de las carpetas que lo contienen.
+Un módulo puede contener cualquier nombre válido como el que le damos a nuestras carpetas en el sistema, ya que por defecto el nombre del módulo va de la mano con el nombre de las carpetas que lo contienen.
 
 Creando un Modulo
 -----------------
 
-Generalmente los módulos de nuestra aplicación estarán contenidos en la carpeta **"proyecto/app/modules/"**, sin embargo un módulo puede estar en cualquier parte del servidor, ya que los módulos deben ser registrados en el `AppKernel <app_kernel.rst>`_ para poder tener acceso a ellos.
+Generalmente los módulos de nuestra aplicación estarán contenidos en la carpeta **"proyecto/app/modules/"**, sin embargo un módulo puede estar en cualquier parte del servidor, ya que los módulos deben ser registrados en el `app/app.php <app.rst>`_ para poder tener acceso a ellos.
 
 Un ejemplo básico de la estructura de un módulo es:
 
@@ -59,139 +59,101 @@ Un ejemplo básico de la estructura de un módulo es:
 		
 Como podemos ver en el ejemplo tenemos un módulo llamado Ventas que contiene una serie de carpetas ( Ninguna de las carpetas es obligatoria ), de las cuales las carpetas Controller y View deben tener siempre esos nombres, ya que el framework busca los controladores y vistas dentro de las mismas. La carpeta Model contendrá los modelos, realmente no importa el nombre de la carpeta que contiene los modelos ó si estos se encuentran en carpeta alguna, ya que el autoload PSR-0 los buscará a traves de su namespace. Tambien tenemos una carpeta llamada MisServicios, donde su nombre no es relevante, y contiene los servicios que posee el módulo.
 
-Ademas tenemos un archivo Module.php el cual es una clase debe extender obligatoriamente de **K2\\Kernel\\Module** y en esta podremos definir las configuraciones y servicios de nuestro módulo.
+Ademas tenemos un archivo config.php el cual contiene la definición y la configuración del módulo.
 
-La clase Module
+EL archivo config.php
 ===============
 
-Esta clase es obligatoria en cada módulo que creemos, puede tener cualquier nombre, y debe extender de **K2\\Kernel\\Module** ademas debe estar colocada en la raiz del módulo, es decir a la altura de las carpetas Controller, View, etc...
+Este archivo es obligatorio en cada módulo que creemos, puede tener cualquier nombre, y debe estar colocado en la raiz del módulo, es decir a la altura de las carpetas Controller, View, etc...
 
-En ella podremos registrar parametros y servicios en el contenedor, ademas agregar escuchas de eventos y configuraciones adicionales para el módulo que se crea.
+En el podremos registrar parametros y servicios en el contenedor, ademas agregar escuchas de eventos y configuraciones adicionales para el módulo que se crea.
 
 **Ejemplo:**
 
 .. code-block:: php
 
     <?php
-
+    
     namespace K2\Ventas;
+    
+    use K2\Di\Container\Container;
+    use K2\Kernel\Event\K2Events as E;
+    use K2\Security\Event\Events as SE;
+    
+    return array(
+        'name' => 'Index', //nombre lógico del módulo
+        'namespace' => __NAMESPACE__, //el namespace que usa el módulo
+        'path' => __DIR__, //el direcorito del módulo
+        'parameters' => array(
+            //parametros que serán insertados en el Container
+        ),
+        'services' => array(
+            //servicios que ofrece el módulo
+            'mi_servicio' => function(Container $c) {
+                return new Services\Servicio($c);
+            }
+        ),
+        'listeners' => array( //escuchas de eventos 
+            SE::LOGIN => array(
+                array('mi_servicio', 'onLogin')
+            ),
+            SE::LOGOUT => array(
+                array('mi_servicio', 'cerrandoSesion')
+            ),
+        ),
+        'init' => function(Container $c) { //configuración adicional del módulo
+            //agregamos el servicio firewall al container
+            $c->set('firewall', function($c) {
+                        return new \K2\Security\Listener\Firewall($c);
+                    });
+            //hacemos que el firewall escuche las peticiones
+            $c['event.dispatcher']->addListener(E::REQUEST, array('firewall', 'onKernelRequest'), 100);
+        },
+    );
 
-    use K2\Kernel\Module;
+En este ejemplo hemos creado un archivo **K2/Ventas/config.php**, en el cual definimos el nombre lógico de módulo, el namespace del mismo, los servicios, parametros y escuchas de eventos, y ademas alguna configuración adicional en el indice **'init'** el cual tiene como valor un clousure que espera el Container.
 
-    class VentasModule extends Module
-    {
+Nombres de Módulos
 
-        //podemos reescribir el método init() para realizar configuraciones
-        //en el módulo.
-        public function init()
-        {
-            //acá registramos un servicio en el container
-            $this->container->set('mi_servicio', function($c) {
-                return new K2\Ventas\Servicio(); //devolvemos la instancia para el servicio
-            });
-        }
-
-    }
-
-En este ejemplo hemos creado una clase en K2/Ventas/VentasModule.php la cual extiende de K2\\Kernel\\Module y reescribe el método init(), lo cual no es obligatorio, solo lo reescribimos cuando queremos agregar configuración adicional como servicios ó parametros en el proyecto.
-
-**Ejemplo de Nombres de Modulos**
-
-Acá tenemos un ejemplo de la asociación entre el nombre del módulo y el espacio de nombre al que está asociado:
-
-+----------------------------+-------------------------------------------------+
-|     Nombre del Módulo      |  Ejemplos de espacios de nombres de la clases   |
-+----------------------------+-------------------------------------------------+
-|                            |  * K2\Backend\Controller\indexController        |
-|                            |  * K2\Backend\Controller\usuariosController     |
-|         K2/Backend         |  * K2\Backend\Model\Usuarios                    |
-|                            |  * K2\Backend\Model\RolesRecursos               |
-|                            |  * K2\Backend\Form\UsuarioForm                  |
-+----------------------------+-------------------------------------------------+
-|                            |  * K2\Calendar\Controller\indexController       |
-|        K2/Calendar         |  * K2\Calendar\Controller\eventController       |
-|                            |  * K2\Calendar\Model\Event                      |
-+----------------------------+-------------------------------------------------+
-|        K2/Debug            |  * K2\Debug\Service\Debug                       | 
-+----------------------------+-------------------------------------------------+
-
-Como se puede apreciar el nombre del módulo es tambien el inicio de los namespace en las clases.
-
-Ahora, porque llamar al módulo **K2/Backend** y no simplemente **Backend**? Esto es así para asegurar que si otra persona ó empresa crea un módulo con el mismo nombre, no existan conflictos, es decir, si el módulo se llamara solo Backend y otra persona crea un módulo llamado Backend tambien, al intentar usar los 2 módulos en la aplicación se generarán conflictos de nombres en los namespaces, ademas no se podrán registrar los 2 módulos al mismo tiempo en el AppKernel.
+Generalmente los módulos tendrán asociado un vendor delante del nombre de los mismos, esto es asó debido a que si otra persona ó empresa crea un módulo con el mismo nombre, no existan conflictos, es decir, si el módulo se llamara solo Backend por ejemplo y otra persona crea un módulo llamado Backend tambien, al intentar usar los 2 módulos en la aplicación se generarán conflictos de nombres en los namespaces.
 
 Lo mejor siempre será entonces llamara al módulo con un identificador del usuario, grupo ó empresa delante del nombre del módulo, ejemplos:
 
-	* **K2/Backend**: el módulo es un backend del grupo K2
-	* **Manuel/Backend**: el módulo es un backend de manuel
-	* **KumbiaPHP/Backend**: el módulo es un backend de KumbiaPHP
+	* **K2Backend**: el módulo es un backend del grupo K2
+	* **ManuelBackend**: el módulo es un backend de manuel
 
 Instalando Modulos de Terceros
 ------------------------------
 
-En esta nueva versión es muy facil instalar y configurar módulos de otras personas, ya sea para agregar alguna funcionalidad a la aplicación, ó para usar algun tipo de libreria creada por la comunidad.
+Es muy facil instalar y configurar módulos de otras personas, ya sea para agregar alguna funcionalidad a la aplicación, ó para usar algun tipo de libreria creada por la comunidad.
 
 Solo debemos descargar dicho módulo y colocarlo en la carpeta vendors de la aplicación si no vamos a editar el código del módulo, ó en la carpeta modules de la aplicación si vamos a editar dicho módulo.
 
-Luego de esto debemos registrar el módulo en el archivo `app/AppKernel.php <https://github.com/k2framework/k2/blob/master/doc/app_kernel.rst>`_, ** en el método `registerModules() <https://github.com/k2framework/k2/blob/master/doc/app_kernel.rst#el-metodo-registermodules>`_.
+Luego de esto debemos registrar el módulo en el archivo `app/config/app.php <https://github.com/k2framework/k2/blob/master/doc/app.rst>`_.
 
-En el registerModules()
+Registrando el módulo
 _________________________
 
-Cuando queremos agregar un módulo a nuestra aplicación debemos hacerlo en el método registerModules().
+Cuando queremos agregar un módulo a nuestra aplicación debemos hacerlo en el archivo **app/config/app.php**.
 
 Veamos un ejemplo de como lograr esto::
 
     Queremos instalar el módulo (plugin) K2/Twitter, el cual nos ofrece un api de conexión con twitter.
 
-    veamos como agregarlo al AppKernel, suponiendo que lo colocamos en vendor:
+    veamos como agregarlo al app/config/app.php, suponiendo que lo colocamos en vendor:
 
 .. code-block:: php
 
-    protected function registerModules()
-    {
-        $modules = array(
-            new \Index\IndexModule(),
-            new \K2\Twitter\TwitterModule(), //esta clase debe estar en la raiz del módulo
-        );
-        
-    }
-
-    
-    $loader->add('K2\\Twitter\\', __DIR__ . '/../../vendor/'); //lo registramos ademas en el autoload.
+    /* * *****************************************************************
+     * Iinstalación de módulos
+     */
+    App::modules(array(
+        '/' => include APP_PATH . '/modules/Index/config.php',
+        '/twitter' => include dirname(APP_PATH) . '/vendor/K2/Twitter/config.php',
+    ));
 
 
-
-Con esto ya tenemos instalado el módulo en la aplicación.
-
-
-En el registerRoutes()
-_____________________
-
-Si el módulo que acabamos de registrar es accesible desde el navegador, debemos crear un prefijo de ruta para poder acceder a el, esto lo hacemos en el método registerRoutes()
-
-.. code-block:: php
-
-    //archivo AppKernel.php
-    //estamos registrando el módulo K2/Backend, 
-    //ademas le asignamos el prefijo de ruta /admin
-    //por lo que toda ruta que comienze con /admin* cargará ese módulo.
-
-    protected function registerModules()
-    {
-        $modules = array(
-            new \Index\IndexModule(),
-            new \K2\Backend\Backend(), //esta clase debe estar en la raiz del módulo
-        );
-        ...
-    }
-    protected function registerRoutes()
-    {
-        return array(
-            '/'                 => 'Index',
-            ...
-            '/admin'                 => 'K2/Backend',
-        );
-    }
+Si el módulo que acabamos de registrar es accesible desde el navegador, el indice del mismo será usado como prefijo de ruta para acceder a los controladores del mismo. Si no queremos que sea accesible desde el navegador, no le colocamos ningun incide.
 
 Donde debo colocar Los Modulos
 ------------------------------
