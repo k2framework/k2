@@ -1,5 +1,5 @@
 Los Modulos
-===========
+========
 
 .. contents:: En esta nueva versión de KumbiaPHP, la aplicación está constituida por módulos ó paquetes.
 
@@ -23,16 +23,16 @@ Un módulo puede contener cualquier nombre válido como el que le damos a nuestr
 Creando un Modulo
 -----------------
 
-Generalmente los módulos de nuestra aplicación estarán contenidos en la carpeta "proyecto/app/modules/", sin embargo un módulo puede estar en cualquier parte del servidor, ya que los módulos deben ser registrados en el `AppKernel <app_kernel.rst>`_ para poder tener acceso a ellos.
+Generalmente los módulos de nuestra aplicación estarán contenidos en la carpeta **"proyecto/app/modules/"**, sin embargo un módulo puede estar en cualquier parte del servidor, ya que los módulos deben ser registrados en el `AppKernel <app_kernel.rst>`_ para poder tener acceso a ellos.
 
 Un ejemplo básico de la estructura de un módulo es:
 
 ::
 	
 	K2/Ventas
-           |
-           |---VentasModule.php
-           |
+       |
+       |---config.php
+       |
 	   |---Controller
 	   |	   |-------indexController.php
 	   |	   |-------reportesController.php
@@ -41,23 +41,21 @@ Un ejemplo básico de la estructura de un módulo es:
 	   |	   |-------Ventas.php
 	   |
 	   |-----View
-	   |	   |-------Ventas
-	   |	   |	       |----ultimas.phtml
-	   |	   |	       |----agregar.phtml
-	   |	   |	       |----eliminar.phtml
-	   |	   |-------Reportes
-	   |	   |	       |----ventas_semanales.phtml
-	   |	   |	       |----ventas_hoy.phtml
-	   |	   |-------_shared
-	   |	   	        |----errors
-	   |			|----templates
-	   |----MisServicios    |----partiales	
-	    	   |		|----....
+	   |	   |-------ventas
+	   |	   |	       |----ultimas.twig
+	   |	   |	       |----agregar.twig
+	   |	   |	       |----eliminar.twig
+	   |	   |-------reportes
+	   |	    	       |----ventas_semanales.twig
+	   |	    	       |----ventas_hoy.twig
+	   |
+	   |----MisServicios  	
+	    	   |	
 	    	   |		
 	    	   |
 	    	   |
-	   	   |-----GestorVentas.php
-	   	   |-----ImpresorVentas.php
+	   	       |-----GestorVentas.php
+	   	       |-----ImpresorVentas.php
 
 		
 Como podemos ver en el ejemplo tenemos un módulo llamado Ventas que contiene una serie de carpetas ( Ninguna de las carpetas es obligatoria ), de las cuales las carpetas Controller y View deben tener siempre esos nombres, ya que el framework busca los controladores y vistas dentro de las mismas. La carpeta Model contendrá los modelos, realmente no importa el nombre de la carpeta que contiene los modelos ó si estos se encuentran en carpeta alguna, ya que el autoload PSR-0 los buscará a traves de su namespace. Tambien tenemos una carpeta llamada MisServicios, donde su nombre no es relevante, y contiene los servicios que posee el módulo.
@@ -158,10 +156,10 @@ Veamos un ejemplo de como lograr esto::
             new \Index\IndexModule(),
             new \K2\Twitter\TwitterModule(), //esta clase debe estar en la raiz del módulo
         );
-        ...
+        
     }
 
-    ...
+    
     $loader->add('K2\\Twitter\\', __DIR__ . '/../../vendor/'); //lo registramos ademas en el autoload.
 
 
