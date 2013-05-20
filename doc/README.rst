@@ -18,8 +18,6 @@ Lo Básico
 Servicios
 ---------
 
-  * `@app.context <https://github.com/k2framework/k2/blob/master/doc/servicios/app_context.rst>`_
-  * `@cache <https://github.com/k2framework/k2/blob/master/doc/servicios/cache.rst>`_
   * `@container <https://github.com/k2framework/k2/blob/master/doc/servicios/container.rst>`_
   * `@firewall <https://github.com/k2framework/k2/blob/master/doc/servicios/seguridad.rst>`_
   * `@flash <https://github.com/k2framework/k2/blob/master/doc/servicios/flash.rst>`_
@@ -42,7 +40,6 @@ Preguntas Frecuentes
   * `¿Cómo crear un Scaffold? <https://github.com/k2framework/k2/blob/master/doc/ejemplos/scaffold.rst>`_
   * `¿Cómo hacer una redirección en el controlador? <https://github.com/k2framework/k2/blob/master/doc/servicios/router.rst#ejemplo-basico>`_
   * `¿Cómo enviar un mensaje FLASH? <https://github.com/k2framework/k2/blob/master/doc/servicios/flash.rst#ejemplo-de-uso>`_
-  * `¿Cómo seleccionar el template a usar en mi controlador? <https://github.com/k2framework/k2/blob/master/doc/controlador.rst#settemplate>`_
   * `¿Cómo seleccionar la vista a usar en mi controlador? <https://github.com/k2framework/k2/blob/master/doc/controlador.rst#setview>`_
   * `¿Cómo crear un servicio? <https://github.com/k2framework/k2/blob/master/doc/servicios.rst#definiendo-un-servicio>`_
   * `¿Cómo crear Ecuchar un Evento? <https://github.com/k2framework/k2/blob/master/doc/servicios.rst#como-escuchar-un-evento>`_
@@ -53,6 +50,5 @@ Preguntas Frecuentes
   * `¿Cómo instalar un módulo de terceros? <https://github.com/k2framework/k2/blob/master/doc/los_modulos.rst#instalando-modulos-de-terceros>`_
   * `¿Cómo obtengo un valor que viene por POST? <https://github.com/k2framework/k2/blob/master/doc/request.rst#el-metodo-get>`_
   * `¿Cómo obtengo un valor que viene por GET? <https://github.com/k2framework/k2/blob/master/doc/request.rst#el-metodo-get>`_
-  * ¿Cómo obtener un servicio desde la Vista?
   * `¿Cómo crear un formulario <https://github.com/k2framework/k2/blob/master/doc/libs/form/formularios.rst>`_
   * ¿Cómo incluir un partial?
