@@ -80,23 +80,23 @@
     },
     {
         "name": "twig/twig",
-        "version": "v1.13.0",
-        "version_normalized": "1.13.0.0",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/fabpot/Twig.git",
-            "reference": "v1.13.0"
+            "reference": "ba88c755579c06e7ccb5ee73c6e27e88a1fed114"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/fabpot/Twig/zipball/v1.13.0",
-            "reference": "v1.13.0",
+            "url": "https://api.github.com/repos/fabpot/Twig/zipball/ba88c755579c06e7ccb5ee73c6e27e88a1fed114",
+            "reference": "ba88c755579c06e7ccb5ee73c6e27e88a1fed114",
             "shasum": ""
         },
         "require": {
             "php": ">=5.2.4"
         },
-        "time": "2013-05-10 15:12:43",
+        "time": "2013-05-17 10:06:31",
         "type": "library",
         "extra": {
             "branch-alias": {

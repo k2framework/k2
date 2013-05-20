@@ -1,0 +1,29 @@
+{% set url = url|default(url()) %}
+{#% if page is not null %}
+{% spaceless %}
+<div class="row-fluid">
+    <div class="span3">
+        <div class="pagination" style="height: auto !important; margin-top: 10px;">
+            <p>Total registros encontrados: <b>{{ page.size }}</b></p>
+        </div>
+    </div>
+    <div class="span9 pagination">
+        <div class="pagination-centered">
+            <ul>                
+                {% if page.prev %}
+                    <li><a href="{{ url }}" >{{ html_link( url ~ "/pag." ~ page.prev, "« ", {'title':'Página anterior'}) }}</li>
+                {% endif %}
+                {% for index in (page.current-4)..(page.current+4) if index <= page.total_page %}
+                    {% if index > 0 %}
+                        <li class="{{ index==page.current?'active':null }}">{{ html_link(url ~ "/pag."~index, index,{title:"Página #{index} de "~page.total_page}) }}</li>                        
+                    {% endif %}
+                {% endfor %}
+                {% if page.next %}
+                    <li> {{ html_link( url ~ "/pag." ~ page.next, "»", {'title':'Página siguiente'}) }}</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endspaceless %}
+{% endif %#}

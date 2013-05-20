@@ -6,9 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Twig_' => array($vendorDir . '/twig/twig/lib'),
-    'Symfony\\Component\\PropertyAccess\\' => array($vendorDir . '/symfony/property-access'),
-    'K2\\' => array($vendorDir . '/k2/core/src'),
-    'ActiveRecord\\' => array($vendorDir . '/k2/activerecord/lib'),
-    '' => array($baseDir . '/app/modules'),
+    'Twig_' => $vendorDir . '/twig/twig/lib',
+    'Symfony\\Component\\PropertyAccess\\' => $vendorDir . '/symfony/property-access',
+    'K2\\' => $vendorDir . '/k2/core/src',
+    'ActiveRecord\\' => $vendorDir . '/k2/activerecord/lib',
+    '' => $baseDir . '/app/modules',
 );

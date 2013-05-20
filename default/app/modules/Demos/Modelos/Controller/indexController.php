@@ -10,7 +10,6 @@ class indexController extends ScaffoldController
     
     protected function beforeFilter()
     {
-        //$this->setTemplate(NULL);
         $this->model = new Usuarios();
     }
 }

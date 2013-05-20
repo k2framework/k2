@@ -15,7 +15,7 @@ En ella se encuentra el código (HTML, XML, JSON, PDF, etc) que va a ser devuelt
 Nombre de la Vista
 __________________
 
-El nombre de la vista por defecto debe ser igual al nombre de la acción (método de la clase controladora) ejecutada en la petición. Sin embargo en el controlador se puede cambiar la vista a mostrar con `setView() <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#setview>`_.
+El nombre de la vista por defecto debe ser igual al nombre de la acción (método de la clase controladora) ejecutada en la petición. Sin embargo en el controlador se puede cambiar la vista a mostrar con `setView() <https://github.com/k2framework/k2/blob/master/doc/controlador.rst#setview>`_.
 
 .. code-block:: php
 
@@ -72,7 +72,7 @@ Todas estas son partes comunes dentro de una vista ( En este caso un Html ).
 Nombre del Template
 ___________________
 
-El nombre del template por defecto es **default** y se encuentra dentro de **app/view/templates/default.phtml**, ademas podemos tener tantos templates como queramos en nuestra aplicacion, para cambiar de template solo debemos llamar al método `setTemplate() <https://github.com/manuelj555/k2/blob/master/doc/controlador.rst#settemplate>`_ en nuestro controlador.
+El nombre del template por defecto es **default** y se encuentra dentro de **app/view/templates/default.phtml**, ademas podemos tener tantos templates como queramos en nuestra aplicacion, para cambiar de template solo debemos llamar al método `setTemplate() <https://github.com/k2framework/k2/blob/master/doc/controlador.rst#settemplate>`_ en nuestro controlador.
 
 Donde debe ir el Template
 _________________________
@@ -102,11 +102,11 @@ Helpers
 
 Los Helpers son clases estáticas que ofrecen métodos utiles que facilitan la creacion de ciertos elementos html como links, imagenes, inserccion de stripts y css, creacion de elementos de formularios, etc. A continuación se listan los helpers disponibles:
 
-	* `Html <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/View/Helper/Html.php>`_
-	* `Form <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/View/Helper/Form.php>`_
-	* `Tag <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/View/Helper/Tag.php>`_
-	* `Js <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/View/Helper/Js.php>`_
-	* `Ajax <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/View/Helper/Ajax.php>`_
+	* `Html <https://github.com/k2framework/Core/blob/master/src/KumbiaPHP/View/Helper/Html.php>`_
+	* `Form <https://github.com/k2framework/Core/blob/master/src/KumbiaPHP/View/Helper/Form.php>`_
+	* `Tag <https://github.com/k2framework/Core/blob/master/src/KumbiaPHP/View/Helper/Tag.php>`_
+	* `Js <https://github.com/k2framework/Core/blob/master/src/KumbiaPHP/View/Helper/Js.php>`_
+	* `Ajax <https://github.com/k2framework/Core/blob/master/src/KumbiaPHP/View/Helper/Ajax.php>`_
 
 Las Funciones h() y eh()
 -----------------------

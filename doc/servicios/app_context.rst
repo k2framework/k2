@@ -1,7 +1,7 @@
 Servicio AppContext
 ===================
 
-El servicio `app.context <https://github.com/manuelj555/Core/blob/master/src/KumbiaPHP/Kernel/AppContext.php>`_ nos ofrece una serie de métodos que nos permitiran obtener información de relevancia con respecto al contexto de la aplicación y la petición, ejemplo de ello es que podemos obtener el módulo actual en ejecución, el controlador, la acción, los parametros, la ruta hacia el módulo actual y hacia cualquier otro módulo, la ruta hacia la carpeta app del proyecto. Ademas nos permite crear urls para manejarnos dentro de la aplicación, entre otras cosas.
+El servicio `app.context <https://github.com/k2framework/Core/blob/master/src/KumbiaPHP/Kernel/AppContext.php>`_ nos ofrece una serie de métodos que nos permitiran obtener información de relevancia con respecto al contexto de la aplicación y la petición, ejemplo de ello es que podemos obtener el módulo actual en ejecución, el controlador, la acción, los parametros, la ruta hacia el módulo actual y hacia cualquier otro módulo, la ruta hacia la carpeta app del proyecto. Ademas nos permite crear urls para manejarnos dentro de la aplicación, entre otras cosas.
 
 .. contents:: Contenido:
 

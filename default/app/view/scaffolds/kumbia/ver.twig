@@ -1,0 +1,15 @@
+{% extends "scaffolds/" ~ scaffold ~ "/base.twig" %}
+
+{% block scaffold_content %}
+<ul style="margin-left: 30px;">
+    {% for property, attr in model.metadata.attributes %}
+        <li><strong>{{ attr.alias }} :</strong> {{ attribute(model, property) }}</li>
+    {% endfor %}
+</ul>
+<div class="actions">
+    <a href="{{ url(action="index") }}">Listado</a>
+    <a href="{{ url(action="crear") }}">Crear registro</a>
+    <a href="{{ url(action="editar", parameters=[model.id]) }}">Editar</a>
+    <a class="del" title="¿Seguro que quiere borrar?" href="{{ url(action="borrar", parameters=[model.id]) }}" onclick="return confirm('¿Está seguro?');">Borrar</a>
+</div>
+{% endblock %}

@@ -2,7 +2,7 @@
 
 namespace Index\Form;
 
-class TestForm extends \K2\Form\Field\AbstractField
+class TestForm extends \K2\Form\Type\AbstractType
 {
 
     public function build(\K2\Form\FormBuilder $builder, array $options = array())
@@ -12,7 +12,6 @@ class TestForm extends \K2\Form\Field\AbstractField
             'label' => 'Estados',
             'options' => $e,
             'expanded' => true,
-            //'multiple' => true,
         ));
         $builder->add('estados2', 'choice', array(
             'label' => 'Estados',

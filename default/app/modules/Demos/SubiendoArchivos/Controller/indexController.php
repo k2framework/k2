@@ -18,13 +18,11 @@ class indexController extends Controller
     {
         if ($this->getRequest()->isMethod('POST')) {
 
-            if ($this->getRequest()->files->has('imagen')) {
-                $file = Upload::factory($this->getRequest(), 'imagen');
-                if ($file->save(uniqid())) {
-                    App::get('flash')->success("El archivo se subió con exito...!!!");
-                } else {
-                    App::get('flash')->error($file->getErrors());
-                }
+            $file = Upload::factory('imagen');
+            if ($file->saveRandom()) {
+                App::get('flash')->success("El archivo se subió con exito...!!!");
+            } else {
+                App::get('flash')->error($file->getErrors());
             }
         }
     }

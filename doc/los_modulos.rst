@@ -137,7 +137,7 @@ En esta nueva versión es muy facil instalar y configurar módulos de otras pers
 
 Solo debemos descargar dicho módulo y colocarlo en la carpeta vendors de la aplicación si no vamos a editar el código del módulo, ó en la carpeta modules de la aplicación si vamos a editar dicho módulo.
 
-Luego de esto debemos registrar el módulo en el archivo `app/AppKernel.php <https://github.com/manuelj555/k2/blob/master/doc/app_kernel.rst>`_, ** en el método `registerModules() <https://github.com/manuelj555/k2/blob/master/doc/app_kernel.rst#el-metodo-registermodules>`_.
+Luego de esto debemos registrar el módulo en el archivo `app/AppKernel.php <https://github.com/k2framework/k2/blob/master/doc/app_kernel.rst>`_, ** en el método `registerModules() <https://github.com/k2framework/k2/blob/master/doc/app_kernel.rst#el-metodo-registermodules>`_.
 
 En el registerModules()
 _________________________

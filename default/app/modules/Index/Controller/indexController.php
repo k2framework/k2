@@ -2,6 +2,7 @@
 
 namespace Index\Controller;
 
+use K2\Kernel\App;
 use K2\Kernel\Controller\Controller;
 
 /**
@@ -21,14 +22,7 @@ class indexController extends Controller
 
     public function index_action()
     {
-        $form = $this->createForm(new \Index\Form\TestForm(), array('estados' => array('2')));
-
-        if ($this->getRequest()->isMethod('POST')) {
-            var_dump($this->getRequest()->request($form->getName()));
-            $form->bind($this->getRequest());
-        }
-
-        $this->form = $form->createView();
+        
     }
 
     public function otro_action()

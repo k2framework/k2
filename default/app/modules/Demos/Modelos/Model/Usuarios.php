@@ -3,7 +3,7 @@
 namespace Demos\Modelos\Model;
 
 use K2\ActiveRecord\ActiveRecord;
-use K2\ActiveRecord\Validation\ValidationBuilder;
+use K2\Validation\ValidationBuilder;
 
 /**
  * Description of Usuarios
@@ -12,6 +12,11 @@ use K2\ActiveRecord\Validation\ValidationBuilder;
  */
 class Usuarios extends ActiveRecord implements \K2\Security\Auth\User\UserInterface
 {
+
+    protected function createRelations()
+    {
+        $this->belongsTo('Demos\\Modelos\\Model\\Estados', 'estados_id');
+    }
 
     protected function validations(ValidationBuilder $builder)
     {
@@ -23,7 +28,7 @@ class Usuarios extends ActiveRecord implements \K2\Security\Auth\User\UserInterf
 
     public function auth(\K2\Security\Auth\User\UserInterface $user)
     {
-        return TRUE;// crypt($user->getPassword()) === $this->getPassword();
+        return TRUE; // crypt($user->getPassword()) === $this->getPassword();
     }
 
     public function getPassword()

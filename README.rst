@@ -6,17 +6,17 @@ Framework que une la facilidad de trabajo de KumbiaPHP con el potencial de Symfo
     * Estado del Core: |buildcore|
     * Estado del ActiveRecord: |buildar|
 
-.. |buildcore| image:: https://secure.travis-ci.org/manuelj555/Core.png?branch=master
-.. |buildar| image:: https://secure.travis-ci.org/manuelj555/activerecord.png?branch=php5.3
+.. |buildcore| image:: https://secure.travis-ci.org/k2framework/Core.png?branch=master
+.. |buildar| image:: https://secure.travis-ci.org/k2framework/activerecord.png?branch=php5.3
 
-`Documentación <https://github.com/manuelj555/k2/tree/master/doc/README.rst>`_
+`Documentación <https://github.com/k2framework/k2/tree/master/doc/README.rst>`_
 
 Instalación
 -----------
 
 Solo debes descargar el proyecto desde la rama descarga, la cual contiene los vendors ya instalados para una facil utilización.
 
-`Descargar <https://github.com/manuelj555/k2/archive/descarga.zip>`_
+`Descargar <https://github.com/k2framework/k2/archive/descarga.zip>`_
 
 Instalación mediante Composer
 _____________________________

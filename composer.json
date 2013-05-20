@@ -8,5 +8,6 @@
         "psr-0":{ 
             "": "app/modules/"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }
