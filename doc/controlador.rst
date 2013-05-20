@@ -1,14 +1,14 @@
 El Controlador
 ==============
 
-Los controladores en KumbiaPHP 2 son muy parecidos a los controladores de la versión 1 del framework, estan compuestos de métodos que si concuerdan con el patrón de la url de una petición, el kernel del framework los invoca y le pasa los parametros que estos soliciten.
+Los controladores en K2 estan compuestos de métodos que si concuerdan con el patrón de la url de una petición (y tengan el sufijo _action), el kernel del framework los invoca y le pasa los parametros que estos soliciten.
 
-.. contents:: Ademas se siguen teniendo los filtros pre y post ejecución de la acción correspondiente.
+.. contents:: Ademas se tienen los filtros pre y post ejecución de la acción correspondiente.
 
 Nombre de la Clase
 ------------------
 
-En esta versión del framework, tanto los nombres de clases como nombres de archivos se escriben exactamente igual. El nombre del controlador preferiblemente en **small_case**, y debe ir seguido del Sufijo **Controller** obligatoriamente.
+Tanto los nombres de clases como nombres de archivos se escriben exactamente igual. El nombre del controlador preferiblemente en **small_case**, y debe ir seguido del Sufijo **Controller** obligatoriamente.
 
 Ejemplo de un Controlador
 _________________________
@@ -160,33 +160,6 @@ Todos los controladores de la aplicación deben extender de la clase base "K2\Ke
 
 Esta clase ofrece ciertos métodos de gran utilidad para ser usados por los controladores de la aplicación, a continuación se detallarán cada uno de ellos:
 
-get()
-________
-
-:: 
-
-    Controller->get($id)
-
-Este método devuelve la instancia del servicio, para ser usado en las acciónes del controlador. por ejemplo:
-
-.. code-block:: php
-
-    //archivo app/modules/MiModulo/Controller/usuariosController.php
-
-    namespace MiModulo\Controller;
-
-    use K2\Kernel\Controller\Controller;
-
-    class usuariosController extends Controller //ahora se extiende de una clase base Controller.
-    {
-        public function index_action()
-        {
-            echo "Método de la petición: " $this->get("request")->getMethod();
-        }
-    }    
-
-Con $this->get("request") obtenemos la instancia del objeto request, y luego llamamos al método getMethod() de dicho objeto. Tambien se puede guardar la instancia del objeto en una variable y luego usar los métodos del objeto.
-
 getRequest()
 ___________
 
@@ -194,7 +167,7 @@ ___________
 
     Controller->getRequest()
 
-Este método nos devuelve la instancia del objeto request, es una manera más sencilla de hacer $this->get("request") y ademas nos brinda la posibilidad de ver los métodos disponibles al utilizar un IDE que lea la PhpDoc.
+Este método nos devuelve la instancia del objeto request.
 
 getRouter()
 __________
@@ -203,7 +176,7 @@ __________
 
     Controller->getRouter()
 
-Este método nos devuelve la instancia del objeto router, es una manera más sencilla de hacer $this->get("router") y ademas nos brinda la posibilidad de ver los métodos disponibles al utilizar un IDE que lea la PhpDoc.
+Este método nos devuelve la instancia del objeto router.
 
 getView()
 _________
@@ -219,10 +192,9 @@ ________
 
 :: 
 
-    Controller->setView($view, $template = FALSE)
+    Controller->setView($view)
 
-Este método permite establecer la vista que el servicio @view deberá renderizar. Ademas podemos establecer de 
-una vez el template a usar. Tambien es posible dejar de mostrar la vista y/ó el template pasando null en los parametros.
+Este método permite establecer la vista que el servicio @view deberá renderizar. Tambien es posible dejar de mostrar la vista pasando false en los parametros.
 
 .. code-block:: php
 
@@ -236,70 +208,26 @@ una vez el template a usar. Tambien es posible dejar de mostrar la vista y/ó el
     {
         public function index_action()
         {
-            $this->setView("listado"); //va a renderizar la vista listado.phtml
-            $this->setView(null); //no se va a renderizar ninguna vista solo el template.
-            $this->setView("listado",null); //va a renderizar la vista listado.phtml sin template
-            $this->setView(null,null); //no se mostrará ni vista ni template
-            $this->setView("listado","otro_template"); //vista listado.phtml y template otro_template.phtml
+            $this->setView("listado"); //va a renderizar la vista listado.twig
+            $this->setView(false); //no se va a renderizar ninguna vista.
         }
     }  
 
-getTemplate()
-____________
 
-:: 
+Cuando queremos utilizar una vista de un módulo y no una público, debemos especificar el nombre del módulo delante del nombre de la vista, por ejemplo:
 
-    Controller->getTemplate()
+    * **@K2Backend/default/index** -> el módulo es K2/Backend y la vista es default/index.twig
+    * **@K2EmailTemplate/usuarios/crear** -> el módulo es K2/EmailTemplate y la vista es usuarios/crear.twig
+    * **@Twitter/base** -> el módulo es Twitter y el template es base.twig
 
-Este método nos devuelve una cadena que representa el nombre del template a renderizar por el servicio @view.
-
-setTemplate()
-____________
-
-:: 
-
-    Controller->setTemplate($template)
-
-Este método permite establecer el template que el servicio @view deberá renderizar. Tambien es posible pasar
-null para indicar que no queremos que se muestre el template. 
-
-Los templates se pueden clasificar en dos grupos:
-
-    * Templates Publicos : Se encuentran en "proyecto/app/view/templates/"
-    * Templates de Módulos: Se encuentran en la carpeta "view/_shared/templates/" de cada módulo de la app.
-
-.. code-block:: php
-
-    //archivo app/modules/MiModulo/Controller/usuariosController.php
-
-    namespace MiModulo\Controller;
-
-    use K2\Kernel\Controller\Controller;
-
-    class usuariosController extends Controller //ahora se extiende de una clase base Controller.
-    {
-        public function index_action()
-        {
-            $this->setTemplate("admin"); //va a renderizar el template publico admin.phtml
-            $this->setTemplate("MiModulo:admin"); //va a renderizar el template admin.phtml del módulo "MiModulo"
-            $this->setTemplate("K2/Backend:default");//renderiza el template default.phtml del módulo "K2/Backend"
-        }
-    } 
-
-Cuando queremos utilizar un template de un módulo y no uno público, debemos especificar el nombre del módulo seguido del simbolo de dos puntos ":" y luego el nombre del template, por ejemplo:
-
-    * **K2/Backend:default** -> el módulo es K2/Backend y el template es default.phtml
-    * **K2/EmailTemplate:default** -> el módulo es K2/EmailTemplate y el template es default.phtml
-    * **Twitter:default** -> el módulo es K2/Backend y el template es default.phtml
-
-El nombre del módulo es el namespace del módulo hasta la carpeta donde se encuentren los controladores, módelos, vistas y demas archivos del mismo.
+El nombre del módulo es el nombre lógico que se le dá a los mismos en los config.php de cada uno.
 
 cache()
 ______
 
 :: 
 
-    Controller->cache($time = FALSE)
+    Controller->cache($time = false)
 
 Establece el tiempo de caché para una vista ó controlador completos, se debe pasar un `intervalo de tiempo válido <http://www.php.net/manual/es/datetime.formats.relative.php>`_, si se pasa false, no se cachea. Por ejemplo:
 
@@ -326,16 +254,16 @@ Establece el tiempo de caché para una vista ó controlador completos, se debe p
         }
     } 
 
-Cabe destacar que la cache solo se activa en produccíon y si se usa la clase AppCache() en public/index.php
+Cabe destacar que la cache solo se activa en produccíon.
 
 render()
 _______
 
 :: 
 
-    Controller->render(array $params = array(), $time = NULL)
+    Controller->render($view, array $params = array(), $time = null)
 
-LLama al servicio @view y nos devuelve la respuesta ya construida con el template y view especificados. Se le pueden pasar parametros que serán las variables en la vista y un tiempo de cache.
+LLama al servicio @view y nos devuelve la respuesta ya construida con la vista especificada. Se le pueden pasar parametros que serán las variables en la vista y un tiempo de cache.
 
 Este método es util cuando queremos enviar la respuesta por correo por ejemplo. crear un PDF, etc.
 
@@ -346,6 +274,6 @@ _______________
 
     Controller->renderNotFound($message)
 
-Este método lanza una excepcion NotFoundException, podemos mostrar un mensaje para verlo en el entorno de desarrollo, en producción se mostrará la vista 404.phtml de "app/views/errors/"
+Este método lanza una excepcion NotFoundException, podemos mostrar un mensaje para verlo en el entorno de desarrollo, en producción se mostrará la vista 404.twig de "app/views/errors/"
 
 
