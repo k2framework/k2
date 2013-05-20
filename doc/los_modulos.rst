@@ -3,7 +3,6 @@ Los Modulos
 
 .. contents:: En esta nueva versión de KumbiaPHP, la aplicación está constituida por módulos ó paquetes.
 
-
 Que es un Modulo
 ----------------
 
@@ -29,33 +28,33 @@ Un ejemplo básico de la estructura de un módulo es:
 
 ::
 	
-	K2/Ventas
-       |
-       |---config.php
-       |
-	   |---Controller
-	   |	   |-------indexController.php
-	   |	   |-------reportesController.php
-	   |
-	   |-----Model
-	   |	   |-------Ventas.php
-	   |
-	   |-----View
-	   |	   |-------ventas
-	   |	   |	       |----ultimas.twig
-	   |	   |	       |----agregar.twig
-	   |	   |	       |----eliminar.twig
-	   |	   |-------reportes
-	   |	    	       |----ventas_semanales.twig
-	   |	    	       |----ventas_hoy.twig
-	   |
-	   |----MisServicios  	
-	    	   |	
-	    	   |		
-	    	   |
-	    	   |
-	   	       |-----GestorVentas.php
-	   	       |-----ImpresorVentas.php
+    K2/Ventas
+        |
+        |---config.php
+        |
+        |---Controller
+        |	   |-------indexController.php
+        |	   |-------reportesController.php
+        |
+        |-----Model
+        |	   |-------Ventas.php
+        |
+        |-----View
+        |	   |-------ventas
+        |	   |	       |----ultimas.twig
+        |	   |	       |----agregar.twig
+        |	   |	       |----eliminar.twig
+        |	   |-------reportes
+        |	    	       |----ventas_semanales.twig
+        |	    	       |----ventas_hoy.twig
+        |
+        |----MisServicios  	
+                |	
+                |		
+                |
+                |
+                |-----GestorVentas.php
+                |-----ImpresorVentas.php
 
 		
 Como podemos ver en el ejemplo tenemos un módulo llamado Ventas que contiene una serie de carpetas ( Ninguna de las carpetas es obligatoria ), de las cuales las carpetas Controller y View deben tener siempre esos nombres, ya que el framework busca los controladores y vistas dentro de las mismas. La carpeta Model contendrá los modelos, realmente no importa el nombre de la carpeta que contiene los modelos ó si estos se encuentran en carpeta alguna, ya que el autoload PSR-0 los buscará a traves de su namespace. Tambien tenemos una carpeta llamada MisServicios, donde su nombre no es relevante, y contiene los servicios que posee el módulo.
@@ -69,10 +68,9 @@ Esta clase es obligatoria en cada módulo que creemos, puede tener cualquier nom
 
 En ella podremos registrar parametros y servicios en el contenedor, ademas agregar escuchas de eventos y configuraciones adicionales para el módulo que se crea.
 
-Ejemplo
-.......
+**Ejemplo:**
 
-.. code::block php
+.. code-block:: php
 
     <?php
 
@@ -97,8 +95,7 @@ Ejemplo
 
 En este ejemplo hemos creado una clase en K2/Ventas/VentasModule.php la cual extiende de K2\\Kernel\\Module y reescribe el método init(), lo cual no es obligatorio, solo lo reescribimos cuando queremos agregar configuración adicional como servicios ó parametros en el proyecto.
 
-Ejemplo de Nombres de Modulos
-_____________________________
+**Ejemplo de Nombres de Modulos**
 
 Acá tenemos un ejemplo de la asociación entre el nombre del módulo y el espacio de nombre al que está asociado:
 
