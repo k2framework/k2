@@ -24,6 +24,7 @@ if ($_SERVER['QUERY_STRING']) {
 }
 
 ###### Arrancamos la config inical del Framework ############
+//require_once '../app/kernel.min.php'; //usar las clases compiladas (mejora velocidad)
 require_once '../app/bootstrap.php';
 
 ###### Arrancamos y ejecutamos el FW ############
