@@ -1,5 +1,6 @@
 <?php
-
+
+
 
 namespace K2\Kernel;
 
@@ -102,7 +103,8 @@ class Collection implements \Serializable
         return preg_replace('/[^[:alpha:]]/', '', $this->get($key, $default));
     }
 
-}
+}
+
 
 namespace K2\Kernel;
 
@@ -232,7 +234,8 @@ class Request
         return array_key_exists($key, $_SERVER) ? $_SERVER[$key] : $default;
     }
 
-}
+}
+
 
 namespace K2\Kernel\Config;
 
@@ -339,7 +342,8 @@ class ConfigReader
         return $configs;
     }
 
-}
+}
+
 
 namespace K2\Di\Container;
 
@@ -506,7 +510,8 @@ class Container implements \ArrayAccess
         throw new DiException("No se reconoce el valor para la definición del servicio $id");
     }
 
-}
+}
+
 
 namespace K2\EventDispatcher;
 
@@ -636,7 +641,8 @@ class EventDispatcher
         }
     }
 
-}
+}
+
 
 namespace K2\Kernel\Event;
 
@@ -648,7 +654,8 @@ final class K2Events
     const RESPONSE = 'kumbia.response';
     const EXCEPTION = 'kumbia.exception';
 
-}
+}
+
 
 namespace K2\EventDispatcher;
 
@@ -671,7 +678,8 @@ class Event
         return $this->propagationStopped;
     }
 
-}
+}
+
 
 namespace K2\Kernel\Event;
 
@@ -718,7 +726,8 @@ class RequestEvent extends Event
         $this->response = $response;
     }
 
-}
+}
+
 
 namespace K2\Kernel\Controller;
 
@@ -926,13 +935,13 @@ class ControllerResolver
         }
     }
 
-}
+}
+
 
 namespace K2\Kernel\Controller;
 
 use K2\Kernel\App;
 use K2\Kernel\Response;
-use K2\Kernel\Router\RouterInterface;
 
 
 class Controller
@@ -1009,13 +1018,13 @@ class Controller
     protected function render($view, array $params = array(), $time = null)
     {
         return App::get('view')->render($view, array(
-                    'response' => $this->getResponse(),
                     'params' => $params,
                     'time' => $time,
         ));
     }
 
-}
+}
+
 
 namespace K2\Kernel;
 
@@ -1168,7 +1177,8 @@ class Response implements \Serializable
         }
     }
 
-}
+}
+
 
 namespace K2\Kernel\Event;
 
@@ -1194,7 +1204,8 @@ class ResponseEvent extends RequestEvent
         return $this->response;
     }
 
-}
+}
+
 
 namespace K2\Kernel;
 
@@ -1387,7 +1398,8 @@ class Kernel
         return false;
     }
 
-}
+}
+
 
 namespace K2\Kernel;
 

@@ -13,7 +13,7 @@ return array(
     'parameters' => array(
     ),
     'services' => array(
-        'mi_servicio' => function($c) {
+        'mi_servicio' => function(Container $c) {
             return new Services\Servicio($c);
         }
     ),
