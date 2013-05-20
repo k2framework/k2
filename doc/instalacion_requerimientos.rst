@@ -14,4 +14,4 @@ Instalación
 
 KumbiaPHP 2 es muy facil de instalar, solo debes ir a la sección de descargas y bajar la ultima versión del proyecto desde aquí (Descargar el .zip con la fecha mas reciente):
 
-`Descargas <https://github.com/manuelj555/k2/downloads>`_
+`Descargas <https://github.com/k2framework/k2/downloads>`_
