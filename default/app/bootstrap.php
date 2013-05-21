@@ -56,4 +56,4 @@ App::modules(array(
     require_once __DIR__ . '/../../vendor/k2/core/src/K2/config.php',
 ));
 
-require_once APP_PATH . '/config/app.php';
+require_once APP_PATH . '/config/modules.php';
