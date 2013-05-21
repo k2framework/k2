@@ -1,8 +1,7 @@
 {
     "require":{
         "k2/core": "dev-master",
-        "k2/activerecord": "dev-master",
-        "symfony/property-access": "v2.2.1"
+        "k2/activerecord": "dev-master"
     },
     "autoload": {
         "psr-0":{ 
