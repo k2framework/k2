@@ -1,0 +1,13 @@
+<?php
+
+use K2\Console\Application;
+use K2\Kernel\Kernel;
+
+require_once __DIR__ . '/bootstrap.php';
+
+
+$app = new Application();
+
+$kernel = new Kernel();
+
+$app->run();

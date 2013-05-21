@@ -18,7 +18,7 @@ define('START_TIME', microtime(1));
 $_url = isset($_GET['_url']) ? $_GET['_url'] : '/';
 
 ###### Creamos el PUBLIC_PATH ############
-if ($_SERVER['QUERY_STRING']) {
+if (isset($_SERVER['QUERY_STRING'])) {
     $uri = $_SERVER['REQUEST_URI'];
     if (false !== ($pos = strpos($_SERVER['REQUEST_URI'], '?'))) {
         $uri = substr($_SERVER['REQUEST_URI'], 0, $pos);
@@ -26,7 +26,7 @@ if ($_SERVER['QUERY_STRING']) {
     define('PUBLIC_PATH', str_replace($_url, '/', urldecode($uri)));
     unset($uri);
 } else {
-    define('PUBLIC_PATH', $_SERVER['REQUEST_URI']);
+    define('PUBLIC_PATH', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null);
 }
 
 App::setLoader($loader);
