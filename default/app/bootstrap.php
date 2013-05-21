@@ -40,6 +40,18 @@ if (PRODUCTION) {
     ini_set('display_errors', 'On');
 }
 
+/**
+ * Permite crear una ruta hasta un paquete instalado en vendor
+ * @param string $package nombre del paquete, como se colocó en el composer.json
+ * @param string $targetDir el target-dir usado por el paquete en su composer.json
+ * @param string $file nombre del archivo php que contiene la configuración, por defecto config.php
+ * @return string
+ */
+function composerPath($package, $targetDir, $file = 'config.php')
+{
+    return APP_PATH . '/../../vendor/' . trim($package) . '/' . trim($targetDir) . '/' . $file;
+}
+
 App::modules(array(
     require_once __DIR__ . '/../../vendor/k2/core/src/K2/config.php',
 ));
