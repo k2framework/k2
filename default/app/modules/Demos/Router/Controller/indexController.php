@@ -19,7 +19,7 @@ class indexController extends Controller
      */
     public function index_action()
     {
-        return $this->getRouter()->redirect('DemosRouter:index/accion2');
+        return $this->getRouter()->redirect('@DemosRouter/index/accion2');
     }
 
     /**

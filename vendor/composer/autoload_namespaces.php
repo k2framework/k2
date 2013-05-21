@@ -8,6 +8,8 @@ $baseDir = dirname($vendorDir);
 return array(
     'Twig_' => $vendorDir . '/twig/twig/lib',
     'Symfony\\Component\\PropertyAccess\\' => $vendorDir . '/symfony/property-access',
+    'Symfony\\Component\\Console\\' => $vendorDir . '/symfony/console',
+    'K2\\Backend\\' => $vendorDir . '/k2/backend',
     'K2\\' => $vendorDir . '/k2/core/src',
     'ActiveRecord\\' => $vendorDir . '/k2/activerecord/lib',
     '' => $baseDir . '/app/modules',

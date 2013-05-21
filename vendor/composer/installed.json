@@ -188,5 +188,80 @@
             "property path",
             "reflection"
         ]
+    },
+    {
+        "name": "k2/backend",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "target-dir": "K2/Backend",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/manuelj555/K2_Backend.git",
+            "reference": "1ab6b9bf6b23e9230f8e888fdcb1c0b3facc2190"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/manuelj555/K2_Backend/zipball/1ab6b9bf6b23e9230f8e888fdcb1c0b3facc2190",
+            "reference": "1ab6b9bf6b23e9230f8e888fdcb1c0b3facc2190",
+            "shasum": ""
+        },
+        "time": "2013-01-26 17:50:24",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "K2\\Backend\\": ""
+            }
+        },
+        "notification-url": "http://packagist.org/downloads/"
+    },
+    {
+        "name": "symfony/console",
+        "version": "v2.2.1",
+        "version_normalized": "2.2.1.0",
+        "target-dir": "Symfony/Component/Console",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/Console.git",
+            "reference": "v2.2.1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/Console/zipball/v2.2.1",
+            "reference": "v2.2.1",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2013-03-19 20:48:08",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\Console\\": ""
+            }
+        },
+        "notification-url": "http://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "http://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Console Component",
+        "homepage": "http://symfony.com"
     }
 ]
