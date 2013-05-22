@@ -6,12 +6,11 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Twig_' => $vendorDir . '/twig/twig/lib',
-    'Symfony\\Component\\PropertyAccess\\' => $vendorDir . '/symfony/property-access',
-    'Symfony\\Component\\Filesystem' => $vendorDir . '/symfony/filesystem',
-    'Symfony\\Component\\Console\\' => $vendorDir . '/symfony/console',
-    'K2\\Backend\\' => $vendorDir . '/k2/backend',
-    'K2\\' => $vendorDir . '/k2/core/src',
-    'ActiveRecord\\' => $vendorDir . '/k2/activerecord/lib',
-    '' => $baseDir . '/app/modules',
+    'Twig_' => array($vendorDir . '/twig/twig/lib'),
+    'Symfony\\Component\\PropertyAccess\\' => array($vendorDir . '/symfony/property-access'),
+    'Symfony\\Component\\Filesystem' => array($vendorDir . '/symfony/filesystem'),
+    'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
+    'K2\\' => array($vendorDir . '/k2/core/src'),
+    'ActiveRecord\\' => array($vendorDir . '/k2/activerecord/lib'),
+    '' => array($baseDir . '/app/modules'),
 );

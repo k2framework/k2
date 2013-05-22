@@ -26,7 +26,7 @@ if (isset($_SERVER['QUERY_STRING'])) {
     define('PUBLIC_PATH', str_replace($_url, '/', urldecode($uri)));
     unset($uri);
 } else {
-    define('PUBLIC_PATH', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null);
+    define('PUBLIC_PATH', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '');
 }
 
 App::setLoader($loader);
@@ -56,4 +56,4 @@ App::modules(array(
     require_once __DIR__ . '/../../vendor/k2/core/src/K2/config.php',
 ));
 
-require_once APP_PATH . '/config/app.php';
+require_once APP_PATH . '/config/modules.php';

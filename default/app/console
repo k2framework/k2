@@ -1,10 +1,9 @@
 <?php
 
-use K2\Console\Application;
 use K2\Kernel\Kernel;
+use K2\Console\Application;
 
 require_once __DIR__ . '/bootstrap.php';
-
 
 $app = new Application();
 
