@@ -1,13 +1,9 @@
 <footer>
     <div class="row">
-        <div class="span6">                     
+        <div class="span12">                     
             <span><a href='https://github.com/k2framework/k2'>K2Framework</a> |</span>
             <span><a href='http://es.wikipedia.org/wiki/Licencia_BSD#Nueva_Licencia_BSD_o_BSD_modificada_.28de_3_cl.C3.A1usulas.29' title='New BSD'>Licencia</a></span>
             </ul>
-        </div>
-        <div class='span6 pull-right' style="text-align: right">
-            Tiempo: {{ round((microtime(1) - constant('START_TIME')), 4) }} seg.
-            Memoria Usada: {{ number_format(memory_get_usage() / 1048576, 2) }}  MB
         </div>
     </div>
 </footer>
