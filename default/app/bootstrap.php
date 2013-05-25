@@ -6,14 +6,6 @@ use K2\Kernel\Exception\ExceptionHandler;
 $loader = require_once __DIR__ . '/../../vendor/autoload.php';
 /*
  */
-###### Especificamos si el proyecto está en producción o no ############
-define('PRODUCTION', false);
-ExceptionHandler::handle(false);
-/*
- */
-define('APP_PATH', __DIR__);
-define('START_TIME', microtime(1));
-
 ###### obtenemos la url de la petición ############
 $_url = isset($_GET['_url']) ? $_GET['_url'] : '/';
 
