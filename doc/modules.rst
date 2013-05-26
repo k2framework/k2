@@ -1,4 +1,4 @@
-El AppKernel
+El app/config/modules.php
 ============
 
 .. contents:: El AppKernel es una clase que se encuentra en "proyecto/app/AppKernel.php", que nos permite registrar módulos y rutas en nuestra aplicación.
