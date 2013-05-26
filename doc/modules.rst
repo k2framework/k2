@@ -1,93 +1,94 @@
-El app/config/modules.php
+El config/modules.php
 ============
 
-.. contents:: El AppKernel es una clase que se encuentra en "proyecto/app/AppKernel.php", que nos permite registrar módulos y rutas en nuestra aplicación.
+.. contents:: El modules.php es un archivo clase que se encuentra en "proyecto/app/config/modules.php", y que nos permite registrar módulos y rutas en nuestra aplicación.
 
-Codigo del AppKernel
+Codigo del modules.php
 --------------------
 
 .. code-block:: php
 
     <?php
-    require_once '../../vendor/autoload.php';
-    
-    use K2\Kernel\Kernel;
-    
-    class AppKernel extends Kernel
-    {
-    
-        protected function registerModules()
-        {
-            $modules = array(
-                new \Index\IndexModule(),
-            );
 
-            if (!$this->production) {
-                $modules[] = new Demos\Modelos\ModelosModule();
-                $modules[] = new Demos\Rest\RestModule();
-                $modules[] = new Demos\Router\RouterModule();
-                $modules[] = new Demos\SubiendoArchivos\ArchivosModule();
-                $modules[] = new Demos\Seguridad\SeguridadModule();
-                $modules[] = new Demos\Vistas\VistasModule();
-            }
-
-            return $modules;
-        }
-
-        protected function registerRoutes()
-        {
-            return array(
-                '/'                 => 'Index',
-                '/demo/rest'        => 'Demos/Rest',
-                '/demo/router'      => 'Demos/Router',
-                '/demo/vistas'      => 'Demos/Vistas',
-                '/demo/modelos'     => 'Demos/Modelos',
-                '/demo/upload'      => 'Demos/SubiendoArchivos',
-                '/admin'            => 'Demos/Seguridad',
-            );
-        }
+    use K2\Kernel\App;
     
+    ########################### MODULOS ###################################
+    
+    /* * *****************************************************************
+     * Iinstalación de módulos
+     */
+    App::modules(array(
+        '/' => include APP_PATH . 'modules/Index/config.php',
+        '/admin' => include composerPath('k2/backend', 'K2/Backend'),
+        '/calendar' => include composerPath('k2/calendar', 'K2/Calendar'),
+    ));
+    
+    
+    /* * *****************************************************************
+     * Agregamos módulos que solo funcionaran en desarrollo:
+     */
+    if (false === PRODUCTION) {
+        App::modules(array(
+            include composerPath('k2/debug', 'K2/Debug'),
+            '/demo/vistas' => include APP_PATH . 'modules/Demos/Vistas/config.php',
+            '/demo/upload' => include APP_PATH . 'modules/Demos/SubiendoArchivos/config.php',
+            '/demo/router' => include APP_PATH . 'modules/Demos/Router/config.php',
+            '/demo/admin' => include APP_PATH . 'modules/Demos/Seguridad/config.php',
+            '/demo/rest' => include APP_PATH . 'modules/Demos/Rest/config.php',
+            '/demo/modelos' => include APP_PATH . 'modules/Demos/Modelos/config.php',
+        ));
     }
 
-    App::setLoader($loader);
-    //acá podemos incluir rutas y prefijos al autoloader
-    //$loader->add('K2\\Backend\\', __DIR__ . '/../../vendor/');
 
-Como podemos ver este es un ejemplo del código que se encuentra en nuestro AppKernel.php, dicha clase tiene dos métodos principales "registerModules()" y "registerRoutes()", a traves de los cuales registraremos los módulos y libs que vayamos necesitando en la aplicación.
+Como podemos ver este es un ejemplo del código que se encuentra en nuestro modules.php, dicha archivo hace uso de la clase K2\\Kernel\\App, a traves de la cual registramos los módulos que vayamos necesitando en la aplicación.
 
-Para añadir libs solo es necesario registrarlas en el autoload de la aplicación, el cual está disponible mediante el uso del objeto $loader.
-
-
-El Metodo registerModules()
+El Metodo App::modules()
 -----------------------------
 
-Este método permite registrar los modulos de la aplicación. por defecto carga el modulo Index y los demos que vienen con el proyecto.
+Este método permite registrar los modulos de la aplicación. recibe un array con la respuesta de la inclusión de los archivo config.php de cada módulo (dichos archivos deben retornar un array).
 
 Ejemplo
 =======
 
 .. code-block:: php
 
-    protected function registerModules()
-        {
-            $modules = array(
-                new \Index\IndexModule(),
-                new \Namespace\MiModulo();
-            );
-            return $modules;
-        }
+    App::modules(array(
+        '/' => include APP_PATH . 'modules/Index/config.php',
+    ));
+    
+    App::modules(array(
+        '/' => include APP_PATH . 'modules/Index/config.php',
+        //si nuestro modulo fué instalador mediante composer, podemos registrarlo usando la funcion composerPath
+        '/admin' => include composerPath('k2/backend', 'K2/Backend'),
+    ));
+    
+    App::modules(array(
+        //si nuestro módulo no será accesible desde el navegador, no le asignamos un indice
+        include composerPath('k2/backend', 'K2/Backend'), 
+    ));
 
-Todo módulo debe tener una clase en la carpeta raiz del mismo que extienda de **K2\\Kernel\\Module** ya que será mediante dicha clase que registraremos el módulo en nuestro proyecto.
-
-El Metodo registerRoutes()
+Todo módulo debe tener un archivo php en la carpeta raiz del mismo, ya que será mediante este que registraremos el módulo en nuestro proyecto.
+La funcion composerPath()
 -------------------------
 
-A traves de este método registraremos los módulos que tendrá la aplicación, donde el índice del arreglo indica el prefijo inicial de la ruta que debe tener la URL para cargar el módulo y el valor de dicho indice será el nombre de nuestro módulo.
+Esta función permite incluir módulos descargados mediante composer, y recibe 3 parametros
 
-Prefijo de un Modulo
+.. code-block:: php
+
+    /**
+     * Permite crear una ruta hasta un paquete instalado en vendor
+     * @param string $package nombre del paquete, como se colocó en el composer.json
+     * @param string $targetDir el target-dir usado por el paquete en su composer.json
+     * @param string $file nombre del archivo php que contiene la configuración, por defecto config.php
+     * @return string
+     */
+    function composerPath($package, $targetDir, $file = 'config.php')
+    
+
+Indice de un Modulo
 ____________________
 
-El prefijo de un módulo es la porción inicial de la URL, despues del PublicPath, que debe tener tener la misma para cargar un módulo especifico, veamoslo con algunos ejemplos:
+El índice/prefijo de un módulo es la porción inicial de la URL, despues del PublicPath, que debe tener tener la misma para cargar un módulo especifico, veamoslo con algunos ejemplos:
 
 Para llamar al "indexController" del módulo "Demos/Rest" nuestra URL de petición deberá comenzar por "/demo/rest", algunos patrones de URl que coincidiran con el prefijo son:
 
@@ -113,11 +114,17 @@ ________________________
 
 En realidad un prefijo puede ser cualquier patrón de url válido, y no necesariamente debe coincidir con el nombre del módulo, ejemplos de prefijos:
   
-::
+.. code-block:: php
 
-    "/usuarios"        =>  "KumbiaPHP/Usuarios"
-    "/clientes"        =>  "Index/Clientes"
-    "/rest/carrito"    =>  "CarritoCompras"
-    "/"                =>  "K2/Calendar"
+    App::modules(array(
+        '/' => include APP_PATH . 'modules/Index/config.php',
+        '/admin' => include composerPath('k2/backend', 'K2/Backend'),
+        '/demo/vistas' => include APP_PATH . 'modules/Demos/Vistas/config.php',
+        '/demo/upload' => include APP_PATH . 'modules/Demos/SubiendoArchivos/config.php',
+        '/demo/router' => include APP_PATH . 'modules/Demos/Router/config.php',
+        '/demo/admin' => include APP_PATH . 'modules/Demos/Seguridad/config.php',
+        '/demo/rest' => include APP_PATH . 'modules/Demos/Rest/config.php',
+        '/demo/modelos' => include APP_PATH . 'modules/Demos/Modelos/config.php',
+    ));
 
 Estos son ejemplos validos de prefijos asignados a módulos, se puede apreciar que no existe ninguna restricción en cuanto al nombre del prefijo y el nombre del módulo, estos pueden ser muy distintos unos de otros.
