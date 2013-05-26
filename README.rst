@@ -7,7 +7,7 @@ Framework que une la facilidad de trabajo de KumbiaPHP con el potencial de Symfo
     * Estado del ActiveRecord: |buildar|
 
 .. |buildcore| image:: https://secure.travis-ci.org/k2framework/Core.png?branch=master
-.. |buildar| image:: https://secure.travis-ci.org/k2framework/activerecord.png?branch=php5.3
+.. |buildar| image:: https://secure.travis-ci.org/k2framework/activerecord.png?branch=master
 
 `Documentación <https://github.com/k2framework/k2/tree/master/doc/README.rst>`_
 
