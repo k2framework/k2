@@ -14,14 +14,7 @@ Framework que une la facilidad de trabajo de KumbiaPHP con el potencial de Symfo
 Instalación
 -----------
 
-Solo debes descargar el proyecto desde la rama descarga, la cual contiene los vendors ya instalados para una facil utilización.
-
-`Descargar <https://github.com/k2framework/k2/archive/descarga.zip>`_
-
-Instalación mediante Composer
-_____________________________
-
-Ademas se puede realizar la instalación a traves de `composer <https://github.com/composer/composer>`_, se debe de descargar el `composer.phar <https://getcomposer.org/composer.phar>`_ ó ejecutar el siguente comando en la raiz del proyecto:
+La instalación es a traves de `composer <https://github.com/composer/composer>`_, se debe de descargar el `composer.phar <https://getcomposer.org/composer.phar>`_ ó ejecutar el siguente comando en la raiz del proyecto:
 ::
 
     curl -s https://getcomposer.org/installer | php
@@ -36,7 +29,7 @@ Este comando instalará todas las dependencias necesarios del framework, ademas 
 Requerimientos
 --------------
 
-Esta esta versión necesita PHP 5.3.* en adelante para trabajar, ya que se incorporan los namespaces que ofrecen las nuevas versiones de php.
+Esta versión necesita PHP 5.3.* en adelante para trabajar, ya que se incorporan los namespaces que ofrecen las nuevas versiones de php.
 
 Ademas se necesita tener activado el `mod_rewrite <https://www.google.com/search?q=mod_rewrite>`_ de Apache para poder trabajar las URL.
 
