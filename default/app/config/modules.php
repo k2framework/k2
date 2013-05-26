@@ -18,11 +18,11 @@ App::modules(array(
 if (false === PRODUCTION) {
     App::modules(array(
         include composerPath('k2/debug', 'K2/Debug'),
-        '/demo/vistas' => include APP_PATH . '/modules/Demos/Vistas/config.php',
-        '/demo/upload' => include APP_PATH . '/modules/Demos/SubiendoArchivos/config.php',
-        '/demo/router' => include APP_PATH . '/modules/Demos/Router/config.php',
-        '/demo/admin' => include APP_PATH . '/modules/Demos/Seguridad/config.php',
-        '/demo/rest' => include APP_PATH . '/modules/Demos/Rest/config.php',
-        '/demo/modelos' => include APP_PATH . '/modules/Demos/Modelos/config.php',
+        '/demo/vistas' => include APP_PATH . 'modules/Demos/Vistas/config.php',
+        '/demo/upload' => include APP_PATH . 'modules/Demos/SubiendoArchivos/config.php',
+        '/demo/router' => include APP_PATH . 'modules/Demos/Router/config.php',
+        '/demo/admin' => include APP_PATH . 'modules/Demos/Seguridad/config.php',
+        '/demo/rest' => include APP_PATH . 'modules/Demos/Rest/config.php',
+        '/demo/modelos' => include APP_PATH . 'modules/Demos/Modelos/config.php',
     ));
 }

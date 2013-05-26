@@ -41,11 +41,11 @@ if (PRODUCTION) {
  */
 function composerPath($package, $targetDir, $file = 'config.php')
 {
-    return APP_PATH . '/../../vendor/' . trim($package) . '/' . trim($targetDir) . '/' . $file;
+    return APP_PATH . '../../vendor/' . trim($package) . '/' . trim($targetDir) . '/' . $file;
 }
 
 App::modules(array(
     require_once __DIR__ . '/../../vendor/k2/core/src/K2/config.php',
 ));
 
-require_once APP_PATH . '/config/modules.php';
+require_once APP_PATH . 'config/modules.php';
