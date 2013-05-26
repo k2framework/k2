@@ -68,6 +68,7 @@ Ejemplo
     ));
 
 Todo módulo debe tener un archivo php en la carpeta raiz del mismo, ya que será mediante este que registraremos el módulo en nuestro proyecto.
+
 La funcion composerPath()
 -------------------------
 
@@ -94,19 +95,19 @@ Para llamar al "indexController" del módulo "Demos/Rest" nuestra URL de petici�
 
 ::
 
-  /demo/rest                        // carga el controlador indexController y la acción index
-  /demo/rest/                       // hace lo mismo que la ruta anterior
-  /demo/rest/index                  // hace lo mismo que la ruta anterior
-  /demo/rest/index/index            // hace lo mismo que la ruta anterior
-  /demo/rest/index/otra_acción      // carga el controlador indexController y la acción otraAccion
-  /demo/rest/ventas/crear           // carga el controlador ventasController y la acción crear
+    /demo/rest                        // carga el controlador indexController y la acción index
+    /demo/rest/                       // hace lo mismo que la ruta anterior
+    /demo/rest/index                  // hace lo mismo que la ruta anterior
+    /demo/rest/index/index            // hace lo mismo que la ruta anterior
+    /demo/rest/index/otra_acción      // carga el controlador indexController y la acción otraAccion
+    /demo/rest/ventas/crear           // carga el controlador ventasController y la acción crear
   
 Ahora tenemos unos ejemplos de rutas que no concordarán con el prefijo /demo/rest
 
 ::
 
-  /demo/restaurant                  // esta ruta no concuerda con el prefijo
-  /demo/res/hola                    // esta ruta tampoco concuerda
+    /demo/restaurant                  // esta ruta no concuerda con el prefijo
+    /demo/res/hola                    // esta ruta tampoco concuerda
 
 
 Como debe ser el Prefijo
