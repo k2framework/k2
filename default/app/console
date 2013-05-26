@@ -4,7 +4,7 @@ use K2\Kernel\Kernel;
 use K2\Console\Application;
 
 define('PRODUCTION', false);
-define('APP_PATH', __DIR__);
+define('APP_PATH', rtrim(__DIR__, '/') . '/');
 
 require_once __DIR__ . '/bootstrap.php';
 

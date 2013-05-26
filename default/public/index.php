@@ -8,7 +8,7 @@ define('START_TIME', microtime(1));
 define('PRODUCTION', false);
 /*
  */
-define('APP_PATH', dirname(__DIR__) . '/app/');
+define('APP_PATH', rtrim(__DIR__, '/') . '/app/');
 /*
  */
 //require_once '../app/kernel.min.php'; //usar las clases compiladas (mejora velocidad)
