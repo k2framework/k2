@@ -9,8 +9,15 @@
                 {% endfor %}
                 <th>Acciones</th>
             </tr></thead>
+        <tfoot>
+            <tr>
+                <td colspan="{{ model.metadata.attributes|length + 1 }}">
+                    {% include 'paginators/extended.twig' with { page: paginator } %}
+                </td>
+            </tr>
+        </tfoot>
         <tbody>
-            {% for e in paginator.items %}
+            {% for e in paginator %}
                 <tr>
                     {% for property, attr in model.metadata.attributes %}
                         <td>{{ attribute(e, property) }}</td>
@@ -24,7 +31,6 @@
             {% endfor %}
         </tbody>
     </table>
-    {#% include 'paginators/default.twig' with { page: paginator } %#}
 {% else %}
         <h2>No hay ningún registro</h2>
 {% endif %}
