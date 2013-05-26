@@ -1,7 +1,7 @@
 Los Modulos
 ========
 
-.. contents:: En esta nueva versión de KumbiaPHP, la aplicación está constituida por módulos ó paquetes.
+.. contents:: Las aplicaciónes en K2 están constituidas por módulos ó paquetes.
 
 Que es un Modulo
 ----------------
@@ -22,7 +22,7 @@ Un módulo puede contener cualquier nombre válido como el que le damos a nuestr
 Creando un Modulo
 -----------------
 
-Generalmente los módulos de nuestra aplicación estarán contenidos en la carpeta **"proyecto/app/modules/"**, sin embargo un módulo puede estar en cualquier parte del servidor, ya que los módulos deben ser registrados en el `app/app.php <app.rst>`_ para poder tener acceso a ellos.
+Generalmente los módulos de nuestra aplicación estarán contenidos en la carpeta **"proyecto/app/modules/"**, sin embargo un módulo puede estar en cualquier parte del servidor, ya que los módulos deben ser registrados en el `app/config/modules.php <https://github.com/k2framework/k2/blob/master/doc/modules.rst>`_ para poder tener acceso a ellos.
 
 Un ejemplo básico de la estructura de un módulo es:
 
@@ -114,8 +114,9 @@ En el podremos registrar parametros y servicios en el contenedor, ademas agregar
 En este ejemplo hemos creado un archivo **K2/Ventas/config.php**, en el cual definimos el nombre lógico de módulo, el namespace del mismo, los servicios, parametros y escuchas de eventos, y ademas alguna configuración adicional en el indice **'init'** el cual tiene como valor un clousure que espera el Container.
 
 Nombres de Módulos
+================
 
-Generalmente los módulos tendrán asociado un vendor delante del nombre de los mismos, esto es asó debido a que si otra persona ó empresa crea un módulo con el mismo nombre, no existan conflictos, es decir, si el módulo se llamara solo Backend por ejemplo y otra persona crea un módulo llamado Backend tambien, al intentar usar los 2 módulos en la aplicación se generarán conflictos de nombres en los namespaces.
+Generalmente los módulos tendrán asociado un vendor delante del nombre de los mismos, esto es así debido a que si otra persona ó empresa crea un módulo con el mismo nombre, no existan conflictos, es decir, si el módulo se llamara solo Backend por ejemplo y otra persona crea un módulo llamado Backend tambien, al intentar usar los 2 módulos en la aplicación se generarán conflictos de nombres en los namespaces.
 
 Lo mejor siempre será entonces llamara al módulo con un identificador del usuario, grupo ó empresa delante del nombre del módulo, ejemplos:
 
@@ -129,18 +130,18 @@ Es muy facil instalar y configurar módulos de otras personas, ya sea para agreg
 
 Solo debemos descargar dicho módulo y colocarlo en la carpeta vendors de la aplicación si no vamos a editar el código del módulo, ó en la carpeta modules de la aplicación si vamos a editar dicho módulo.
 
-Luego de esto debemos registrar el módulo en el archivo `app/config/app.php <https://github.com/k2framework/k2/blob/master/doc/app.rst>`_.
+Luego de esto debemos registrar el módulo en el archivo `app/config/modules.php <https://github.com/k2framework/k2/blob/master/doc/modules.rst>`_.
 
 Registrando el módulo
 _________________________
 
-Cuando queremos agregar un módulo a nuestra aplicación debemos hacerlo en el archivo **app/config/app.php**.
+Cuando queremos agregar un módulo a nuestra aplicación debemos hacerlo en el archivo **app/config/modules.php**.
 
 Veamos un ejemplo de como lograr esto::
 
     Queremos instalar el módulo (plugin) K2/Twitter, el cual nos ofrece un api de conexión con twitter.
 
-    veamos como agregarlo al app/config/app.php, suponiendo que lo colocamos en vendor:
+    veamos como agregarlo al app/config/modules.php, suponiendo que lo colocamos en vendor:
 
 .. code-block:: php
 
@@ -153,7 +154,7 @@ Veamos un ejemplo de como lograr esto::
     ));
 
 
-Si el módulo que acabamos de registrar es accesible desde el navegador, el indice del mismo será usado como prefijo de ruta para acceder a los controladores del mismo. Si no queremos que sea accesible desde el navegador, no le colocamos ningun incide.
+Si el módulo que acabamos de registrar es accesible desde el navegador, el indice del mismo será usado como prefijo de ruta para acceder a los controladores del mismo. Si no queremos que sea accesible desde el navegador, no le colocamos ningun índice.
 
 Donde debo colocar Los Modulos
 ------------------------------
@@ -161,3 +162,5 @@ Donde debo colocar Los Modulos
 Dependiendo de la finalidad del módulo, existen dos lugares principales en los que alojar al mismo. Si nuestro módulo va a poder ser reutilizable en diferentes aplicaciones, y no está enfocado en una funcionalidad de una aplicación en especifico, lo mejor es que se encuentre en la carpeta **vendors** de los proyectos, ya que esto permite que varias aplicaciones puedan utilizar el mismo módulo conjuntamente.
 
 Si el módulo ofrece una funcionalidad especifica dentro de la aplicación, por ejemplo los reportes de ventas de una empresa, lo mejor es que se encuentre alojado dentro de la carpeta **app/modules**, ya que el módulo es propio del proyecto, y los demas proyectos no lo reuzarán.
+
+Ademas generalmente los módulos serán instalables mediante composer, por lo tanto se autoinstalaran en la carpeta vendors por defecto (Esta es la mejor opción para instalar módulos de terceros).
