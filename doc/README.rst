@@ -7,7 +7,7 @@ Lo Básico
    * `Instalación y Requerimientos <https://github.com/k2framework/k2/blob/master/doc/instalacion_requerimientos.rst>`_
    * `Funcionamiento Básico <https://github.com/k2framework/k2/blob/master/doc/funcionamiento_basico.rst>`_
    * `Los Módulos <https://github.com/k2framework/k2/blob/master/doc/los_modulos.rst>`_
-   * `El AppKernel <https://github.com/k2framework/k2/blob/master/doc/app_kernel.rst>`_
+   * `El config/modules.php <https://github.com/k2framework/k2/blob/master/doc/modules.rst>`_
    * `El Controlador <https://github.com/k2framework/k2/blob/master/doc/controlador.rst>`_
    * `El Objeto Request ( Petición ) <https://github.com/k2framework/k2/blob/master/doc/request.rst>`_
    * `El Objeto Response ( la Respuesta ) <https://github.com/k2framework/k2/blob/master/doc/response.rst>`_
