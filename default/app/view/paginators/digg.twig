@@ -1,0 +1,88 @@
+{# 
+ * KumbiaPHP web & app Framework
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://wiki.kumbiaphp.com/Licencia
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@kumbiaphp.com so we can send you a copy immediately.
+ *
+ * Paginador "digg" para aplicaciones
+ *
+ * Parametros del paginador:
+ *   page: objeto obtenido al invocar al paginador
+ *   show: numero de paginas que se mostraran en el paginador
+ *   url: url para la accion que efectua la paginacion, por defecto "module/controller/page/"
+ *        y se envia por parametro el numero de pagina
+ * 
+ * @category   Kumbia
+ * @package    Partials 
+ * @copyright  Copyright (c) 2005-2012 Kumbia Team (http://www.kumbiaphp.com)
+ * @license    http://wiki.kumbiaphp.com/Licencia     New BSD License
+#}
+{% if page is not null %}
+{% spaceless %}
+{% set url = rtrim(url|default(url(parameters={})), '/') ~ '/' %}
+{% set show = show|default(10) %}
+{% set half = floor(show / 2) %}
+{% if page.currentPage <= half %}
+{% set start = 1 %}
+{% elseif (page.pages - page.currentPage) < half %}
+{% set start = abs(page.pages - show + 1) %}
+{% else %}
+{% set start = page.currentPage - half %}
+{% endif %}
+{% set last = start == page.pages ? true : false %}
+{% set start = start - 1 > 0 ? start - 1 : start %}
+<div class="paginator">
+    {# pintado del PREV #}
+    {% if page.previousPage == 1 %}
+        <a href="{{ url }}" title="Ir a la pág. anterior" class="nextprev">Anterior</a>
+    {% elseif page.previousPage %}
+        <a href="{{ url~page.previousPage }}" title="Ir a la pág. anterior" class="nextprev">Anterior</a>
+    {% endif %}
+    {#  #}
+    {% if start == 1 %}
+        {% set start, show = 2 , show - 1 %}
+        {% if 1==page.currentPage %}
+            <strong>1</strong>
+        {% else %}
+            <a href="{{ url }}">1</a>
+        {% endif %}
+    {% endif %}
+    {# pintamos las páginas  #}
+    {% set fin = start+show %}
+    {% set fin = fin > page.pages ? page.pages : fin %}
+    {% for index in (start)..(fin) if index < page.pages %}
+        {% if index==page.currentPage %}
+            <strong>{{ index }}</strong>
+        {% else %}
+            <a href="{{ url~index }}">{{ index }}</a>
+        {% endif %}
+    {% endfor %}
+    {# si el for va a mostrar elementos por debajo del total de paginas mostramos un ... #}
+    {% if page.pages > fin %}
+        {% if page.pages > fin + 1 %}
+            <a href="#">...</a>
+        {% endif %}
+        {% set fin = page.pages - 1 %}
+        <a href="{{ url~fin }}">{{ fin }}</a>
+        <a href="{{ url~page.pages }}">{{ page.pages }}</a>
+    {% elseif page.pages==fin %}
+        {% if last %}
+            <strong>{{ index }}</strong>
+        {% else %}
+            <a href="{{ url~fin }}">{{ fin }}</a>
+        {% endif %}
+    {% endif %}
+    {# pintamos el nextPage #}
+    {% if page.nextPage %}
+        <a href="{{ url~page.nextPage }}" title="Ir a la pág. siguiente" class="nextprev">Siguiente</a>
+    {% endif %}
+</div>
+{% endspaceless %}
+{% endif %}

@@ -1,5 +1,4 @@
-<?php
-/**
+{#
  * KumbiaPHP web & app Framework
  *
  * LICENSE
@@ -12,7 +11,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@kumbiaphp.com so we can send you a copy immediately.
  *
- * Paginador "simple" para aplicaciones
+ * Paginador "extended" para aplicaciones
  *
  * Parametros del paginador:
  *   page: objeto obtenido al invocar al paginador
@@ -23,19 +22,26 @@
  * @package    Partials 
  * @copyright  Copyright (c) 2005-2012 Kumbia Team (http://www.kumbiaphp.com)
  * @license    http://wiki.kumbiaphp.com/Licencia     New BSD License
- */
- 
-if(!isset($url)) {
-    $url = rtrim(K2\View\View::app()->createUrl(), '/');
-}
- 
-?>
-
+#}
+{% if page is not null %}
+{% spaceless %}
+{% set url = rtrim(url|default(url(parameters={})), '/') ~ '/' %}
+{% set s_item = page.perPage * (page.currentPage-1) + 1 %}        
+{% set e_item = s_item + (page.items|length) - 1 %}        
 <div class="paginator">
-    <?php if($page->prev==1) echo Html::link("$url/", 'Anterior', 'title="Ir a la pág. anterior" class="nextprev"'); //se coloca el link sin numero de pagina para la pagina 1
-        elseif($page->prev) echo Html::link("$url/$page->prev/", 'Anterior', 'title="Ir a la pág. anterior" class="nextprev"'); ?>
+    {% if page.previousPage == 1 %}
+        <a href="{{ url }}" title="Ir a la pág. anterior" class="nextprev">Anterior</a>
+    {% elseif page.previousPage %}
+        <a href="{{ url~page.previousPage }}" title="Ir a la pág. anterior" class="nextprev">Anterior</a>
+    {% endif %}
 
-    pag. <?php echo $page->current ?>/<?php echo $page->total ?>
+    pag. {{ page.currentPage }} de {{ page.pages }}
+    |
+    items {{ s_item }}-{{ e_item }}
 
-    <?php if($page->next) echo Html::link("$url/$page->next/", 'Siguiente', 'title="Ir a la pág. siguiente" class="nextprev"') ?>
+    {% if page.nextPage %}
+        <a href="{{ url~page.nextPage }}" title="Ir a la pág. siguiente" class="nextprev">Siguiente</a>
+    {% endif %}
 </div>
+{% endspaceless %}
+{% endif %}
