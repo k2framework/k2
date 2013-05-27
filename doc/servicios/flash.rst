@@ -107,21 +107,22 @@ En el siguiente ejemplo enviaremos 1 mensaje de información desde un controlado
 
     namespace MiModulo\Controller;
 
+    use K2\Kernel\App;
     use K2\Kernel\Controller\Controller;
 
     class usuariosController extends Controller
     {
         public function index_action()
         {
-            $this->get("flash")->info("Lista de Usuarios Vacía...!!!");
+            App::get("flash")->info("Lista de Usuarios Vacía...!!!");
         }
     }
 
-.. code-block:: phtml
+.. code-block:: html+jinja
 
-    <!-- en la vista leemos el flash -->
+    {# en la vista leemos el flash #}
 
-    <?php if (View::flash()->has("info")): //se puede obviar el if, ya que si no existe se muestra vacio ?>
+    {# if (View::flash()->has("info")): //se puede obviar el if, ya que si no existe se muestra vacio ?>
         <?php foreach(View::flash()->get("info") => $msj): ?>
             <div class="info"><?php echo $msj ?></div>
         <?php endforeach; ?>
