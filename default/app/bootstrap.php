@@ -1,7 +1,7 @@
 <?php
 
 use K2\Kernel\App;
-use K2\Kernel\Exception\ExceptionHandler;
+use K2\Kernel\Config\ConfigReader;
 
 $loader = require_once __DIR__ . '/../../vendor/autoload.php';
 /*
@@ -23,7 +23,6 @@ if (isset($_SERVER['QUERY_STRING'])) {
 
 App::setLoader($loader);
 
-
 if (PRODUCTION) {
     error_reporting(0);
     ini_set('display_errors', 'Off');
@@ -44,8 +43,10 @@ function composerPath($package, $targetDir, $file = 'config.php')
     return APP_PATH . '../../vendor/' . trim($package) . '/' . trim($targetDir) . '/' . $file;
 }
 
-App::modules(array(
-    require_once __DIR__ . '/../../vendor/k2/core/src/K2/config.php',
-));
+if (!ConfigReader::getCompiled()) {
+    
+    require_once APP_PATH . 'config/modules.php';
+    
+    ConfigReader::compile();
+}
 
-require_once APP_PATH . 'config/modules.php';
