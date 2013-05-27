@@ -19,11 +19,11 @@ App::modules(array(
 if (false === PRODUCTION) {
     App::modules(array(
         composerPath('k2/debug', 'K2/Debug'),
-        '/demo/vistas' => APP_PATH . 'modules/Demos/Vistas/config.php',
-        '/demo/upload' => APP_PATH . 'modules/Demos/SubiendoArchivos/config.php',
-        '/demo/router' => APP_PATH . 'modules/Demos/Router/config.php',
-        '/demo/admin' => APP_PATH . 'modules/Demos/Seguridad/config.php',
-        '/demo/rest' => APP_PATH . 'modules/Demos/Rest/config.php',
+        '/demo/vistas'  => APP_PATH . 'modules/Demos/Vistas/config.php',
+        '/demo/upload'  => APP_PATH . 'modules/Demos/SubiendoArchivos/config.php',
+        '/demo/router'  => APP_PATH . 'modules/Demos/Router/config.php',
+        '/demo/admin'   => APP_PATH . 'modules/Demos/Seguridad/config.php',
+        '/demo/rest'    => APP_PATH . 'modules/Demos/Rest/config.php',
         '/demo/modelos' => APP_PATH . 'modules/Demos/Modelos/config.php',
     ));
 }
