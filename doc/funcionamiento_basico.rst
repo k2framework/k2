@@ -6,9 +6,9 @@ El principio básico del recorrido de las peticiones es el siguiente:
 
 Tenemos un controlador que se ejecuta al enviar una petición a una url concreta, y nuestro controlador puede tener filtros para realizar tareas antes y despues de ejecutar la acción en el controlador. 
 
-Los controladores extienden de una clase base para todos los controladores **"K2\\Kernel\\Controller\\Controller"** la cual ofrcee métodos utiles para interactuar y solicitar herramientas que el framework ofrece.
+Los controladores extienden de una clase base para todos los controladores **"K2\\Kernel\\Controller\\Controller"** la cual ofrece métodos utiles para interactuar y solicitar herramientas que el framework ofrece.
 
-Se incorporan los escuchas de eventos, los mediante los cuales podemos facilmente realizar ciertas, que necesitemos se ejecuten en distintos momentos del recorrido de la petición.
+Ademas se tienen los escuchas de eventos, mediante los cuales podemos facilmente realizar ciertas tareas, que necesitemos se ejecuten en distintos momentos del recorrido de la petición.
 
 Recorido de la Peticion
 -----------------------

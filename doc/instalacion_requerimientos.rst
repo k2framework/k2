@@ -1,7 +1,7 @@
 ﻿Requerimientos de K2Framewrok
 =============================
 
-Esta versión necesita PHP 5.3.* en adelante para trabajar, ya que se incorporan los namespaces que ofrecen las nuevas versiones de php.
+Se necesita PHP 5.3.* en adelante para trabajar.
 
 Ademas se necesita tener activado el `mod_rewrite <https://www.google.com/search?q=mod_rewrite>`_ de Apache para poder trabajar las URL.
 
