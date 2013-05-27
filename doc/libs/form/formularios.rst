@@ -1,52 +1,25 @@
 Formularios
 ===========
 
-La lib para la creación de formularios nos permite de manera sencilla crear elementos (campos) del form, dandonos la seguridad de que solo esos campos y ningun otro data enviado por el cliente llegará a los modelos, ya que es en nuestros modelos de formulario ó en el contralador donde definiremos los campos que tendrá nuestro formulario y serán solos los valores de esos campos ( debidamente validados ), los que llegarán al modelo para ser procesados.
+Para la creación de formularios disponemos de varias funciones Twig:
+
+    * **form_input(name, type = 'text', attrs = array(), value = null)**
+    * **form_label(name, text, attrs = array())**
+    * **form_textarea(name, attrs = array(), value = null)**
+    * **form_check(name, value, attrs = array(), check = false)**
+    * **form_radio(name, value, attrs = array(), check = false)**
+    * **form_select(name, array options, attrs = array(), value = null)**
+    * **form_choice(name, array options, multiple = true, attrs = array(), value = null)**
+    * **form_options(array options, column, key = 'id')**
+
+Estás funciones permiten crear de manera simple los elementos comunes presentes en cualquier formulario html.
 
 Creando un Formulario
 ---------------------
 
 Veamos con un ejemplo como crear un formulario con tres campos, nombres, apellidos y edad:
 
-.. code-block:: php
-
-    //archivo app/modules/MiModulo/Controller/usuariosController.php
-
-    namespace MiModulo\Controller;
-
-    use K2\Form\Form;
-    use K2\Kernel\Controller\Controller;
-
-    class usuariosController extends Controller //ahora se extiende de una clase base Controller.
-    {
-        public function crear_action()
-        {
-            $form = new Form("nombre_form");//creamos la instancia del formulario y lo llamamos nombre_form
-
-            $form->add("nombres") //por defecto add crea un campo de tipo texto si no lo especificamos.
-                    ->setLabel("Escribe tus Nombres:") //agregamos un texto para el label
-                    ->required(true); //le decimos que el campo es requerido (valida html5 y php)
-
-            $form->add("apellidos", 'text') //acá le decimos explicitamente que el campo es de texto.
-                    ->setLabel("Escribe tus Apellidos:")
-                    ->required(); //le decimos que es requerido, por defecto es true si no pasamos nada
-
-            $form->add("edad", "number") //agregamos un campo de tipo number.
-                    ->setLabel("Escribe tu Edad:")
-                    ->required()
-                    ->range(18); //acá le decimos que el numero minimo es 18
-                    //->range(18, 110); //acá le decimos que la edad es minimo 18 y máximo 110 años
-                    //->range(18, 110, 'Tu edad debe estar entre {min} y {max}'); //acá pasamos un mensaje personalizado.
-
-            $this->formulario = $form;//pasamos el objeto a la vista. 
-        }
-    }
-
-    //la vista:
-
-    <?php K2\View\View::content(true); //el true es para que muestre los mensajes flash ?>
-
-    <?php echo $formulario;//imprimimos la variable y esto nos generará todo el formulario con los campos agregados. ?>
+.. code-block:: html+jinja
 
 Como se puede apreciar es muy sencillo crear y agregar campos con la lib form, aparte esta puede renderizar todo el formulario sin nosotros tener que hacer nada especial (Con mensajes de error si el formulario es validado).
 
