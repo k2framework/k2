@@ -43,10 +43,4 @@ function composerPath($package, $targetDir, $file = 'config.php')
     return APP_PATH . '../../vendor/' . trim($package) . '/' . trim($targetDir) . '/' . $file;
 }
 
-if (!ConfigReader::getCompiled()) {
-    
-    require_once APP_PATH . 'config/modules.php';
-    
-    ConfigReader::compile();
-}
-
+require_once APP_PATH . 'config/modules.php';
