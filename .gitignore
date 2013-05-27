@@ -1,3 +1,4 @@
 /nbproject/
 composer.*
 */app/temp/
+/vendor/
