@@ -10,8 +10,6 @@ use K2\Kernel\App;
 App::modules(array(
     composerPath('k2/core', 'src/K2'),
     '/' => APP_PATH . 'modules/Index/config.php',
-    include composerPath('k2/core', 'src/K2'),
-    '/' => include APP_PATH . 'modules/Index/config.php',
 ));
 
 
