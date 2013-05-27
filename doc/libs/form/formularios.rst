@@ -48,31 +48,3 @@ Veamos con un ejemplo como crear un formulario con tres campos, nombres, apellid
    {% endblock %}
 
 Como se puede apreciar es muy sencillo crear campos.
-
-Personalizando el diseño del Formulario
----------------------------------------
-
-La gran mayoria de la veces necesitaremos personalizar el como se muestran los campos de formulario, y realmente es muy sencillo lograr esto con la lib Form, veamos un ejemplo del mismo formulario anterior pero personalizado.
-
-.. code-block:: html+php
-
-    <?php K2\View\View::content(true); //el true es para que muestre los mensajes flash ?>
-
-    <?php echo $formulario->open(); //crea la etiqueta de apertura. ?>
-
-    <dl>
-
-        <dd><label><?php echo $formulario['nombres']['label']; //imprime el label para el campo nombres ?></label></dd>
-        <dt><?php echo $formulario['nombres']; //renderiza el campo de tipo texto nombres ?></dt>
-
-        <dd><label><?php echo $formulario['apellidos']['label']; ?></label></dd>
-        <dt><?php echo $formulario['nombres']; //renderiza el campo de tipo texto apellidos ?></dt>
-
-        <dd><label><?php echo $formulario['edad']['label']; ?></label></dd>
-        <dt><?php echo $formulario['edad']; //renderiza el campo edad (tipo number) ?></dt>
-
-    </dl>
-
-    <?php echo $formulario->close(); //crea la etiqueta de cierre. ?>
-
-Como se puede apreciar es muy sencillo personalizar el formulario, ya que en la vista se trabaja como si fuese un arreglo del que mostramos los indices (estos indices son los campos agregados en el controlador). y solo con hacerles un echo, estos generan código html. Ademas, de una vez estos campos al ser requeridos tendrán el atributo required, y el campo edad tendrá ademas el atributo range para sus respectivas validaciones HTML5
