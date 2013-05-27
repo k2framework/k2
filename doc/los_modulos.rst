@@ -149,8 +149,8 @@ Veamos un ejemplo de como lograr esto::
      * Iinstalación de módulos
      */
     App::modules(array(
-        '/' => include APP_PATH . '/modules/Index/config.php',
-        '/twitter' => include dirname(APP_PATH) . '/vendor/K2/Twitter/config.php',
+        '/' => APP_PATH . '/modules/Index/config.php',
+        '/twitter' => dirname(APP_PATH) . '/vendor/K2/Twitter/config.php',
     ));
 
 

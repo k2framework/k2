@@ -18,9 +18,9 @@ Codigo del modules.php
      * Iinstalación de módulos
      */
     App::modules(array(
-        '/' => include APP_PATH . 'modules/Index/config.php',
-        '/admin' => include composerPath('k2/backend', 'K2/Backend'),
-        '/calendar' => include composerPath('k2/calendar', 'K2/Calendar'),
+        '/' => APP_PATH . 'modules/Index/config.php',
+        '/admin' => composerPath('k2/backend', 'K2/Backend'),
+        '/calendar' => composerPath('k2/calendar', 'K2/Calendar'),
     ));
     
     
@@ -29,13 +29,13 @@ Codigo del modules.php
      */
     if (false === PRODUCTION) {
         App::modules(array(
-            include composerPath('k2/debug', 'K2/Debug'),
-            '/demo/vistas' => include APP_PATH . 'modules/Demos/Vistas/config.php',
-            '/demo/upload' => include APP_PATH . 'modules/Demos/SubiendoArchivos/config.php',
-            '/demo/router' => include APP_PATH . 'modules/Demos/Router/config.php',
-            '/demo/admin' => include APP_PATH . 'modules/Demos/Seguridad/config.php',
-            '/demo/rest' => include APP_PATH . 'modules/Demos/Rest/config.php',
-            '/demo/modelos' => include APP_PATH . 'modules/Demos/Modelos/config.php',
+            composerPath('k2/debug', 'K2/Debug'),
+            '/demo/vistas' => APP_PATH . 'modules/Demos/Vistas/config.php',
+            '/demo/upload' => APP_PATH . 'modules/Demos/SubiendoArchivos/config.php',
+            '/demo/router' => APP_PATH . 'modules/Demos/Router/config.php',
+            '/demo/admin' => APP_PATH . 'modules/Demos/Seguridad/config.php',
+            '/demo/rest' => APP_PATH . 'modules/Demos/Rest/config.php',
+            '/demo/modelos' => APP_PATH . 'modules/Demos/Modelos/config.php',
         ));
     }
 
@@ -45,7 +45,7 @@ Como podemos ver este es un ejemplo del código que se encuentra en nuestro modu
 El Metodo App::modules()
 -----------------------------
 
-Este método permite registrar los modulos de la aplicación. recibe un array con la respuesta de la inclusión de los archivo config.php de cada módulo (dichos archivos deben retornar un array).
+Este método permite registrar los modulos de la aplicación. recibe un array con los las rutas de los archivos config.php de cada módulo (dichos archivos deben retornar un array).
 
 Ejemplo
 =======
@@ -53,18 +53,18 @@ Ejemplo
 .. code-block:: php
 
     App::modules(array(
-        '/' => include APP_PATH . 'modules/Index/config.php',
+        '/' => APP_PATH . 'modules/Index/config.php',
     ));
     
     App::modules(array(
-        '/' => include APP_PATH . 'modules/Index/config.php',
+        '/' => APP_PATH . 'modules/Index/config.php',
         //si nuestro modulo fué instalador mediante composer, podemos registrarlo usando la funcion composerPath
-        '/admin' => include composerPath('k2/backend', 'K2/Backend'),
+        '/admin' => composerPath('k2/backend', 'K2/Backend'),
     ));
     
     App::modules(array(
         //si nuestro módulo no será accesible desde el navegador, no le asignamos un indice
-        include composerPath('k2/backend', 'K2/Backend'), 
+        composerPath('k2/backend', 'K2/Backend'), 
     ));
 
 Todo módulo debe tener un archivo php en la carpeta raiz del mismo, ya que será mediante este que registraremos el módulo en nuestro proyecto.
@@ -118,14 +118,14 @@ En realidad un prefijo puede ser cualquier patrón de url válido, y no necesari
 .. code-block:: php
 
     App::modules(array(
-        '/' => include APP_PATH . 'modules/Index/config.php',
-        '/admin' => include composerPath('k2/backend', 'K2/Backend'),
-        '/demo/vistas' => include APP_PATH . 'modules/Demos/Vistas/config.php',
-        '/demo/upload' => include APP_PATH . 'modules/Demos/SubiendoArchivos/config.php',
-        '/demo/router' => include APP_PATH . 'modules/Demos/Router/config.php',
-        '/demo/admin' => include APP_PATH . 'modules/Demos/Seguridad/config.php',
-        '/demo/rest' => include APP_PATH . 'modules/Demos/Rest/config.php',
-        '/demo/modelos' => include APP_PATH . 'modules/Demos/Modelos/config.php',
+        '/' => APP_PATH . 'modules/Index/config.php',
+        '/admin' => composerPath('k2/backend', 'K2/Backend'),
+        '/demo/vistas' => APP_PATH . 'modules/Demos/Vistas/config.php',
+        '/demo/upload' => APP_PATH . 'modules/Demos/SubiendoArchivos/config.php',
+        '/demo/router' => APP_PATH . 'modules/Demos/Router/config.php',
+        '/demo/admin' => APP_PATH . 'modules/Demos/Seguridad/config.php',
+        '/demo/rest' => APP_PATH . 'modules/Demos/Rest/config.php',
+        '/demo/modelos' => APP_PATH . 'modules/Demos/Modelos/config.php',
     ));
 
 Estos son ejemplos validos de prefijos asignados a módulos, se puede apreciar que no existe ninguna restricción en cuanto al nombre del prefijo y el nombre del módulo, estos pueden ser muy distintos unos de otros.
