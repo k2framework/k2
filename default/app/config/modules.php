@@ -8,6 +8,7 @@ use K2\Kernel\App;
  * Iinstalación de módulos
  */
 App::modules(array(
+    include composerPath('k2/core', 'src/K2'),
     '/' => include APP_PATH . 'modules/Index/config.php',
 ));
 
