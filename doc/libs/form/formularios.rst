@@ -21,7 +21,33 @@ Veamos con un ejemplo como crear un formulario con tres campos, nombres, apellid
 
 .. code-block:: html+jinja
 
-Como se puede apreciar es muy sencillo crear y agregar campos con la lib form, aparte esta puede renderizar todo el formulario sin nosotros tener que hacer nada especial (Con mensajes de error si el formulario es validado).
+   {% extends "base.twig" %}
+   
+   {% block cuerpo %}
+   
+   {{ form_label('persona.nombres', 'Nombres') }}
+   {{ form_input('persona.nombres') }} {# si no especificamos el tipo de campo, lo crea type="text" #}
+   
+   {{ form_label('persona.apellidos', 'Apellidos') }}
+   {{ form_input('persona.apellidos', 'text') }}
+   
+   {{ form_label('persona.edad', 'Edad') }}
+   {{ form_input('persona.edad', 'number', {min:1, max: 110}) }}
+   
+   <!-- genera -->
+   
+   <label for="persona_nombres">Nombres</label>
+   <input type="text" name="persona[nombres]" id="persona_nombres" />
+   
+   <label for="persona_apelldios">Apelldios</label>
+   <input type="text" name="persona[apelldios]" id="persona_apelldios" />
+   
+   <label for="persona_edad">Edad</label>
+   <input type="number" name="persona[edad]" id="persona_edad" min="1" max="110" />
+   
+   {% endblock %}
+
+Como se puede apreciar es muy sencillo crear campos.
 
 Personalizando el diseño del Formulario
 ---------------------------------------
