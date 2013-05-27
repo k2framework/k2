@@ -2,3 +2,4 @@
 composer.*
 */app/temp/
 /vendor/
+/default/public/k2*
