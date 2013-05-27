@@ -53,6 +53,7 @@ ______________
 
     namespace MiModulo\Controller;
 
+    use K2\Kernel\App;
     use K2\Kernel\Controller\Controller;
 
     class usuariosController extends Controller
@@ -73,8 +74,8 @@ ______________
         public function todos()
         {
             //tambien podemos llamar al servicio usado el método get() del controlador
-            return $this->get("router")->forward("NombreModulo:usuarios/index");redireccion interna hacia index()
-            return $this->get("router")->forward("OtroModulo:compras");redireccion interna hacia index()
+            return App::get("router")->forward("NombreModulo:usuarios/index");redireccion interna hacia index()
+            return App::get("router")->forward("OtroModulo:compras");redireccion interna hacia index()
             return $this->getRouter()->forward("OtroModulo:compras");redireccion interna hacia index()
         }
     }
@@ -92,6 +93,7 @@ Se enviará un correo a travez de un servicio ficticio llamado @mail, el correo 
 
     namespace Registro\Controller;
 
+    use K2\Kernel\App;
     use K2\Kernel\Controller\Controller;
 
     class registroController extends Controller
@@ -104,16 +106,16 @@ Se enviará un correo a travez de un servicio ficticio llamado @mail, el correo 
             $response = $this->getRouter()->forward("K2/EmailTemplates:/usuarios/registro/$usuarioId");
 
             if ( 200 === $response->getStatus() ){ //si la respuesta es exitosa.
-                $email = $this->get("mail")
+                $email = App::get("mail")
                                     ->setSubject("Registro Exitoso")
                                     ->setContent($response->getContet());
                 if ( $email->send() ){
-                    $this->get("flash")->success("El correo fué enviado con éxito...!!!");
+                    App::get("flash")->success("El correo fué enviado con éxito...!!!");
                 }else{ //si hubo un error.
-                    $this->get("flash")->error("No se Pudo enviar el Correo...!!!");
+                    App::get("flash")->error("No se Pudo enviar el Correo...!!!");
                 }
             }else{ //si hubo un error.
-                $this->get("flash")->error("No se Pudo enviar el Correo...!!!");
+                App::get("flash")->error("No se Pudo enviar el Correo...!!!");
             }
         }
     }
