@@ -50,6 +50,8 @@ Para registrar servicios el container ofrece un método set():
      */
     public function set($id, \Closure $function, $singleton = true)
     
+Sin embargo muy pocas veces registraremos servicios usando directamente el container, K2 ofrece una forma simple de hacerlo en la configuracion de los módulos: `Creando un Servicio <https://github.com/k2framework/k2/blob/master/doc/servicios.rst#definiendo-un-servicio>`_
+
 Estos son algunos ejemplos de uso:
 
 .. code-block:: php
@@ -75,3 +77,23 @@ Estos son algunos ejemplos de uso:
         return $mail;//devolvemos la instancia creada.
         
     });
+    
+Registrando una instancia en el container
+------------------
+
+Aveces necesitamos registrar una instancia ya creada en el contenedor, esto lo podemos hacer mediante el método:
+
+.. code-block:: php
+
+    /**
+     * Establece una instancia de un objeto en el indice especificado
+     * @param string $id indice
+     * @param object $object objeto a almacenar
+     */
+    public function setInstance($id, $object)
+    
+    //ejemplo:
+    
+    $user = Usuarios::findById(5);
+    
+    App::get("container")->setInstance("user_logged", $user);
