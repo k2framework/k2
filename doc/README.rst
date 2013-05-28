@@ -21,6 +21,7 @@ Servicios
   * `@container <https://github.com/k2framework/k2/blob/master/doc/servicios/container.rst>`_
   * `@firewall <https://github.com/k2framework/k2/blob/master/doc/servicios/seguridad.rst>`_
   * `@flash <https://github.com/k2framework/k2/blob/master/doc/servicios/flash.rst>`_
+  * `@mapper <https://github.com/k2framework/k2/blob/master/doc/servicios/mapper.rst>`_
   * `@request <https://github.com/k2framework/k2/blob/master/doc/request.rst>`_
   * `@router <https://github.com/k2framework/k2/blob/master/doc/servicios/router.rst>`_
   * `@security <https://github.com/k2framework/k2/blob/master/doc/servicios/seguridad.rst>`_
@@ -32,8 +33,8 @@ Librerias
 ---------
 
   * `ActiveRecord <https://github.com/k2framework/activerecord>`_
-  * Upload
-  * `Form <https://github.com/k2framework/k2/blob/master/doc/libs/form/formularios.rst>`_
+  * `Upload <https://github.com/k2framework/k2/blob/master/doc/libs/upload.rst>`_
+  * `Form <https://github.com/k2framework/k2/blob/master/doc/libs/formularios.rst>`_
 
 Preguntas Frecuentes
 ====================
