@@ -5,6 +5,8 @@ El servicio session es una implementación de la interfaz `K2\\Kernel\\Session\\
 
 Mediante este servicio podremos guardar y leer datos de la sessión de php de forma Orientada a Objetos, veamos algunos ejemplos de como usar el servicio:
 
+.. code-block:: php
+
     <?php
     
     use K2\Kernel\App;
