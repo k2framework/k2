@@ -210,15 +210,21 @@ Este método permite establecer la vista que el servicio @view deberá renderiza
         {
             $this->setView("listado"); //va a renderizar la vista listado.twig
             $this->setView(false); //no se va a renderizar ninguna vista.
+            
+            $this->setView("@K2Backend/reportes/nuevos_ingresos");
+            //va a renderizar la vista CarpetaModuloK2Backend/View/reportes/nuevos_ingresos.twig
+            
+            $this->setView("@K2Backend/ajax");
+            //va a renderizar la vista CarpetaModuloK2Backend/View/ajax.twig
         }
     }  
 
 
 Cuando queremos utilizar una vista de un módulo y no una público, debemos especificar el nombre del módulo delante del nombre de la vista, por ejemplo:
 
-    * **@K2Backend/default/index** -> el módulo es K2/Backend y la vista es default/index.twig
+    * **@K2Backend/default/index**        -> el módulo es K2/Backend y la vista es default/index.twig
     * **@K2EmailTemplate/usuarios/crear** -> el módulo es K2/EmailTemplate y la vista es usuarios/crear.twig
-    * **@Twitter/base** -> el módulo es Twitter y el template es base.twig
+    * **@Twitter/base**                   -> el módulo es Twitter y el template es base.twig
 
 El nombre del módulo es el nombre lógico que se le dá a los mismos en los config.php de cada uno.
 
