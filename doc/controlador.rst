@@ -282,4 +282,40 @@ _______________
 
 Este método lanza una excepcion NotFoundException, podemos mostrar un mensaje para verlo en el entorno de desarrollo, en producción se mostrará la vista 404.twig de "app/views/errors/"
 
+Usando Servicios y Parametros
+________________
+
+Es muy comun usar servicios en las acciones de los controladores (Principalmente es acá donde se usan), por lo tanto debe haber alguna forma de obtenerlos, veamos un ejemplo de como hacerlo:
+
+.. code-block:: php
+
+    //archivo app/modules/MiModulo/Controller/usuariosController.php
+
+    namespace MiModulo\Controller;
+
+    use K2\Kernel\App; la clase App nos permite acceder a todos los servicios del container.
+    use K2\Kernel\Controller\Controller;
+
+    class usuariosController extends Controller //ahora se extiende de una clase base Controller.
+    {
+    
+        public function index_action()
+        {
+            $session = App::get("session"); //el método get de la clase App nos devuelve las instancias de los servicios.
+            $container = App::get("container");//el propio container es un servicio en si.
+            
+            $flash = $conatiner->get("flash"); //ahora lo hacemos directo del container.
+            $flash = App::get("flash"); //ahora usando App::get().
+            
+            $nameApp = App::getParameter("config.name");
+            
+            $configINI = App::getParameter("config");
+            
+            $nameApp = $container->getParameter("config.name");
+            
+            $configINI = $container->getParameter("config");
+            
+            
+        }
+    } 
 
