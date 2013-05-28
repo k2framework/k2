@@ -17,7 +17,7 @@ _________
      * @param string $url
      * @return \K2\Kernel\RedirectResponse 
      */
-    public function redirect($url = NULL, $status = 302)
+    public function redirect($url = null, $status = 302)
 
 toAction()
 _________
@@ -28,7 +28,7 @@ _________
      * @param type $action
      * @return \K2\Kernel\RedirectResponse 
      */
-    public function toAction($action = NULL, $status = 302)
+    public function toAction($action = null, $status = 302)
 
 forward()
 ________
@@ -42,6 +42,31 @@ ________
      * @throws \LogicException 
      */
     public function forward($url)
+
+createUrl()
+________
+.. code-block:: php
+
+    /**
+     * Crea una url válida dentro de la app. todos las libs y helpers la usan.
+     * 
+     * Ejemplos:
+     * 
+     * $this->createUrl('admin/usuarios/perfil');
+     * $this->createUrl('admin/roles');
+     * $this->createUrl('admin/recursos/editar/2');
+     * $this->createUrl('@K2Backend/usuarios'); módulo:controlador/accion/params
+     * 
+     * El ultimo ejemplo es una forma especial de crear rutas
+     * donde especificamos el nombre del módulo en vez del prefijo.
+     * ya que el prefijo lo podemos cambiar a nuestro antojo.
+     * 
+     * @param string $url
+     * @param boolean $baseUrl indica si se devuelve con el baseUrl delante ó no
+     * @return string
+     * @throws NotFoundException si no existe el módulo
+     */
+    public function createUrl($url, $baseUrl = true)
 
 Ejemplo de Uso
 --------------
@@ -65,10 +90,11 @@ ______________
 
         public function listado_action()
         {
-            return $this->getRouter()->redirect("NombreModulo:usuarios/index");//redirije a la accion index()
-            return $this->getRouter()->redirect("NombreModulo:usuarios");//redirije a la accion index()
+            return $this->getRouter()->redirect("@NombreModulo/usuarios/index");// redirige al modulo NombreModule controlador usuarios acción index
+            return $this->getRouter()->redirect("@NombreModulo/usuarios");//lo mismo que el anterior
+            
+            return $this->getRouter()->toAction("index");//lo mismo que el anterior
             return $this->getRouter()->toAction();//redirije a la accion index()
-            return $this->getRouter()->toAction("index");//redirije a la accion index()
         }
 
         public function todos()
@@ -103,7 +129,7 @@ Se enviará un correo a travez de un servicio ficticio llamado @mail, el correo 
             //obtenemos el contenido de la url email_templates/usuarios/registro/{id}
             //el cual es el html que se enviará por correo.
 
-            $response = $this->getRouter()->forward("K2/EmailTemplates:/usuarios/registro/$usuarioId");
+            $response = $this->getRouter()->forward("@K2EmailTemplates/usuarios/registro/$usuarioId");
 
             if ( 200 === $response->getStatus() ){ //si la respuesta es exitosa.
                 $email = App::get("mail")
