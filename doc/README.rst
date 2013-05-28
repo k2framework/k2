@@ -45,11 +45,10 @@ Preguntas Frecuentes
   * `¿Cómo crear un servicio? <https://github.com/k2framework/k2/blob/master/doc/servicios.rst#definiendo-un-servicio>`_
   * `¿Cómo crear Ecuchar un Evento? <https://github.com/k2framework/k2/blob/master/doc/servicios.rst#como-escuchar-un-evento>`_
   * `¿Cómo Crear un Modelo? <https://github.com/k2framework/k2/blob/master/doc/ejemplos/creando_un_modelo.rst>`_
-  * `¿Cómo obtener un servicio desde el controlador? <https://github.com/k2framework/k2/blob/master/doc/controlador.rst#get>`_
+  * `¿Cómo obtener un servicio desde el controlador? <https://github.com/k2framework/k2/blob/master/doc/controlador.rst#usando-servicios-y-parametros>`_
   * `¿Cómo retornar una respuesta JSON? <https://github.com/k2framework/k2/blob/master/doc/response.rst#parametros-de-la-respuesta>`_
   * `¿Cómo crear un módulo en mi aplicación? <https://github.com/k2framework/k2/blob/master/doc/los_modulos.rst>`_
   * `¿Cómo instalar un módulo de terceros? <https://github.com/k2framework/k2/blob/master/doc/los_modulos.rst#instalando-modulos-de-terceros>`_
   * `¿Cómo obtengo un valor que viene por POST? <https://github.com/k2framework/k2/blob/master/doc/request.rst#el-metodo-get>`_
   * `¿Cómo obtengo un valor que viene por GET? <https://github.com/k2framework/k2/blob/master/doc/request.rst#el-metodo-get>`_
-  * `¿Cómo crear un formulario <https://github.com/k2framework/k2/blob/master/doc/libs/form/formularios.rst>`_
-  * ¿Cómo incluir un partial?
+  * `¿Cómo crear un formulario? <https://github.com/k2framework/k2/blob/master/doc/libs/formularios.rst#creando-un-formulario>`_
