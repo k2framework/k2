@@ -55,5 +55,38 @@ Nuestra acción puede recibir un parametro, y si no se le pasa ninguno, toma el 
 
 El sufijo **_action** es muy importante, porque eso le indica al framework que nuestro método es una acción accesible desde el navegador.
 
-la ruta para acceder a nuestra acción es: **http::/localhost/proyecto_k2/index/hola** pero cuidado que si lo hacemos ahora, el framework nos lanzará una excepción diciendonos que no existe la vista **default/app/modules/Index/View/index/hola.twig**
+La vista
+--------
 
+La ruta para acceder a nuestra acción es: **http::/localhost/proyecto_k2/index/hola** pero cuidado que si lo hacemos ahora, el framework nos lanzará una excepción diciendonos que no existe la vista **default/app/modules/Index/View/index/hola.twig**, por lo tanto es hora de crear dicha vista:
+
+```html+jinja
+{# archivo default/app/modules/Index/View/index/hola.twig #}
+{% extends "default.twig" %}
+
+{% block content %}
+
+    <h3>Hola {{ nombre }}!</h3>
+    
+{% endblock %}
+```
+
+Este es todo el código de nuestra vista, si ahora nos vamos al navegador y escribimos la url:
+
+    http::/localhost/proyecto_k2/index/hola
+
+Tendremos una página con el texto:
+
+    Hola Mundo!
+    
+Si ahora intentamos accader a la url pasando un parametro como por ejemplo:
+
+    http::/localhost/proyecto_k2/index/hola/Manuel
+
+Tendremos una página con el texto:
+
+    Hola Manuel!
+    
+Con esto ya tenemos listo nuestro Hola Mundo en K2 Framework :-) , aprendimos a descargar e instalar el framework, crear acciones que reciben parametros, pasar variables a la vista, y usamos algunas de los bondades de Twig para extender plantillas y mostrar variables.
+
+Para conocer más acerca del framework, puedes visitar la [documentación en linea](https://github.com/k2framework/k2/blob/master/README.rst)
