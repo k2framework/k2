@@ -35,7 +35,7 @@ abstract class ScaffoldController extends Controller
     {
         $this->checkModel();
 
-        $this->model = $this->model->findByID($id);
+        $this->model = $this->model->findById($id);
     }
 
     public function crear_action()
@@ -61,7 +61,7 @@ abstract class ScaffoldController extends Controller
 
         $this->setView('crear');
 
-        if (!$this->model = $this->model->findByID($id)) {
+        if (!$this->model = $this->model->findById($id)) {
             $this->renderNotFound("No existe el Registro");
         }
 
@@ -82,7 +82,7 @@ abstract class ScaffoldController extends Controller
     {
         $this->checkModel();
 
-        if (!$model = $this->model->findByID($id)) {
+        if (!$model = $this->model->findById($id)) {
             $this->renderNotFound("No existe el Registro");
         }
 
