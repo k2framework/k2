@@ -3,13 +3,13 @@ El servicio Validator
 
 El servicio de validación llamado @validator nos ofrece una forma sencilla de validar objetos en nuestra aplicación, desde atributos no nulos, hasta atributos iguales, tamaños maximos y minimos de caracteres en los atributos, entre otras cosas.
 
-Para lograr que un objeto pueda ser validado por al servicio **validator**, la clase que difine al objeto debe implementar la interfaz `K2\\Validation\\Validatable <https://github.com/k2framework/Core/blob/master/src/KumbiaPHP/Validation/Validatable.php>`_ la cual contiene tres métodos que deben ser implementados:
+Para lograr que un objeto pueda ser validado por al servicio **validator**, la clase que difine al objeto debe implementar la interfaz `K2\\Validation\\Validatable <https://github.com/k2framework/Core/blob/master/src/K2/Validation/Validatable.php>`_ la cual contiene tres métodos que deben ser implementados:
 
-    * getValidations(): este método debe devolver una instancia de `K2\\Validation\\ValidationBuilder <https://github.com/k2framework/Core/blob/master/src/KumbiaPHP/Validation/ValidationBuilder.php>`_ con las validaciones para la clase definidas.
+    * public function createValidations(ValidationBuilder $builder): en este método crearemos las reglas de validación usando el ValidationBuilder.
     * addError($index, $message): este método recibirá los errores que se presenten al validar.
     * getErrors(): este metodo retornará un arreglo con los errores de validación.
 
-Cualquier clase que implemente la interfaz `K2\\Validation\\Validatable <https://github.com/k2framework/Core/blob/master/src/KumbiaPHP/Validation/Validatable.php>`_ puede ser validada por el servicio **validator**.
+Cualquier clase que implemente la interfaz `K2\\Validation\\Validatable <https://github.com/k2framework/Core/blob/master/src/K2/Validation/Validatable.php>`_ puede ser validada por el servicio **validator**.
 
 Validando un Objeto
 -------------------
@@ -33,17 +33,14 @@ Veamos cómo validar un objeto con el servicio validator:
 
       private $errores = array();
 
-      //implementamos el método getValidations()
-      public function getValidations()
+      //implementamos el método createValidations
+      public function createValidations(ValidationBuilder $builder)
       {
-         $builder = new ValidationBuilder();
-         $builer->notNull('nombres', array('message' => 'Debe especificar un Nombre'));
-         $builer->notNull('fechaNac', array('message' => 'Debe especificar un Correo'));
-         $builer->notNull('comentario', array('message' => 'Debe especificar un Comentario'));
+         $builder->notNull('nombres', array('message' => 'Debe especificar un Nombre'));
+         $builder->notNull('fechaNac', array('message' => 'Debe especificar un Correo'));
+         $builder->notNull('comentario', array('message' => 'Debe especificar un Comentario'));
 
-         $builer->date('fechaNac', array('message' => 'Escriba una Fecha de Nacimiento Válida'));
-
-         return $builder;
+         $builder->date('fechaNac', array('message' => 'Escriba una Fecha de Nacimiento Válida'));
       }
 
       //implementamos el método addError()
@@ -63,6 +60,8 @@ Veamos cómo validar un objeto con el servicio validator:
 
    <?php 
 
+    use K2\Kernel\App;
+
    class indexController extends Controller
    {
 
@@ -70,14 +69,14 @@ Veamos cómo validar un objeto con el servicio validator:
       {
          $contacto = new Contacto();
 
-         $contacto->setData($this->getRequest()->get('form')); //le pasamos la data por un método ficticio.
+         $contacto->setData($this->getRequest()->post('form')); //le pasamos la data por un método ficticio.
 
          //obtenemos el servicio validator y llamamos a su método validate()
-         if ( $this->get('validator')->validate($contacto) ){
+         if ( App::get('validator')->validate($contacto) ){
             //guardamos la data, la enviamos por correo, etc...
-            $this->get('flash')->success('La data fué procesada con exito');
+            App::get('flash')->success('La data fué procesada con exito');
          }else{
             //si hubo errores de validación, los mandamos al servicio flash
-            $this->get('flash')->error($contacto->getErrors());
+            App::get('flash')->error($contacto->getErrors());
       }
    }
