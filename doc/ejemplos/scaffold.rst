@@ -49,5 +49,5 @@ Probando el CRUD
 
 Para probar el crud solo basta con ir a la url del controlador y nos debe aparecer algo como esto:
 
-.. image:: https://raw.github.com/manuelj555/k2/master/doc/img/scaffold1.png
+.. image:: https://raw.github.com/k2framework/k2/master/doc/img/scaffold1.png
    :width: 600px
