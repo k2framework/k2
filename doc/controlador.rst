@@ -208,7 +208,7 @@ Este método permite establecer la vista que el servicio @view deberá renderiza
     {
         public function index_action()
         {
-            $this->setView("listado"); //va a renderizar la vista listado.twig
+            $this->setView("listado"); //va a renderizar la vista proyecto/app/view/listado.twig
             $this->setView(false); //no se va a renderizar ninguna vista.
             
             $this->setView("@K2Backend/reportes/nuevos_ingresos");
