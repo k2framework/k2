@@ -9,7 +9,8 @@ Framework que une la facilidad de trabajo de KumbiaPHP con el potencial de Symfo
 .. |buildcore| image:: https://secure.travis-ci.org/k2framework/Core.png?branch=master
 .. |buildar| image:: https://secure.travis-ci.org/k2framework/activerecord.png?branch=master
 
-`Documentación <https://github.com/k2framework/k2/tree/master/doc/README.rst>`_
++ `Hola Mundo! <https://github.com/k2framework/k2/tree/master/doc/hola_mundo.md>`_
++ `Documentación <https://github.com/k2framework/k2/tree/master/doc/README.rst>`_
 
 Instalación
 -----------
