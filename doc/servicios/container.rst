@@ -102,7 +102,49 @@ Aveces necesitamos registrar una instancia ya creada en el contenedor, esto lo p
     
     App::get("container")->setInstance("user_logged", $user);
     
-Leyendo parametros del Contenedor
+Leyendo y escribiendo parametros en el Contenedor
 -----------
 
 El contenedor de servicios, aparte de contener las instancias de muchas de las clases del framework, contiene parametros de configuración de todo el sistema, los de los módulos, los del config.ini y los que agreguemos directamente en el container.
+
+Leyendo parametros del contenedor:
+
+.. code-block:: php
+
+    <?php
+    
+    use K2\Kernel\App;
+    
+    $container = App::get("container");
+    
+    echo $container->getParameter("config.name"); //leemos el valor del indice name de la seccion [config] del config.ini
+    echo App::getParameter("config.name"); //hace lo mismo que el código anterior.
+    
+    var_dump(App::getParameter("config")); devuelve un array con todos los valores del [config] en el config.ini
+    
+    //es posible acceder a indices de un array en el config usando el  punto **.** como separador, ejemplo:
+    
+    $container->setParameter("user", array( 'id' => 15 , 'nombre' => 'Manuel' ));
+    
+    echo $container->getParameter("user.id");
+    echo $container->getParameter("user.nombre");
+    
+    var_dump($container->getParameter("user"));
+    
+    $container->setParameter("user", array( 
+        'id' => 15 , 
+        'nombre' => 'Manuel',
+        'roles' => array(
+            'user' => array ( 'id' => 1 , 'name' => 'ROL_USUARIO' ),
+            'admin' => array ( 'id' => 2 , 'name' => 'ROL_ADMIN' ),
+        ),
+    ));
+    
+    echo App::getParameter("user.nombre");
+    echo App::getParameter("user.roles.user.name");
+    echo App::getParameter("user.roles.admin.name"); //obtenemos el valor del indice name del rol admin en los roles.
+    
+    var_dump(App::getParameter("user.roles"));
+    var_dump(App::getParameter("user.roles.admin"));
+    
+Generalmente los parametros serán establecidos en el archivo de configuración de cada módulo, en el indice parameters del mismo, allí definiremos todos los parametros necesarios para el correcto funcionamiento del módulo.
