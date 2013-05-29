@@ -3,7 +3,7 @@ Formularios
 
 Para la creación de formularios disponemos de varias funciones Twig:
 
-    * **form_input(name, type = 'text', attrs = array(), value = null)**
+    * **form_*(name, attrs = array(), value = null)**
     * **form_label(name, text, attrs = array())**
     * **form_textarea(name, attrs = array(), value = null)**
     * **form_check(name, value, attrs = array(), check = false)**
@@ -22,17 +22,17 @@ Veamos con un ejemplo como crear un formulario con tres campos, nombres, apellid
 .. code-block:: html+jinja
 
     {{ form_label('persona.nombres', 'Nombres') }}
-    {{ form_input('persona.nombres') }} {# si no especificamos el tipo de campo, lo crea type="text" #}
+    {{ form_text('persona.nombres') }} {# llama a la funcion form_* #}
     
     {{ form_label('persona.apellidos', 'Apellidos') }}
-    {{ form_input('persona.apellidos', 'text') }}
+    {{ form_text('persona.apellidos') }}
     
     {{ form_label('persona.edad', 'Edad') }}
-    {{ form_input('persona.edad', 'number', {min:1, max: 110}, 18) }} {# por defecto muestra 18 en la edad #}
+    {{ form_number('persona.edad', {min:1, max: 110}, 18) }} {# por defecto muestra 18 en la edad #}
 
-Como se puede apreciar es muy sencillo crear y agregar campos con la lib form, aparte esta puede renderizar todo el formulario sin nosotros tener que hacer nada especial (Con mensajes de error si el formulario es validado).
+Como se puede apreciar es muy sencillo crear y agregar campos con la lib form.
 
-form_input()
+form_*()
 ---------
 
 Permite crear campos de tipo text, hidden, password, number, email, url, color, etc...
@@ -40,37 +40,36 @@ Permite crear campos de tipo text, hidden, password, number, email, url, color, 
 Los atributos que acepta son:
 
     * **field**: nombre del input (genera name y id, convierte los puntos para el name en notación de array y para el id los separa con _).
-    * **type**: tipo del input por defecto es type=text.
     * **attrs**: un arreglo twig con los atributos para el input (class, style, required, disabled, ...)
     * **value**: valor inicial para el elemento, por defecto null.
 
 .. code-block:: html+jinja
 
-    {{ form_input('persona.nombres') }}    
+    {{ form_text('persona.nombres') }}    
     <!-- <input type="text" name="persona[nombres]" id="persona_nombres" /> -->
     
-    {{ form_input('direccion') }}    
+    {{ form_text('direccion') }}    
     <!-- <input type="text" name="direccion" id="direccion" /> -->
     
-    {{ form_input('edad', 'number') }}    
+    {{ form_number('edad') }}    
     <!-- <input type="number" name="edad" id="edad" /> -->
     
-    {{ form_input('user.color', type='color') }}    
+    {{ form_color('user.color') }}    
     <!-- <input type="color" name="user[color]" id="user_color" /> -->
     
-    {{ form_input('user.website', attrs={maxlength:120}, type='url') }}    
+    {{ form_url('user.website', attrs={maxlength:120}) }}    
     <!-- <input type="url" name="user[website]" id="user_website" /> -->
     
-    {{ form_input('user.correo', 'email') }}    
+    {{ form_email('user.correo') }}    
     <!-- <input type="email" name="user[correo]" id="user_correo" /> -->
         
-    {{ form_input('clave', 'password') }}    
+    {{ form_password('clave') }}    
     <!-- <input type="password" name="clave" id="clave" /> -->
         
-    {{ form_input('id', 'hidden', value="23") }}    
+    {{ form_hidden('id', value="23") }}    
     <!-- <input type="hidden" name="id" id="id" value="23" /> -->
         
-    {{ form_input('persona.id', 'hidden') }}
+    {{ form_hidden('persona.id') }}
     <!-- <input type="hidden" name="persona[id]" id="persona_id" /> -->
 
 
