@@ -1,6 +1,5 @@
 <?php
-
-
+
 
 namespace K2\Kernel;
 
@@ -103,12 +102,10 @@ class Collection implements \Serializable
         return preg_replace('/[^[:alpha:]]/', '', $this->get($key, $default));
     }
 
-}
-
+}
 
 namespace K2\Kernel;
 
-use K2\Kernel\AppContext;
 use K2\Kernel\Session\SessionInterface;
 
 
@@ -124,6 +121,7 @@ class Request
     
     protected $locale;
     protected $uri;
+    protected $type;
 
     
     public function __construct($uri)
@@ -234,121 +232,24 @@ class Request
         return array_key_exists($key, $_SERVER) ? $_SERVER[$key] : $default;
     }
 
-}
-
-
-namespace K2\Kernel\Config;
-
-use K2\Kernel\AppContext;
-
-
-class ConfigReader
-{
-
     
-    protected $config;
-
-//    private $sectionsValid = array('config', 'parameters');
-
-    public function __construct(AppContext $app)
+    public function getType()
     {
-        $configFile = $app->getAppPath() . '/config/config.php';
-        if ($app->inProduction()) {
-            if (is_file($configFile)) {
-                $this->config = require $configFile;
-                return;
-            } else {
-                $this->config = $this->compile($app);
-                $config = PHP_EOL . PHP_EOL . 'return '
-                        . var_export($this->config, true);
-                file_put_contents($configFile, "<?php$config;");
-            }
-        } else {
-            $this->config = $this->compile($app);
-            if (is_writable($configFile)) {
-                unlink($configFile);
-            }
-        }
+        return $this->type;
     }
 
-    
-    protected function compile(AppContext $app)
+    public function setType($type)
     {
-        $parameters = array();
-        $services = array();
-
-        $dirs = array_merge($app->getModules(), array('app' => dirname($app->getAppPath())));
-
-        foreach ($dirs as $namespace => $dir) {
-            $configFile = rtrim($dir, '/') . '/' . $namespace . '/config/config.ini';
-            $servicesFile = rtrim($dir, '/') . '/' . $namespace . '/config/services.ini';
-
-            if (is_file($configFile)) {
-                foreach (parse_ini_file($configFile, true) as $sectionType => $values) {
-
-                    foreach ($values as $index => $v) {
-                        $parameters[$sectionType][$index] = $v;
-                    }
-                }
-            }
-            if (is_file($servicesFile)) {
-                foreach (parse_ini_file($servicesFile, TRUE) as $serviceName => $config) {
-                    if (isset($config['listen'])) {
-                        foreach ($config['listen'] as $method => $event) {
-                            $config['listen'][$method] = $event = explode(':', $event);
-                            isset($event[1]) || $config['listen'][$method][1] = 0;
-                        }
-                    }
-                    $services[$serviceName] = $config;
-                }
-            }
-        }
-
-        return $this->prepareAditionalConfig(array(
-                    'parameters' => $parameters,
-                    'services' => $services,
-                ));
+        $this->type = $type;
     }
 
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    
-    protected function prepareAditionalConfig($configs)
-    {
-        //si se usa el routes lo añadimos al container
-        if (isset($configs['parameters']['config']['routes'])) {
-            $router = substr($configs['parameters']['config']['routes'], 1);
-
-            //si es el router por defecto quien reescribirá las url
-            if ('router' === $router) {
-                //le añadimos un listener.
-                $configs['services']['router']
-                        ['listen']['rewrite'] = 'kumbia.request:1000'; //con priotidad 1000 para que sea el primero en ejecutarse.
-            }
-        }
-
-        //si se estan usando locales y ningun módulo a establecido una definición para
-        //el servicio translator, lo hacemos por acá.
-        if (isset($configs['parameters']['config']['locales'])
-                && !isset($configs['services']['translator'])) {
-            $configs['services']['translator'] = array(
-                'class' => 'K2\\Translation\\Translator',
-            );
-        }
-
-        return $configs;
-    }
-
-}
-
+}
 
 namespace K2\Di\Container;
 
-use K2\Di\Exception\IndexNotDefinedException;
 use K2\Di\Exception\DiException;
+use K2\Di\Exception\IndexNotDefinedException;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 
 class Container implements \ArrayAccess
@@ -360,6 +261,9 @@ class Container implements \ArrayAccess
     
     protected $definitions;
 
+    
+    protected $pAccesor;
+
     public function __construct()
     {
         $this->services = array();
@@ -370,6 +274,8 @@ class Container implements \ArrayAccess
 
         //agregamos al container como servicio.
         $this->setInstance('container', $this);
+        $this->pAccesor = new PropertyAccessor();
+        $this->setInstance('property_accesor', $this->pAccesor);
     }
 
     public function get($id)
@@ -414,18 +320,32 @@ class Container implements \ArrayAccess
         }
     }
 
+    public function removeInstance($id)
+    {
+        if ($this->hasInstance($id)) {
+            unset($this->services[$id]);
+        }
+    }
+
     public function getParameter($id)
     {
-        if ($this->hasParameter($id)) {
-            return $this->definitions['parameters'][$id];
-        } else {
-            return NULL;
+        try {
+            $id = '[' . str_replace('.', '][', $id) . ']';
+            return $this->pAccesor->getValue($this->definitions['parameters'], $id);
+        } catch (\RuntimeException $e) {
+            return null;
         }
     }
 
     public function hasParameter($id)
     {
-        return array_key_exists($id, $this->definitions['parameters']);
+        try {
+            $id = '[' . str_replace('.', '][', $id) . ']';
+            $this->pAccesor->getValue($this->definitions['parameters'], $id);
+            return true;
+        } catch (\RuntimeException $e) {
+            return false;
+        }
     }
 
     public function getDefinitions()
@@ -435,7 +355,16 @@ class Container implements \ArrayAccess
 
     public function setParameter($id, $value)
     {
-        $this->definitions['parameters'][$id] = $value;
+        try {
+            if (is_array($value) and is_array($original = $this->getParameter($id))) {
+                $value = $this->merge($original, $value);
+            }
+            $id = '[' . str_replace('.', '][', $id) . ']';
+            return $this->pAccesor->setValue($this->definitions['parameters'], $id, $value);
+        } catch (\RuntimeException $e) {
+            
+        }
+
         return $this;
     }
 
@@ -510,8 +439,22 @@ class Container implements \ArrayAccess
         throw new DiException("No se reconoce el valor para la definición del servicio $id");
     }
 
-}
+    protected function merge(array &$original, array &$data)
+    {
+        $merged = $original;
 
+        foreach ($data as $key => &$value) {
+            if (is_array($value) && isset($merged [$key]) && is_array($merged [$key])) {
+                $merged [$key] = $this->merge($merged [$key], $value);
+            } else {
+                $merged [$key] = $value;
+            }
+        }
+
+        return $merged;
+    }
+
+}
 
 namespace K2\EventDispatcher;
 
@@ -641,8 +584,7 @@ class EventDispatcher
         }
     }
 
-}
-
+}
 
 namespace K2\Kernel\Event;
 
@@ -654,8 +596,7 @@ final class K2Events
     const RESPONSE = 'kumbia.response';
     const EXCEPTION = 'kumbia.exception';
 
-}
-
+}
 
 namespace K2\EventDispatcher;
 
@@ -678,8 +619,7 @@ class Event
         return $this->propagationStopped;
     }
 
-}
-
+}
 
 namespace K2\Kernel\Event;
 
@@ -726,8 +666,7 @@ class RequestEvent extends Event
         $this->response = $response;
     }
 
-}
-
+}
 
 namespace K2\Kernel\Controller;
 
@@ -760,7 +699,7 @@ class ControllerResolver
     
     protected $parameters;
 
-    public function __construct(Container $con)
+    public function __construct(Container $con, $actionSuffix = '_action')
     {
         $this->container = $con;
 
@@ -768,7 +707,7 @@ class ControllerResolver
 
         $this->module = $context['module'];
         $this->controllerUrl = $context['controller'];
-        $this->action = $context['action'] . '_action';
+        $this->action = $context['action'] . $actionSuffix;
         $this->parameters = $context['parameters'];
         if ('/logout' === App::getRequest()->getRequestUrl()) {
             throw new NotFoundException("La ruta \"/logout\" no concuerda con ningún módulo ni controlador en la App");
@@ -810,13 +749,13 @@ class ControllerResolver
     }
 
     
-    public function executeAction()
+    public function executeAction($filters = true)
     {
         $this->getController();
 
         $controller = new ReflectionObject($this->controller);
 
-        if (($response = $this->executeBeforeFilter($controller)) instanceof Response) {
+        if ($filters && (($response = $this->executeBeforeFilter($controller)) instanceof Response)) {
             return $response;
         }
 
@@ -827,13 +766,13 @@ class ControllerResolver
 
         $response = call_user_func_array(array($this->controller, $this->action), $this->parameters);
 
-        $this->executeAfterFilter($controller);
+        $filters && $this->executeAfterFilter($controller);
 
         return $response;
     }
 
     
-    protected function validateAction(\ReflectionObject $controller, array $params)
+    public function validateAction(\ReflectionObject $controller, array $params)
     {
         if ($controller->hasProperty('limitParams')) {
             $limitParams = $controller->getProperty('limitParams');
@@ -916,32 +855,18 @@ class ControllerResolver
     }
 
     
-    public function callMethod($method)
+    public function getAction()
     {
-        $reflection = new \ReflectionClass($this->controller);
-
-        if ($reflection->hasMethod($method)) {
-
-            //obtengo el parametro del controlador.
-            $method = $reflection->getMethod($method);
-
-            //lo hago accesible para poderlo leer
-            $method->setAccessible(true);
-
-            //y retorno su valor
-            return $method->invoke($this->controller);
-        } else {
-            return null;
-        }
+        return $this->action;
     }
 
-}
-
+}
 
 namespace K2\Kernel\Controller;
 
 use K2\Kernel\App;
 use K2\Kernel\Response;
+use K2\Kernel\Router\RouterInterface;
 
 
 class Controller
@@ -1023,8 +948,7 @@ class Controller
         ));
     }
 
-}
-
+}
 
 namespace K2\Kernel;
 
@@ -1177,8 +1101,7 @@ class Response implements \Serializable
         }
     }
 
-}
-
+}
 
 namespace K2\Kernel\Event;
 
@@ -1204,8 +1127,7 @@ class ResponseEvent extends RequestEvent
         return $this->response;
     }
 
-}
-
+}
 
 namespace K2\Kernel;
 
@@ -1231,27 +1153,35 @@ class Kernel
 
     
     protected $locales;
+    protected $hasException = false;
 
     
-    public function __construct()
+    public function __construct($showExceptions = false)
     {
-        App::getLoader()->add(null, APP_PATH . '/modules/');
+        App::getLoader()->add(null, APP_PATH . 'modules/');
 
         $this->initContainer();
 
         $this->initDispatcher();
 
         $this->initModules();
+
+        $this->readConfig();
+
+        App::get('container')->setParameter('show_exceptions', $showExceptions);
     }
 
     
     public function execute(Request $request, $type = self::MASTER_REQUEST)
     {
+        $request->setType($type);
         try {
             App::setRequest($request);
-            return $this->_execute($request, $type);
+            $response = $this->_execute($request, $type);
             App::terminate();
+            return $response;
         } catch (\Exception $e) {
+            $this->hasException = true;
             return $this->exception($e);
         }
     }
@@ -1277,7 +1207,7 @@ class Kernel
     }
 
     
-    private function createResponse(ControllerResolver $resolver)
+    public function createResponse(ControllerResolver $resolver)
     {
         $controller = $resolver->getController();
         //como la acción no devolvió respuesta, debemos
@@ -1301,10 +1231,6 @@ class Kernel
             return $this->response($event->getResponse());
         }
 
-        if ($this->production) {
-            return ExceptionHandler::createException($e);
-        }
-
         throw $e;
     }
 
@@ -1323,21 +1249,17 @@ class Kernel
         App::setContainer($container = new Container());
 
         $container->setInstance('app.kernel', $this);
+        $container->setFromArray(App::definitions('services', true));
 
-        $this->readConfig();
+        foreach (App::definitions('parameters', true) as $name => $value) {
+            $container->setParameter($name, $value);
+        }
     }
 
     protected function initModules()
     {
         $container = App::get('container');
-        foreach (App::modules() as $name => $config) {
-            $container->setFromArray($config['services']);
-            foreach ($config['listeners'] as $event => $listeners) {
-                foreach ($listeners as $priority => $listener) {
-                    $this->dispatcher->addListener($event, $listener, $priority);
-                }
-            }
-        }
+
         foreach (App::modules() as $name => $config) {
             if (is_callable($config['init'])) {
                 call_user_func($config['init'], $container);
@@ -1350,6 +1272,12 @@ class Kernel
     {
         $this->dispatcher = new EventDispatcher(App::get('container'));
         App::get('container')->setInstance('event.dispatcher', $this->dispatcher);
+
+        foreach (App::definitions('listeners', true) as $event => $listeners) {
+            foreach ($listeners as $priority => $listener) {
+                $this->dispatcher->addListener($event, $listener, $priority);
+            }
+        }
     }
 
     protected function readConfig()
@@ -1398,15 +1326,19 @@ class Kernel
         return false;
     }
 
-}
+    public function hasException()
+    {
+        return $this->hasException;
+    }
 
+}
 
 namespace K2\Kernel;
 
 use K2\Kernel\Request;
-use K2\Kernel\AppContext;
-use Composer\Autoload\ClassLoader;
 use K2\Di\Container\Container;
+use Exception\NotFoundException;
+use Composer\Autoload\ClassLoader;
 use K2\Security\Auth\User\UserInterface;
 
 class App
@@ -1421,6 +1353,20 @@ class App
     protected static $routes;
     protected static $request = array();
     protected static $context = array();
+
+    
+    protected static $services = array();
+
+    
+    protected static $requestServices = array();
+
+    
+    protected static $definitions = array(
+        'services' => array(),
+        'parameters' => array(),
+        'listeners' => array(),
+        'twig_extensions' => array(),
+    );
 
     
     public static function setContainer(Container $container)
@@ -1455,7 +1401,23 @@ class App
     
     public static function setRequest(Request $request)
     {
-        return static::$request[] = $request;
+        //algunos servicios deben ser instancias distintas dependiendo de la petición,
+        //ya que contienen datos referentes a la petición en curso, por lo tanto
+        //se debe crear una instancia por cadá subpetición hecha al kernel.
+        if ($request->getType() == Kernel::SUB_REQUEST) {
+            foreach (static::$requestServices as $key) {
+                if (static::$container->hasInstance($key)) {
+                    static::$services[$key][] = self::$container[$key];
+                    static::$container->removeInstance($key);
+                }
+            }
+        }
+
+        static::$request[] = $request;
+
+        static::parseUrl($request->getRequestUrl());
+
+        return $request;
     }
 
     
@@ -1469,6 +1431,54 @@ class App
     {
         unset(static::$context[static::getRequest()->getRequestUrl()]);
         array_pop(static::$request);
+        //por cada servicio agregado a la cola en una subpetición, 
+        //debemos sacarlo de la cola al final, y pasarlo al container
+        foreach (static::$services as $key => $instances) {
+            self::$container->setInstance($key, array_pop(static::$services[$key]));
+        }
+    }
+
+    
+    protected static function parseUrl($url)
+    {
+        $controller = 'index'; //controlador por defecto si no se especifica.
+        $action = 'index'; //accion por defecto si no se especifica.
+        $moduleUrl = '/';
+        $params = array(); //parametros de la url, de existir.
+        //obtenemos la url actual de la petición.
+        $currentUrl = '/' . trim($url, '/');
+
+        list($moduleUrl, $module, $currentUrl) = static::get('app.kernel')->getModule($currentUrl);
+
+        if (!$moduleUrl || !$module) {
+            throw new NotFoundException(sprintf("La ruta \"%s\" no concuerda con ningún módulo ni controlador en la App", $currentUrl), 404);
+        }
+
+        if ($url = explode('/', trim(substr($currentUrl, strlen($moduleUrl)), '/'))) {
+
+            //ahora obtengo el controlador
+            if (current($url)) {
+                //si no es un controlador lanzo la excepcion
+                $controller = current($url);
+                next($url);
+            }
+            //luego obtenemos la acción
+            if (current($url)) {
+                $action = current($url);
+                next($url);
+            }
+            //por ultimo los parametros
+            if (current($url)) {
+                $params = array_slice($url, key($url));
+            }
+        }
+        static::setContext(array(
+            'module' => $module,
+            'module_url' => $moduleUrl,
+            'controller' => $controller,
+            'action' => $action,
+            'parameters' => $params,
+        ));
     }
 
     public static function setContext(array $data)
@@ -1513,13 +1523,18 @@ class App
         if (null === $modules) {
             return static::$modules;
         } else {
-            foreach ($modules as $index => $module) {
-                static::$modules[$module['name']] = $module + array(
-                    'parameters' => array(),
-                    'services' => array(),
-                    'listeners' => array(),
-                    'init' => null,
-                );
+            foreach ($modules as $index => $file) {
+                
+                $module = require $file;
+                
+                static::addDefinitions('services', $module);
+                static::addDefinitions('parameters', $module);
+                static::addDefinitions('listeners', $module);
+                static::addDefinitions('twig_extensions', $module);
+                
+                //$module['file'] = $file;
+
+                static::$modules[$module['name']] = $module + array('init' => null);
                 //si el indice no es numerico, agregamos el mismo a las rutas
                 if (!is_numeric($index)) {
                     static::$routes[$index] = $module['name'];
@@ -1578,6 +1593,49 @@ class App
         }
 
         return array_search($module, static::$routes);
+    }
+
+    
+    public static function addSerciveToRequest($idService)
+    {
+        static::$requestServices[$idService] = $idService;
+    }
+
+    protected static function addDefinitions($key = null, array &$data = array())
+    {
+        if (null !== $key) {
+            if (isset($data[$key])) {
+                static::$definitions[$key] = array_merge_recursive(static::$definitions[$key], $data[$key]);
+                unset($data[$key]);
+            }
+        } else {
+            static::$definitions = array_merge(static::$definitions, $data);
+        }
+    }
+
+    public static function definitions($key = null, $unset = false)
+    {
+        if (null == $key) {
+            if (!$unset) {
+                return static::$definitions;
+            }
+            $def = static::$definitions;
+            static::$definitions = array(
+                'services' => array(),
+                'parameters' => array(),
+                'listeners' => array(),
+                'twig_extensions' => array(),
+            );
+            return $def;
+        }
+
+        if (isset(static::$definitions[$key])) {
+            $def = static::$definitions[$key];
+            if ($unset) {
+                static::$definitions[$key] = array();
+            }
+            return $def;
+        }
     }
 
 }
