@@ -1,7 +1,11 @@
 Contenedor de Servicios
 ================
 
-El contenedor de servicios de K2 no es una clase que se encarga de crear y administrar y mantener instancias de otras clases para que estás ultimas sean accesibles en toda la aplicación. Dichas clases son comunmente llamadas servicios, ya que ofrecen funcionalidades y caracteristicas a todo el framework.
+Un contenedor de servicios no es más que una implementación del patron de inyección de dependencias, mediante el cual se gestiona la creación de las clases (llamadas servicios), y se pasan a otras clases que dependen de estas para su correcto funcionamiento, quitandole a estas ultimas la responsabilidad de crear dichas dependencias.
+
+Las ventajas de esto es que podemos cambiar facilmente una dependencia por otra, y las clases que usen dicha dependencia no tendrán que ser modificadas en lo absoluto.
+
+El contenedor de servicios de K2 es una clase que se encarga de crear y administrar y mantener instancias de otras clases para que estás ultimas sean accesibles en toda la aplicación. Dichas clases son comunmente llamadas servicios, ya que ofrecen funcionalidades y caracteristicas a todo el framework.
 
 Usando el Container
 -------------
@@ -97,3 +101,8 @@ Aveces necesitamos registrar una instancia ya creada en el contenedor, esto lo p
     $user = Usuarios::findById(5);
     
     App::get("container")->setInstance("user_logged", $user);
+    
+Leyendo parametros del Contenedor
+-----------
+
+El contenedor de servicios, aparte de contener las instancias de muchas de las clases del framework, contiene parametros de configuración de todo el sistema, los de los módulos, los del config.ini y los que agreguemos directamente en el container.
