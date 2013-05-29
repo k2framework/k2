@@ -148,3 +148,5 @@ Leyendo parametros del contenedor:
     var_dump(App::getParameter("user.roles.admin"));
     
 Generalmente los parametros serán establecidos en el archivo de configuración de cada módulo, en el indice parameters del mismo, allí definiremos todos los parametros necesarios para el correcto funcionamiento del módulo.
+
+Ver `El archivo de configuración de cada módulo <https://github.com/k2framework/k2/blob/master/doc/los_modulos.rst#el-archivo-configphp>`_
