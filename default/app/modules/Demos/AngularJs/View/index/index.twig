@@ -1,0 +1,64 @@
+{% extends "default.twig" %}
+
+{% block css %}
+{{ parent() }}
+<script type="text/javascript" src="{{ asset("@DemoAngularJs/js/angular.min.js") }}"></script>
+{% endblock %}
+
+{% block content %}
+<div ng-app="personas">
+    <div ng-view></div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    angular.module("personas", []).config(function($routeProvider) {
+        $routeProvider.when('/', {
+            controller: personasList,
+            template: "{{ block('list')|e('js') }}"
+        }).when('/crear', {
+            controller: personasCrear,
+            templateUrl: "{{ url(action='crear') }}"
+        })
+    })
+
+    function loadPersonas()
+    {
+    }
+
+    function personasList($scope) {
+        $.ajax({
+            url: '{{ url(action='get') }}',
+            async: false
+        }).done(function(data) {
+            $scope.personas = data
+        })
+    }
+
+    function personasCrear($scope, $location) {
+        $scope.errors = {}
+        $scope.save = function() {
+            $.ajax({
+                url: '{{ url(action='crear') }}',
+                data: {persona: $scope.persona},
+                type: 'post',
+                async: false
+            }).done(function(errors) {
+                if ($.isEmptyObject(errors)) {
+                    $location.path('/')
+                }
+                $scope.errors = errors
+            })
+        }
+    }
+    </script>
+{% endblock %}
+
+{% block list %}
+    <h3>Personas :</h3>
+    <a href="#/crear">Add</a>
+    <ul>
+        <li ng-repeat="persona in personas">{{'{{'}} persona.nombres }} ({{'{{'}}persona.edad}})</li>
+    </ul>
+{% endblock %}

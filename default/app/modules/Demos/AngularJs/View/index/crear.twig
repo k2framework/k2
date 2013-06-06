@@ -1,0 +1,9 @@
+<form ng-submit="save()">
+    <div ng-repeat="(campo, error) in errors" class="flash error">{{'{{'}}error}}</div>
+    {{ form_label('persona.nombres', 'Nombre') }}
+    {{ form_text('persona.nombres',{'ng-model':'persona.nombres'}) }}
+    {{ form_label('persona.edad', 'Edad') }}
+    {{ form_text('persona.edad',{'ng-model':'persona.edad'}) }}
+        <input type="submit" value="Save" />
+        <a href="#/">Back</a>
+</form>

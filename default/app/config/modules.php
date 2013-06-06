@@ -25,5 +25,6 @@ if (false === PRODUCTION) {
         '/demo/admin'   => APP_PATH . 'modules/Demos/Seguridad/config.php',
         '/demo/rest'    => APP_PATH . 'modules/Demos/Rest/config.php',
         '/demo/modelos' => APP_PATH . 'modules/Demos/Modelos/config.php',
+        '/angular' => APP_PATH . 'modules/Demos/AngularJs/config.php',
     ));
 }
