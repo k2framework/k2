@@ -3,55 +3,59 @@
 {% block css %}
 {{ parent() }}
 <script type="text/javascript" src="{{ asset("@DemoAngularJs/js/angular.min.js") }}"></script>
+<script type="text/javascript" src="{{ asset("@DemoAngularJs/js/angular-resource.min.js") }}"></script>
 {% endblock %}
 
 {% block content %}
-<div ng-app="personas">
+<div ng-app="crud">
     <div ng-view></div>
 </div>
 {% endblock %}
 
 {% block javascript %}
 <script type="text/javascript">
-    angular.module("personas", []).config(function($routeProvider) {
+    var app = angular.module("crud", ['ngResource']).config(function($routeProvider) {
         $routeProvider.when('/', {
-            controller: personasList,
+            controller: 'lista',
             template: "{{ block('list')|e('js') }}"
         }).when('/crear', {
-            controller: personasCrear,
-            templateUrl: "{{ url(action='crear') }}"
-        })
-    })
-
-    function loadPersonas()
-    {
-    }
-
-    function personasList($scope) {
-        $.ajax({
-            url: '{{ url(action='get') }}',
-            async: false
-        }).done(function(data) {
-            $scope.personas = data
-        })
-    }
-
-    function personasCrear($scope, $location) {
+            controller: 'crear',
+            template: "{{ block('form')|e('js') }}"
+        }).when('/editar/:id', {
+            controller: 'editar',
+            template: "{{ block('form')|e('js') }}"
+        }).otherwise({redirectTo:'/'})
+    }).controller('lista', function($scope, Personas){
+        $scope.personas = Personas.query()
+    }).controller('crear', function($scope, guardarPersona){
         $scope.errors = {}
-        $scope.save = function() {
-            $.ajax({
-                url: '{{ url(action='crear') }}',
-                data: {persona: $scope.persona},
-                type: 'post',
-                async: false
-            }).done(function(errors) {
-                if ($.isEmptyObject(errors)) {
-                    $location.path('/')
+        $scope.save = function(){
+            guardarPersona($scope)            
+        }
+    }).controller('editar', function($scope, Personas, guardarPersona, $routeParams){
+    
+        $scope.persona = Personas.get({id: $routeParams.id})
+        
+        $scope.errors = {}
+        $scope.save = function(){
+            guardarPersona($scope)
+        }
+    })
+    
+    app.factory('Personas',function($resource){      
+        return $resource('{{ url('@DemoAngularJs/personas') }}',{},{
+                query: {method:'GET',isArray: true},
+            })
+    }).factory('guardarPersona', function(Personas, $location){
+        return function(scope){
+            Personas.save({persona:scope.persona}, function(res){
+                if ($.isEmptyObject(res.errors)) {
+                    $location.path('/editar/' + res.persona.id)
                 }
-                $scope.errors = errors
+                scope.errors = res.errors
             })
         }
-    }
+    })
     </script>
 {% endblock %}
 
@@ -59,6 +63,21 @@
     <h3>Personas :</h3>
     <a href="#/crear">Add</a>
     <ul>
-        <li ng-repeat="persona in personas">{{'{{'}} persona.nombres }} ({{'{{'}}persona.edad}})</li>
+        <li ng-repeat="persona in personas">
+            {{'{{'}} persona.nombres }} ({{'{{'}}persona.edad}})
+            <a href="#/editar/{{'{{'}}persona.id}}">Editar</a>
+        </li>
     </ul>
+{% endblock %}
+    
+{% block form %}
+<form ng-submit="save()">
+    <div ng-repeat="(campo, error) in errors" class="flash error">{{'{{'}}error}}</div>
+    {{ form_label('persona.nombres', 'Nombre') }}
+    {{ form_text('persona.nombres',{'ng-model':'persona.nombres'}) }}
+    {{ form_label('persona.edad', 'Edad') }}
+    {{ form_text('persona.edad',{'ng-model':'persona.edad'}) }}
+    <input type="submit" value="Save" />
+    <a href="#/">Back</a>
+</form>
 {% endblock %}
