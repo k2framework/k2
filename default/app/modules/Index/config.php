@@ -25,14 +25,6 @@ return array(
             array('mi_servicio', 'cerrandoSesion')
         ),
     ),
-    'init' => function(Container $c) {
-        //agregamos el servicio firewall al container
-        $c->set('firewall', function($c) {
-                    return new \K2\Security\Listener\Firewall($c);
-                });
-        //hacemos que el firewall escuche las peticiones
-        $c['event.dispatcher']->addListener(E::REQUEST, array('firewall', 'onKernelRequest'), 100);
-    },
 );
 
 
