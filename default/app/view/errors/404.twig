@@ -1,24 +1,16 @@
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="{{ _charset }}" />
-        <title>KumbiaPHP web &amp; app Framework</title>
-        <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css" />
-    </head>
-    <body>
-        <div style="text-align: center; margin: 50px; font-size: 12pt; background-color: transparent; font-family: Lucida Grande, Verdana, Sans-serif;">
-            <table align="center" id="content" style="background-color: #fff; border: #999 1px solid; padding: 10px 10px 6px 10px; width: 50%;">
-                <tbody>
-                    <tr>
-                        <td style="width: 5%">
-                            <a href="http://www.kumbiaphp.com"><img src="{{ asset('img/site_logo.gif') }}" alt="Kumbia PHP Framework"/></a>
-                        </td>
-                        <td>
-                            <h1 style="font-size: 14pt; color: #990000; margin: 0 0 4px 0;">ERROR 404</h1>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </body>
-</html>
+{% extends 'default.twig' %}
+
+{% block css %}
+{{ parent() }}
+<style type="text/css">
+    body{border: 1px solid;width: 500px;margin: 30px auto;}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="row" style="background: transparent">
+    <div class="span12">
+        <h1>404 Not Found</h1>
+    </div>
+</div>
+{% endblock %}
