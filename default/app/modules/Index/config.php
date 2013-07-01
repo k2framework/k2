@@ -13,18 +13,16 @@ return array(
     'parameters' => array(
     ),
     'services' => array(
-        'mi_servicio' => function(Container $c) {
-            return new Services\Servicio($c);
-        }
-    ),
-    'listeners' => array(
-        SE::LOGIN => array(
-            array('mi_servicio', 'onLogin')
+        'mi_servicio' => array(
+            'callback' => function(Container $c) {
+                return new Services\Servicio($c);
+            },
+            'tags' => array(
+                array('name' => 'event.listener', 'event' => SE::LOGIN, 'method' => 'onLogin'), 
+                array('name' => 'event.listener', 'event' => SE::LOGOUT, 'method' => 'cerrandoSesion'), 
+            ),
         ),
-        SE::LOGOUT => array(
-            array('mi_servicio', 'cerrandoSesion')
-        ),
-    ),
+    )
 );
 
 
