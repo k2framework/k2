@@ -158,7 +158,7 @@ _______________________
 
 Para que un servicio escuche eventos solo debemos agregalo al EventDispatcher en el config.php de nuestro módulo, ejemplo:
 
-Crearemos un servicio llamado **k2_seguridad**, el cual escuchará el evento **kumbia.request**, entonces al iniciar la petición, se creará la instancia de la clase K2/Seguridad/Seguridad.php y se llamará al método verificarAcceso() de la misma, pasandole el objeto con la información del evento correspondiente, ejemplo del código de la clase:
+Crearemos un servicio llamado **k2_seguridad**, el cual escuchará el evento **k2.request**, entonces al iniciar la petición, se creará la instancia de la clase K2/Seguridad/Seguridad.php y se llamará al método verificarAcceso() de la misma, pasandole el objeto con la información del evento correspondiente, ejemplo del código de la clase:
 
 .. code-block:: php
 
@@ -179,7 +179,7 @@ Crearemos un servicio llamado **k2_seguridad**, el cual escuchará el evento **k
         }
 
         /**
-         * Este método será llamado en la ejecución del evento kumbia.request.
+         * Este método será llamado en la ejecución del evento k2.request.
          *
          * Es importante resaltar que el evento recibirá una instancia del objeto RequestEvent, el cual ofrece una serie de métodos
          * que nos permiten obtener data de relevancia para el evento en cuestion.
@@ -219,17 +219,14 @@ Ahora agregamos el servicio al EventDispatcher:
         'namespace' => __NAMESPACE__,
         'path' => __DIR__,
         'services' => array(
-            'k2_seguridad' => function($c) {
-                return new K2\Seguridad\Seguridad($c['router']);
-            }
-        ),
-        'listeners' => array(
-            'kumbia.request' => array(
-                array('k2_seguridad', 'verificarAcceso'),
-                function(){
-                    echo "Tambien podemos añadir una función al event_dispatcher";
+            'k2_seguridad' => array(
+                'callback' => function($c) {
+                    return new K2\Seguridad\Seguridad($c['router']);
                 },
-            ),
+                'tags' => array(
+                    array('name' => 'event.listener', 'event' => 'k2.request', 'method' => 'verificarAcceso')
+                ),
+            )
         ),
     );
 
@@ -265,7 +262,7 @@ Ahora nuestro servicio k2_seguridad está escuchando varios eventos, veamos como
         }
     }
 
-La clase Seguridad tiene tres métodos que están escuchando por diferentes eventos, y cada uno de ellos espera un tipo de objeto diferente que ofree métodos de utilidad para el tipo de evento.
+La clase Seguridad tiene tres métodos que están escuchando diferentes eventos, y cada uno de ellos espera un tipo de objeto diferente que ofree métodos de utilidad para el tipo de evento.
 
 En el config.php:
 
@@ -284,19 +281,15 @@ Ahora agregamos el servicio al EventDispatcher:
         'namespace' => __NAMESPACE__,
         'path' => __DIR__,
         'services' => array(
-            'k2_seguridad' => function($c) {
-                return new K2\Seguridad\Seguridad($c['router']);
-            }
-        ),
-        'listeners' => array(
-            'kumbia.request' => array(
-                array('k2_seguridad', 'verificarAcceso'),
-            ),
-            'kumbia.exception' => array(
-                array('k2_seguridad', 'ocurrioExcepcion'),
-            ),
-            'kumbia.response' => array(
-                array('k2_seguridad', 'onResponse'),
-            ),
+            'k2_seguridad' => array(
+                'callback' => function($c) {
+                    return new K2\Seguridad\Seguridad($c['router']);
+                },
+                'tags' => array(
+                    array('name' => 'event.listener', 'event' => 'k2.request', 'method' => 'verificarAcceso')
+                    array('name' => 'event.listener', 'event' => 'k2.exception', 'method' => 'ocurrioExcepcion')
+                    array('name' => 'event.listener', 'event' => 'k2.response', 'method' => 'onResponse')
+                ),
+            )
         ),
     );
